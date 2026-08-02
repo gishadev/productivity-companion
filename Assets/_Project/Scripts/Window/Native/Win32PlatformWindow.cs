@@ -74,11 +74,12 @@ namespace gishadev.companion.Window.Native
                 UnityEngine.Debug.LogWarning(
                     "[Window] DWM composition is disabled; per-pixel alpha will not work. Use the ColorKey mode instead.");
 
-            // Deliberately NOT layered here. The DWM glass sheet below already honours the
-            // framebuffer's per-pixel alpha; adding WS_EX_LAYERED + LWA_ALPHA on top applies a second
-            // translucency pass over the composited result, which washes out even fully opaque
-            // content. The two mechanisms are alternatives, not partners.
-            RemoveExStyle(Win32Interop.WS_EX_LAYERED);
+            // WS_EX_LAYERED is required here, for two reasons that are easy to get wrong: click-through
+            // via WS_EX_TRANSPARENT only passes clicks reliably on a layered window, and a layered
+            // window that never receives SetLayeredWindowAttributes is not guaranteed to paint at all.
+            // An alpha of 255 is uniform-opaque and does not itself cause washout.
+            AddExStyle(Win32Interop.WS_EX_LAYERED);
+            Win32Interop.SetLayeredWindowAttributes(_hwnd, 0, 255, Win32Interop.LWA_ALPHA);
 
             // -1 on every side extends the glass frame across the whole client area.
             var margins = new Win32Interop.MARGINS

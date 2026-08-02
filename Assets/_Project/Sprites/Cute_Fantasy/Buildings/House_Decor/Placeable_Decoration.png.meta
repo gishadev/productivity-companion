@@ -1,0 +1,2158 @@
+fileFormatVersion: 2
+guid: 7775d565e291fb243adf62af157ab0a7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1557162233518572622
+    second: Placeable_Decoration_0
+  - first:
+      213: -3668620171150187158
+    second: Placeable_Decoration_1
+  - first:
+      213: 4185740207367369205
+    second: Placeable_Decoration_2
+  - first:
+      213: -3618289786711725597
+    second: Placeable_Decoration_3
+  - first:
+      213: -2331638111578344857
+    second: Placeable_Decoration_4
+  - first:
+      213: 2762570414405055553
+    second: Placeable_Decoration_5
+  - first:
+      213: -3435673381830592202
+    second: Placeable_Decoration_6
+  - first:
+      213: 4905977331444542710
+    second: Placeable_Decoration_7
+  - first:
+      213: -5760121673264066818
+    second: Placeable_Decoration_8
+  - first:
+      213: 5388446321774107783
+    second: Placeable_Decoration_9
+  - first:
+      213: 5765557802090474487
+    second: Placeable_Decoration_10
+  - first:
+      213: -2680420632632612256
+    second: Placeable_Decoration_11
+  - first:
+      213: -4131635522156258028
+    second: Placeable_Decoration_12
+  - first:
+      213: -5806314263583938824
+    second: Placeable_Decoration_13
+  - first:
+      213: 4272538532364134741
+    second: Placeable_Decoration_14
+  - first:
+      213: 714355525284852567
+    second: Placeable_Decoration_15
+  - first:
+      213: 6981469256046717897
+    second: Placeable_Decoration_16
+  - first:
+      213: -1464849696692829479
+    second: Placeable_Decoration_17
+  - first:
+      213: 1140867624577482625
+    second: Placeable_Decoration_18
+  - first:
+      213: -5820400399161203649
+    second: Placeable_Decoration_19
+  - first:
+      213: 4543417261041167574
+    second: Placeable_Decoration_20
+  - first:
+      213: -3906228074646893096
+    second: Placeable_Decoration_21
+  - first:
+      213: -6983681596814081532
+    second: Placeable_Decoration_22
+  - first:
+      213: 8209307290744454248
+    second: Placeable_Decoration_23
+  - first:
+      213: 5486708622658266150
+    second: Placeable_Decoration_24
+  - first:
+      213: 7071081393220375109
+    second: Placeable_Decoration_25
+  - first:
+      213: -5385457438469701139
+    second: Placeable_Decoration_26
+  - first:
+      213: 5409520708988324579
+    second: Placeable_Decoration_27
+  - first:
+      213: 825117474570146884
+    second: Placeable_Decoration_28
+  - first:
+      213: 7440765310228178469
+    second: Placeable_Decoration_29
+  - first:
+      213: -1007296634176376707
+    second: Placeable_Decoration_30
+  - first:
+      213: -9105257707568997301
+    second: Placeable_Decoration_31
+  - first:
+      213: -7132803866787315051
+    second: Placeable_Decoration_32
+  - first:
+      213: -1994256679673521358
+    second: Placeable_Decoration_33
+  - first:
+      213: 4544078185858031264
+    second: Placeable_Decoration_34
+  - first:
+      213: -7234681272561293999
+    second: Placeable_Decoration_35
+  - first:
+      213: 1422347090535952798
+    second: Placeable_Decoration_36
+  - first:
+      213: -7125047258854406981
+    second: Placeable_Decoration_37
+  - first:
+      213: 1598397122587375893
+    second: Placeable_Decoration_38
+  - first:
+      213: -2573969476962601716
+    second: Placeable_Decoration_39
+  - first:
+      213: -2073328424454764230
+    second: Placeable_Decoration_40
+  - first:
+      213: -8257267819809350112
+    second: Placeable_Decoration_41
+  - first:
+      213: -8751911793525589661
+    second: Placeable_Decoration_42
+  - first:
+      213: -8914913402784461664
+    second: Placeable_Decoration_43
+  - first:
+      213: -2647218014804030370
+    second: Placeable_Decoration_44
+  - first:
+      213: 4186887557743022998
+    second: Placeable_Decoration_45
+  - first:
+      213: -8484429494584748417
+    second: Placeable_Decoration_46
+  - first:
+      213: -1782676633065697013
+    second: Placeable_Decoration_47
+  - first:
+      213: -1110173354318937512
+    second: Placeable_Decoration_48
+  - first:
+      213: 2684755753566664918
+    second: Placeable_Decoration_49
+  - first:
+      213: -1689866315433734029
+    second: Placeable_Decoration_50
+  - first:
+      213: 7235580746462957051
+    second: Placeable_Decoration_51
+  - first:
+      213: -5691904607479156153
+    second: Placeable_Decoration_52
+  - first:
+      213: -8159498172854841184
+    second: Placeable_Decoration_53
+  - first:
+      213: -4760589171425692515
+    second: Placeable_Decoration_54
+  - first:
+      213: -5123846994757192102
+    second: Placeable_Decoration_55
+  - first:
+      213: -4270231625639659721
+    second: Placeable_Decoration_56
+  - first:
+      213: 1520451302394797524
+    second: Placeable_Decoration_57
+  - first:
+      213: -7240485870761892442
+    second: Placeable_Decoration_58
+  - first:
+      213: -5614988980648512263
+    second: Placeable_Decoration_59
+  - first:
+      213: 4101817613702818736
+    second: Placeable_Decoration_60
+  - first:
+      213: 3635742315891665283
+    second: Placeable_Decoration_61
+  - first:
+      213: 2768519596050354781
+    second: Placeable_Decoration_62
+  - first:
+      213: -1944501724530840336
+    second: Placeable_Decoration_63
+  - first:
+      213: 5509254498539696423
+    second: Placeable_Decoration_64
+  - first:
+      213: -7909165854784514782
+    second: Placeable_Decoration_65
+  - first:
+      213: -668662576516998999
+    second: Placeable_Decoration_66
+  - first:
+      213: -7769143948361868935
+    second: Placeable_Decoration_67
+  - first:
+      213: -679158517671952211
+    second: Placeable_Decoration_68
+  - first:
+      213: 4747737491845107421
+    second: Placeable_Decoration_69
+  - first:
+      213: 1827462749236928629
+    second: Placeable_Decoration_70
+  - first:
+      213: 3034944794732770465
+    second: Placeable_Decoration_71
+  - first:
+      213: 1923672494721872929
+    second: Placeable_Decoration_72
+  - first:
+      213: 8880031861087673417
+    second: Placeable_Decoration_73
+  - first:
+      213: 922386932997688609
+    second: Placeable_Decoration_74
+  - first:
+      213: -1665749970369051642
+    second: Placeable_Decoration_75
+  - first:
+      213: -8433305997547174636
+    second: Placeable_Decoration_76
+  - first:
+      213: 8590218504778169936
+    second: Placeable_Decoration_77
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Placeable_Decoration_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 161
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bbb875e239d36ae0800000000000000
+      internalID: -1557162233518572622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_1
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 161
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a65a2ca3461761dc0800000000000000
+      internalID: -3668620171150187158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_2
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 161
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f1b336aa8cb61a30800000000000000
+      internalID: 4185740207367369205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_3
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 161
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e9af980c9049cdc0800000000000000
+      internalID: -3618289786711725597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_4
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 161
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7623c96bd7b54afd0800000000000000
+      internalID: -2331638111578344857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_5
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 161
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 144fd99b72f965620800000000000000
+      internalID: 2762570414405055553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_6
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 161
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 639f8bf13490250d0800000000000000
+      internalID: -3435673381830592202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_7
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 161
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fceed4d368851440800000000000000
+      internalID: 4905977331444542710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_8
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 145
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efe011a4bdfef00b0800000000000000
+      internalID: -5760121673264066818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_9
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 145
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78c1b94616b97ca40800000000000000
+      internalID: 5388446321774107783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_10
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 145
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fba5951640630050800000000000000
+      internalID: 5765557802090474487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_11
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 145
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06a2e47d2ab3dcad0800000000000000
+      internalID: -2680420632632612256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_12
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 145
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41d9d78026b79a6c0800000000000000
+      internalID: -4131635522156258028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_13
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 145
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f6abc0c0f3db6fa0800000000000000
+      internalID: -5806314263583938824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_14
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 145
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 559abb6882b1b4b30800000000000000
+      internalID: 4272538532364134741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_15
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 145
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 753f0ffb096e9e900800000000000000
+      internalID: 714355525284852567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_16
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 145
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cba9f88c4923e060800000000000000
+      internalID: 6981469256046717897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_17
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 128
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d2094346fecbabe0800000000000000
+      internalID: -1464849696692829479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_18
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 128
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18f3faa5f0d25df00800000000000000
+      internalID: 1140867624577482625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_19
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 128
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f34647dbca8c93fa0800000000000000
+      internalID: -5820400399161203649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_20
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 128
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dcacb64de57d0f30800000000000000
+      internalID: 4543417261041167574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_21
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 128
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dd830f134a4ac9c0800000000000000
+      internalID: -3906228074646893096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_22
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 129
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 402c67db69af41f90800000000000000
+      internalID: -6983681596814081532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_23
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 129
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86cf8d47c715de170800000000000000
+      internalID: 8209307290744454248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_24
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 129
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6246e972c64b42c40800000000000000
+      internalID: 5486708622658266150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_25
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 129
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54256cc1017812260800000000000000
+      internalID: 7071081393220375109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_26
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 113
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de1470b3ef20345b0800000000000000
+      internalID: -5385457438469701139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_27
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 114
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea4e588c6a721b40800000000000000
+      internalID: 5409520708988324579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_28
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 113
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44498b1b8f7637b00800000000000000
+      internalID: 825117474570146884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_29
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 114
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 526233570a8e24760800000000000000
+      internalID: 7440765310228178469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_30
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 113
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7078705c0d5502f0800000000000000
+      internalID: -1007296634176376707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_31
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 113
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4c56ff4b50a3a180800000000000000
+      internalID: -9105257707568997301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_32
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 113
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5920c93aca0330d90800000000000000
+      internalID: -7132803866787315051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_33
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23b1c19ad1af254e0800000000000000
+      internalID: -1994256679673521358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_34
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 112
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ae5ba3d80fcf0f30800000000000000
+      internalID: 4544078185858031264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_35
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 99
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15520dda6bf399b90800000000000000
+      internalID: -7234681272561293999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_36
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 99
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e91b4b694213db310800000000000000
+      internalID: 1422347090535952798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_37
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 99
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb4cc18a44fbe1d90800000000000000
+      internalID: -7125047258854406981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_38
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 99
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 519b3ddd6b5ae2610800000000000000
+      internalID: 1598397122587375893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_39
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 99
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0532fee56c674cd0800000000000000
+      internalID: -2573969476962601716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_40
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 97
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3947ad68ce0a33e0800000000000000
+      internalID: -2073328424454764230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_41
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 97
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02edff0baaa486d80800000000000000
+      internalID: -8257267819809350112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_42
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 97
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 369fa59e796fa8680800000000000000
+      internalID: -8751911793525589661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_43
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 97
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0acc9af4e7dd74480800000000000000
+      internalID: -8914913402784461664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_44
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 83
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5c4798bd31334bd0800000000000000
+      internalID: -2647218014804030370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_45
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 83
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69396c9fc00da1a30800000000000000
+      internalID: 4186887557743022998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_46
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 83
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76dd6db350414a80800000000000000
+      internalID: -8484429494584748417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_47
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 83
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b01dab81c09a247e0800000000000000
+      internalID: -1782676633065697013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_48
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 83
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85247b8573fd790f0800000000000000
+      internalID: -1110173354318937512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_49
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 81
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8f608222b224520800000000000000
+      internalID: 2684755753566664918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_50
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 81
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3709ca61a836c88e0800000000000000
+      internalID: -1689866315433734029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_51
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 81
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfd84986a52f96460800000000000000
+      internalID: 7235580746462957051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_52
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 81
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 742bbcf9aea4201b0800000000000000
+      internalID: -5691904607479156153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_53
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 64
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a0d98584a3a3ce80800000000000000
+      internalID: -8159498172854841184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_54
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 64
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d94b99b0f5dfeedb0800000000000000
+      internalID: -4760589171425692515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_55
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 64
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a567b0a3e4074e8b0800000000000000
+      internalID: -5123846994757192102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_56
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 64
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 737fb1d06f61db4c0800000000000000
+      internalID: -4270231625639659721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_57
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 64
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd9581676ab91510800000000000000
+      internalID: 1520451302394797524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_58
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 48
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a5a0085670a48b90800000000000000
+      internalID: -7240485870761892442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_59
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 48
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f476b6854d8312b0800000000000000
+      internalID: -5614988980648512263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_60
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 48
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bb623623659ce830800000000000000
+      internalID: 4101817613702818736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_61
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 48
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38924919f50c47230800000000000000
+      internalID: 3635742315891665283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_62
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 48
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d521a4487e1cb6620800000000000000
+      internalID: 2768519596050354781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_63
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 32
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fc6434ebfdb305e0800000000000000
+      internalID: -1944501724530840336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_64
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 32
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7217ea2f6cdc47c40800000000000000
+      internalID: 5509254498539696423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_65
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 32
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2259be34f8ffc3290800000000000000
+      internalID: -7909165854784514782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_66
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 32
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a85b1cedee68b6f0800000000000000
+      internalID: -668662576516998999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_67
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 32
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 979d30dddb47e2490800000000000000
+      internalID: -7769143948361868935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_68
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 16
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da08bff2de42396f0800000000000000
+      internalID: -679158517671952211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_69
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 16
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dde4b30281a53e140800000000000000
+      internalID: 4747737491845107421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_70
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 16
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 570a68820b37c5910800000000000000
+      internalID: 1827462749236928629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_71
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 16
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a4b7f2063a4e1a20800000000000000
+      internalID: 3034944794732770465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_72
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 16
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 124361021f142ba10800000000000000
+      internalID: 1923672494721872929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_73
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 0
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94c1842ede53c3b70800000000000000
+      internalID: 8880031861087673417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_74
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 0
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12d0ace470afccc00800000000000000
+      internalID: 922386932997688609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_75
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 0
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 604098b3a3112e8e0800000000000000
+      internalID: -1665749970369051642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_76
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 0
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 415870670e0e6fa80800000000000000
+      internalID: -8433305997547174636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Placeable_Decoration_77
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 0
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05e3a489736963770800000000000000
+      internalID: 8590218504778169936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Placeable_Decoration_0: -1557162233518572622
+      Placeable_Decoration_1: -3668620171150187158
+      Placeable_Decoration_10: 5765557802090474487
+      Placeable_Decoration_11: -2680420632632612256
+      Placeable_Decoration_12: -4131635522156258028
+      Placeable_Decoration_13: -5806314263583938824
+      Placeable_Decoration_14: 4272538532364134741
+      Placeable_Decoration_15: 714355525284852567
+      Placeable_Decoration_16: 6981469256046717897
+      Placeable_Decoration_17: -1464849696692829479
+      Placeable_Decoration_18: 1140867624577482625
+      Placeable_Decoration_19: -5820400399161203649
+      Placeable_Decoration_2: 4185740207367369205
+      Placeable_Decoration_20: 4543417261041167574
+      Placeable_Decoration_21: -3906228074646893096
+      Placeable_Decoration_22: -6983681596814081532
+      Placeable_Decoration_23: 8209307290744454248
+      Placeable_Decoration_24: 5486708622658266150
+      Placeable_Decoration_25: 7071081393220375109
+      Placeable_Decoration_26: -5385457438469701139
+      Placeable_Decoration_27: 5409520708988324579
+      Placeable_Decoration_28: 825117474570146884
+      Placeable_Decoration_29: 7440765310228178469
+      Placeable_Decoration_3: -3618289786711725597
+      Placeable_Decoration_30: -1007296634176376707
+      Placeable_Decoration_31: -9105257707568997301
+      Placeable_Decoration_32: -7132803866787315051
+      Placeable_Decoration_33: -1994256679673521358
+      Placeable_Decoration_34: 4544078185858031264
+      Placeable_Decoration_35: -7234681272561293999
+      Placeable_Decoration_36: 1422347090535952798
+      Placeable_Decoration_37: -7125047258854406981
+      Placeable_Decoration_38: 1598397122587375893
+      Placeable_Decoration_39: -2573969476962601716
+      Placeable_Decoration_4: -2331638111578344857
+      Placeable_Decoration_40: -2073328424454764230
+      Placeable_Decoration_41: -8257267819809350112
+      Placeable_Decoration_42: -8751911793525589661
+      Placeable_Decoration_43: -8914913402784461664
+      Placeable_Decoration_44: -2647218014804030370
+      Placeable_Decoration_45: 4186887557743022998
+      Placeable_Decoration_46: -8484429494584748417
+      Placeable_Decoration_47: -1782676633065697013
+      Placeable_Decoration_48: -1110173354318937512
+      Placeable_Decoration_49: 2684755753566664918
+      Placeable_Decoration_5: 2762570414405055553
+      Placeable_Decoration_50: -1689866315433734029
+      Placeable_Decoration_51: 7235580746462957051
+      Placeable_Decoration_52: -5691904607479156153
+      Placeable_Decoration_53: -8159498172854841184
+      Placeable_Decoration_54: -4760589171425692515
+      Placeable_Decoration_55: -5123846994757192102
+      Placeable_Decoration_56: -4270231625639659721
+      Placeable_Decoration_57: 1520451302394797524
+      Placeable_Decoration_58: -7240485870761892442
+      Placeable_Decoration_59: -5614988980648512263
+      Placeable_Decoration_6: -3435673381830592202
+      Placeable_Decoration_60: 4101817613702818736
+      Placeable_Decoration_61: 3635742315891665283
+      Placeable_Decoration_62: 2768519596050354781
+      Placeable_Decoration_63: -1944501724530840336
+      Placeable_Decoration_64: 5509254498539696423
+      Placeable_Decoration_65: -7909165854784514782
+      Placeable_Decoration_66: -668662576516998999
+      Placeable_Decoration_67: -7769143948361868935
+      Placeable_Decoration_68: -679158517671952211
+      Placeable_Decoration_69: 4747737491845107421
+      Placeable_Decoration_7: 4905977331444542710
+      Placeable_Decoration_70: 1827462749236928629
+      Placeable_Decoration_71: 3034944794732770465
+      Placeable_Decoration_72: 1923672494721872929
+      Placeable_Decoration_73: 8880031861087673417
+      Placeable_Decoration_74: 922386932997688609
+      Placeable_Decoration_75: -1665749970369051642
+      Placeable_Decoration_76: -8433305997547174636
+      Placeable_Decoration_77: 8590218504778169936
+      Placeable_Decoration_8: -5760121673264066818
+      Placeable_Decoration_9: 5388446321774107783
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -45,15 +45,21 @@ namespace gishadev.companion.Window
             }
         }
 
-        /// <summary>Called by <see cref="WindowBootstrap"/> before this component is enabled.</summary>
-        public void Initialize(WindowSettings settings, RenderThrottle renderThrottle, IPlatformWindow window)
+        /// <summary>
+        /// Called by <see cref="WindowLifetimeScope"/> before this component is enabled. Deliberately
+        /// not VContainer attribute injection — see <see cref="WindowLifetimeScope"/> for why.
+        /// </summary>
+        public void Initialize(
+            WindowSettings settings,
+            RenderThrottle renderThrottle,
+            IPlatformWindow window,
+            ClickThroughController clickThrough)
         {
             _settings = settings;
             _renderThrottle = renderThrottle;
             _window = window;
+            _clickThrough = clickThrough;
         }
-
-        private void Awake() => _clickThrough = GetComponent<ClickThroughController>();
 
         private void Start() => SetOverlayVisible(_overlayVisible);
 

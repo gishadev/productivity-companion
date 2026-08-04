@@ -21,7 +21,7 @@ code, which is why this file exists.
 | `preserveFramebufferAlpha` | `1` | Player → Rendering | Without it Unity discards the alpha channel on present, so the camera's `a = 0` clear never reaches DWM. |
 | `m_SupportsHDR` | `0` | UniversalRP.asset | The HDR resolve writes `alpha = 1` into the backbuffer. |
 | `m_AllowPostProcessAlphaOutput` | `1` | UniversalRP.asset ("Alpha Processing") | Gates whether alpha survives to the backbuffer at all. Without it everything renders uniformly translucent, **including fully opaque content**. |
-| `fullscreenMode` | `3` (Windowed) | Player → Resolution | A layered window cannot be exclusive fullscreen. Also forced at runtime in `WindowController.Awake`, because Unity persists the last screen mode in the registry. |
+| `fullscreenMode` | `3` (Windowed) | Player → Resolution | A layered window cannot be exclusive fullscreen. Also forced at runtime by `WindowController` before the first scene loads, because Unity persists the last screen mode in the registry. |
 
 Camera clear flags and background colour are set at runtime by `WindowController` and should not be
 authored in the scene.
@@ -44,20 +44,33 @@ Window/
   TopmostWatchdog.cs
   RenderThrottle.cs
   WidgetDragHandle.cs   scene component: drag to reposition the widget
-  WindowBootstrap.cs    [RuntimeInitializeOnLoadMethod] entry point
+  WindowLifetimeScope.cs  registrations + [RuntimeInitializeOnLoadMethod] self-bootstrap
+  WindowSceneBinder.cs  pushes services into scene-authored components
   WindowDebugHotkeys.cs dev-only overlay (stripped from release builds)
 ```
 
-Two decisions that look odd without the context:
+Three decisions that look odd without the context:
 
-**Components get explicit `Initialize(...)` calls, not `[Inject]`.** The project's root scope
-(`gishadev.tools.AutoInjectLifetimeScope`) re-injects every `[Inject]`-bearing MonoBehaviour found by
-`FindObjectsByType` on each scene load — and that sweep includes `DontDestroyOnLoad` objects. The
-window services live in a child scope the root container knows nothing about, so that pass would log
-an injection failure for every component on every scene load. Registrations still live in VContainer
-(`WindowInstaller`); only the delivery is manual. Scene-authored components (e.g. `WidgetDragHandle`)
-reach services through the static accessors on `WindowBootstrap`, which is the same problem with no
-cleaner answer.
+**The scope creates itself at `BeforeSceneLoad` instead of living in a scene.** The window has to be
+reshaped before anything is drawn, and it is an app-lifetime service — registering it in a scene scope
+would dispose `WindowSettings` and `RenderThrottle` on scene unload while the native window kept its
+old state. Self-bootstrapping also means no scene can be missing it.
+
+**`WindowController`, `ClickThroughController` and `TopmostWatchdog` are plain C# entry points, not
+MonoBehaviours.** This is what lets them take constructor dependencies. `[Inject]` is not available:
+the project's root scope (`gishadev.tools.AutoInjectLifetimeScope`) re-injects every `[Inject]`-bearing
+MonoBehaviour found by `FindObjectsByType` on each scene load — a sweep that includes
+`DontDestroyOnLoad` objects — and because the window services live in a child scope the root container
+knows nothing about, that pass would log an injection failure for every one of them, every scene load.
+
+`WindowController` implements both `IInitializable` (runs synchronously as the container builds, i.e.
+`BeforeSceneLoad`, where chrome removal belongs) and `IStartable` (first player loop, once
+`Camera.main` exists, which is what transparency needs). The two are not interchangeable.
+
+The exceptions are the two components that genuinely cannot stop being MonoBehaviours:
+`WindowDebugHotkeys` draws through `OnGUI`, and `WidgetDragHandle` is scene-authored and implements the
+uGUI drag interfaces. Both get explicit `Initialize(...)` calls instead — the debug overlay from
+`WindowLifetimeScope`, the drag handles from `WindowSceneBinder`.
 
 **`RenderThrottle` and `ClickThroughController` hand out refcounted `IDisposable` leases**, not bools,
 so independent systems (a drag, an overlay, an animation) can each hold "keep rendering" or "keep

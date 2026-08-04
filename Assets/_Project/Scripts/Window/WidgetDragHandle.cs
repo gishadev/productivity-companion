@@ -36,8 +36,22 @@ namespace gishadev.companion.Window
         private Canvas _canvas;
         private RectTransform _parentRect;
 
+        private ClickThroughController _clickThrough;
+        private RenderThrottle _renderThrottle;
+
         private IDisposable _clickThroughBlock;
         private IDisposable _renderLease;
+
+        /// <summary>
+        /// Called by <see cref="WindowSceneBinder"/> once the window scope is up. Dragging still works
+        /// without it — the holds below are simply not taken — so a missing binder degrades rather
+        /// than throws.
+        /// </summary>
+        public void Initialize(ClickThroughController clickThrough, RenderThrottle renderThrottle)
+        {
+            _clickThrough = clickThrough;
+            _renderThrottle = renderThrottle;
+        }
 
         private void Awake()
         {
@@ -67,10 +81,10 @@ namespace gishadev.companion.Window
         {
             // Without this the cursor crossing empty space mid-drag would flip the window to
             // click-through, Unity would stop receiving mouse messages, and the drag would die.
-            _clickThroughBlock ??= WindowBootstrap.ClickThrough?.AcquireBlock("widget-drag");
+            _clickThroughBlock ??= _clickThrough?.AcquireBlock("widget-drag");
 
             // Dragging is an animation; don't let the idle throttle stutter it.
-            _renderLease ??= WindowBootstrap.RenderThrottle?.AcquireLease("widget-drag");
+            _renderLease ??= _renderThrottle?.AcquireLease("widget-drag");
         }
 
         public void OnDrag(PointerEventData eventData)

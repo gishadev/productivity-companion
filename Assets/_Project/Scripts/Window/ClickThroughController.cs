@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
@@ -16,8 +17,12 @@ namespace gishadev.companion.Window
     /// The cursor is read from Win32 rather than the Input System on purpose: a window carrying
     /// WS_EX_TRANSPARENT receives no mouse messages, so Unity's cursor position freezes the instant
     /// click-through engages and the controller could never turn it back off.
+    ///
+    /// The two loop phases are not interchangeable. <see cref="ITickable"/> maps to the old Update and
+    /// must run before the UI input module dispatches; <see cref="ILateTickable"/> maps to LateUpdate,
+    /// after the frame's raycasts are meaningful.
     /// </remarks>
-    public sealed class ClickThroughController : MonoBehaviour
+    public sealed class ClickThroughController : ITickable, ILateTickable, IDisposable
     {
         /// <summary>Minimize state barely changes, so it is polled instead of queried every frame.</summary>
         private const float MinimizedPollInterval = 0.25f;
@@ -25,23 +30,21 @@ namespace gishadev.companion.Window
         private readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
         private readonly HashSet<Block> _blocks = new HashSet<Block>();
 
-        private IPlatformWindow _window;
-        private WindowSettings _settings;
+        private readonly IPlatformWindow _window;
+        private readonly WindowSettings _settings;
 
         private PointerEventData _pointerData;
         private bool _minimized;
         private float _nextMinimizedPoll;
         private bool _applied;
 
-        /// <summary>
-        /// Called by <see cref="WindowBootstrap"/> before this component is enabled. Deliberately not
-        /// VContainer attribute injection — see <see cref="WindowBootstrap"/> for why.
-        /// </summary>
-        public void Initialize(IPlatformWindow window, WindowSettings settings)
+        public ClickThroughController(IPlatformWindow window, WindowSettings settings)
         {
             _window = window;
             _settings = settings;
         }
+
+        public bool IsBlocked => _blocks.Count > 0;
 
         /// <summary>
         /// Forces the window to keep accepting clicks regardless of the hit test, until disposed.
@@ -59,22 +62,40 @@ namespace gishadev.companion.Window
             return block;
         }
 
-        public bool IsBlocked => _blocks.Count > 0;
-
-        private void OnDisable()
+        public void Dispose()
         {
-            // Never leave the window stuck in click-through if this component goes away.
-            if (_applied)
-            {
-                _window?.SetClickThrough(false);
-                _applied = false;
-            }
+            // Never leave the window stuck in click-through if this controller goes away.
+            if (!_applied) return;
+            _window?.SetClickThrough(false);
+            _applied = false;
         }
 
-        private void Update()
+        void ITickable.Tick() => SyncPointerToOsCursor();
+
+        void ILateTickable.LateTick()
         {
-            // Must run before the UI input module dispatches, hence Update rather than LateUpdate.
-            SyncPointerToOsCursor();
+            if (_window == null || !_window.IsAvailable) return;
+
+            if (!_settings.ClickThrough || IsBlocked)
+            {
+                if (!_applied) return;
+                _window.SetClickThrough(false);
+                _applied = false;
+                return;
+            }
+
+            if (IsMinimized())
+            {
+                // No point hit-testing a window nobody can see.
+                if (!_applied) return;
+                _window.SetClickThrough(false);
+                _applied = false;
+                return;
+            }
+
+            var shouldPassThrough = !IsCursorOverInteractiveContent();
+            _window.SetClickThrough(shouldPassThrough);
+            _applied = shouldPassThrough;
         }
 
         /// <summary>
@@ -99,32 +120,6 @@ namespace gishadev.companion.Window
             if (((Vector2)mouse.position.ReadValue() - position).sqrMagnitude < 0.01f) return;
 
             InputState.Change(mouse.position, position);
-        }
-
-        private void LateUpdate()
-        {
-            if (_window == null || !_window.IsAvailable) return;
-
-            if (!_settings.ClickThrough || IsBlocked)
-            {
-                if (!_applied) return;
-                _window.SetClickThrough(false);
-                _applied = false;
-                return;
-            }
-
-            if (IsMinimized())
-            {
-                // No point hit-testing a window nobody can see.
-                if (!_applied) return;
-                _window.SetClickThrough(false);
-                _applied = false;
-                return;
-            }
-
-            var shouldPassThrough = !IsCursorOverInteractiveContent();
-            _window.SetClickThrough(shouldPassThrough);
-            _applied = shouldPassThrough;
         }
 
         private bool IsCursorOverInteractiveContent()

@@ -1,6 +1,6 @@
-using System.Collections;
 using gishadev.companion.Window.Native;
 using UnityEngine;
+using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
@@ -12,51 +12,53 @@ namespace gishadev.companion.Window
     /// Runs at a low fixed cadence and only re-asserts when the flag was <em>actually</em> lost.
     /// Blindly calling SetWindowPos every frame is pure waste and can fight the shell's own
     /// z-order handling.
+    ///
+    /// A plain <see cref="ITickable"/> rather than a MonoBehaviour coroutine: nothing here needs a
+    /// transform, and staying out of the scene means the dependency arrives by constructor instead of
+    /// an Initialize call. Unscaled time is used so a paused or slowed timescale cannot stall it.
     /// </remarks>
-    public sealed class TopmostWatchdog : MonoBehaviour
+    public sealed class TopmostWatchdog : ITickable
     {
         private const float CheckInterval = 0.5f;
 
-        private IPlatformWindow _window;
+        private readonly IPlatformWindow _window;
 
-        private Coroutine _routine;
+        private float _nextCheck;
 
-        /// <summary>Called by <see cref="WindowBootstrap"/> before this component is enabled.</summary>
-        public void Initialize(IPlatformWindow window) => _window = window;
+        public TopmostWatchdog(IPlatformWindow window)
+        {
+            _window = window;
+        }
 
-        public bool IsRunning => _routine != null;
+        public bool IsRunning { get; private set; }
 
         public void StartWatching()
         {
-            if (_routine != null || _window == null || !_window.IsAvailable) return;
-            _routine = StartCoroutine(WatchRoutine());
+            if (IsRunning || !_window.IsAvailable) return;
+
+            IsRunning = true;
+
+            // Due immediately, matching the coroutine this replaced: it checked before its first wait.
+            _nextCheck = Time.unscaledTime;
         }
 
-        public void StopWatching()
-        {
-            if (_routine == null) return;
-            StopCoroutine(_routine);
-            _routine = null;
-        }
+        public void StopWatching() => IsRunning = false;
 
         /// <summary>Immediate out-of-band check, e.g. right after the app regains focus.</summary>
         public void CheckNow()
         {
-            if (_window == null || !_window.IsAvailable) return;
+            if (!_window.IsAvailable) return;
             if (_window.IsTopmost && !_window.IsTaskbarForeground) return;
             _window.SetTopmost(true);
         }
 
-        private void OnDisable() => StopWatching();
-
-        private IEnumerator WatchRoutine()
+        void ITickable.Tick()
         {
-            var wait = new WaitForSecondsRealtime(CheckInterval);
-            while (true)
-            {
-                CheckNow();
-                yield return wait;
-            }
+            if (!IsRunning) return;
+            if (Time.unscaledTime < _nextCheck) return;
+
+            _nextCheck = Time.unscaledTime + CheckInterval;
+            CheckNow();
         }
     }
 }

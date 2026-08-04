@@ -1,5 +1,7 @@
+using System;
 using gishadev.companion.Window.Native;
 using UnityEngine;
+using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
@@ -7,7 +9,14 @@ namespace gishadev.companion.Window
     /// Applies <see cref="WindowSettings"/> to the actual window and to Unity's own player state.
     /// The single place that reacts to setting changes; everything else just flips settings.
     /// </summary>
-    public sealed class WindowController : MonoBehaviour
+    /// <remarks>
+    /// The two entry point phases are load-bearing and not interchangeable.
+    /// <see cref="IInitializable"/> runs synchronously while the container builds — that is
+    /// BeforeSceneLoad for this scope — which is where the window must be stripped of its chrome, before
+    /// a single frame is drawn. <see cref="IStartable"/> runs on the first player loop, once the scene
+    /// exists and <see cref="Camera.main"/> resolves, which is what transparency needs.
+    /// </remarks>
+    public sealed class WindowController : IInitializable, IStartable, IDisposable
     {
         /// <summary>
         /// Reserved key color for <see cref="TransparencyMode.ColorKey"/>: any pixel matching it
@@ -22,22 +31,26 @@ namespace gishadev.companion.Window
         /// </remarks>
         public static readonly Color32 DefaultColorKey = new Color32(255, 0, 255, 255);
 
-        private IPlatformWindow _window;
-        private WindowSettings _settings;
-        private RenderThrottle _renderThrottle;
-        private TopmostWatchdog _watchdog;
+        private readonly IPlatformWindow _window;
+        private readonly WindowSettings _settings;
+        private readonly RenderThrottle _renderThrottle;
+        private readonly TopmostWatchdog _watchdog;
 
         private Camera _targetCamera;
         private CameraClearFlags _originalClearFlags;
         private Color _originalBackground;
         private bool _cameraStateCaptured;
 
-        /// <summary>Called by <see cref="WindowBootstrap"/> before this component is enabled.</summary>
-        public void Initialize(IPlatformWindow window, WindowSettings settings, RenderThrottle renderThrottle)
+        public WindowController(
+            IPlatformWindow window,
+            WindowSettings settings,
+            RenderThrottle renderThrottle,
+            TopmostWatchdog watchdog)
         {
             _window = window;
             _settings = settings;
             _renderThrottle = renderThrottle;
+            _watchdog = watchdog;
         }
 
         /// <summary>Color punched out in <see cref="TransparencyMode.ColorKey"/> mode.</summary>
@@ -68,10 +81,8 @@ namespace gishadev.companion.Window
             }
         }
 
-        private void Awake()
+        void IInitializable.Initialize()
         {
-            _watchdog = GetComponent<TopmostWatchdog>();
-
             // The widget must keep ticking while unfocused; that is the entire point of the app.
             Application.runInBackground = true;
 
@@ -81,31 +92,19 @@ namespace gishadev.companion.Window
                 Screen.fullScreenMode = FullScreenMode.Windowed;
 
             _window.RemoveChrome();
-        }
 
-        private void OnEnable()
-        {
             _settings.Changed += OnSettingChanged;
+
+            // Replaces OnApplicationFocus now that this is not a MonoBehaviour.
+            Application.focusChanged += OnApplicationFocus;
         }
 
-        private void OnDisable()
+        void IStartable.Start() => ApplyAll();
+
+        public void Dispose()
         {
             _settings.Changed -= OnSettingChanged;
-        }
-
-        private void Start()
-        {
-            ApplyAll();
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            _renderThrottle.SetFocused(hasFocus);
-
-            // Regaining focus usually means the taskbar or another window just had it, which is
-            // exactly when Windows will have dropped our topmost flag.
-            if (hasFocus && _settings.AlwaysOnTop)
-                _watchdog?.CheckNow();
+            Application.focusChanged -= OnApplicationFocus;
         }
 
         public void ApplyAll()
@@ -115,6 +114,16 @@ namespace gishadev.companion.Window
             ApplyTransparency();
             ApplyAlwaysOnTop();
             ApplyHideFromTaskbar();
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            _renderThrottle.SetFocused(hasFocus);
+
+            // Regaining focus usually means the taskbar or another window just had it, which is
+            // exactly when Windows will have dropped our topmost flag.
+            if (hasFocus && _settings.AlwaysOnTop)
+                _watchdog.CheckNow();
         }
 
         private void OnSettingChanged(WindowSetting setting)
@@ -199,8 +208,6 @@ namespace gishadev.companion.Window
         {
             var enabled = _settings.AlwaysOnTop;
             _window.SetTopmost(enabled);
-
-            if (_watchdog == null) return;
 
             // The watchdog exists purely to defend the topmost flag; don't run it when off.
             if (enabled)

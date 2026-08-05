@@ -6,29 +6,16 @@ using VContainer.Unity;
 namespace gishadev.companion.Window
 {
     /// <summary>
-    /// Applies <see cref="WindowSettings"/> to the actual window and to Unity's own player state.
-    /// The single place that reacts to setting changes; everything else just flips settings.
+    /// The single place that reacts to <see cref="WindowSettings"/> changes; everything else just flips
+    /// settings. The two entry point phases are not interchangeable: IInitializable runs as the
+    /// container builds, where chrome must be stripped before a frame is drawn; IStartable runs on the
+    /// first player loop, once <see cref="Camera.main"/> resolves, which is what transparency needs.
     /// </summary>
-    /// <remarks>
-    /// The two entry point phases are load-bearing and not interchangeable.
-    /// <see cref="IInitializable"/> runs synchronously while the container builds — that is
-    /// BeforeSceneLoad for this scope — which is where the window must be stripped of its chrome, before
-    /// a single frame is drawn. <see cref="IStartable"/> runs on the first player loop, once the scene
-    /// exists and <see cref="Camera.main"/> resolves, which is what transparency needs.
-    /// </remarks>
     public sealed class WindowController : IInitializable, IStartable, IDisposable
     {
-        /// <summary>
-        /// Reserved key color for <see cref="TransparencyMode.ColorKey"/>: any pixel matching it
-        /// exactly is punched out.
-        /// </summary>
-        /// <remarks>
-        /// Only 0 and 255 are used per channel, and that is not cosmetic. The project renders in
-        /// Linear color space, so the clear color makes a round trip through sRGB→linear→sRGB before
-        /// it reaches the window surface. Intermediate values (254 was the first attempt here) come
-        /// back off by a unit and never match the key, which LWA_COLORKEY compares exactly. 0 and 255
-        /// are the only values guaranteed to survive that round trip.
-        /// </remarks>
+        // Only 0 and 255 per channel: the project renders in Linear space, so the clear color round-trips
+        // sRGB→linear→sRGB before reaching the window surface. Intermediate values come back off by a
+        // unit and never match, and LWA_COLORKEY compares exactly.
         public static readonly Color32 DefaultColorKey = new Color32(255, 0, 255, 255);
 
         private readonly IPlatformWindow _window;
@@ -53,12 +40,11 @@ namespace gishadev.companion.Window
             _watchdog = watchdog;
         }
 
-        /// <summary>Color punched out in <see cref="TransparencyMode.ColorKey"/> mode.</summary>
         public Color32 ColorKey { get; set; } = DefaultColorKey;
 
         /// <summary>
-        /// Camera whose background becomes the transparent region. Defaults to <see cref="Camera.main"/>,
-        /// resolved lazily so scene loads that swap cameras still work.
+        /// Camera whose background becomes the transparent region. Resolved lazily so scene loads that
+        /// swap cameras still work.
         /// </summary>
         public Camera TargetCamera
         {
@@ -86,16 +72,14 @@ namespace gishadev.companion.Window
             // The widget must keep ticking while unfocused; that is the entire point of the app.
             Application.runInBackground = true;
 
-            // Unity persists the last screen mode in the registry, so a previously fullscreen run
-            // would survive the project default. A layered window has to be windowed.
+            // Unity persists the last screen mode in the registry, so a previously fullscreen run would
+            // survive the project default. A layered window has to be windowed.
             if (Screen.fullScreenMode != FullScreenMode.Windowed)
                 Screen.fullScreenMode = FullScreenMode.Windowed;
 
             _window.RemoveChrome();
 
             _settings.Changed += OnSettingChanged;
-
-            // Replaces OnApplicationFocus now that this is not a MonoBehaviour.
             Application.focusChanged += OnApplicationFocus;
         }
 
@@ -209,7 +193,6 @@ namespace gishadev.companion.Window
             var enabled = _settings.AlwaysOnTop;
             _window.SetTopmost(enabled);
 
-            // The watchdog exists purely to defend the topmost flag; don't run it when off.
             if (enabled)
                 _watchdog.StartWatching();
             else

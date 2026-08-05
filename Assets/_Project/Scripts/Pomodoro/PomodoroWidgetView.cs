@@ -1,26 +1,18 @@
 using System;
+using gishadev.companion.Events;
+using gishadev.tools.Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace gishadev.companion.Pomodoro
 {
     /// <summary>
-    /// The scene-authored face of the Pomodoro widget: it renders what it is told to render and
-    /// reports clicks. It holds no timer state and makes no decisions — <see cref="PomodoroPresenter"/>
-    /// owns all of that.
+    /// Renders what it is told to and reports clicks; <see cref="PomodoroPresenter"/> owns all state.
+    /// Field injection because Unity constructs it, so there is no constructor for the container to
+    /// call. Clicks are wired in code, not UnityEvent lists, so a scene edit cannot silently unhook them.
     /// </summary>
-    /// <remarks>
-    /// Deliberately free of [Inject] members. The project's root scope
-    /// (<c>gishadev.tools.AutoInjectLifetimeScope</c>) sweeps the scene on every load and injects every
-    /// MonoBehaviour carrying an [Inject] attribute <em>from the root container</em>, logging an error
-    /// for each one it cannot satisfy. Since the Pomodoro services live in a child scope, an attribute
-    /// here would log on every scene load. Instead this component is pulled into the container with
-    /// <c>RegisterComponentInHierarchy</c> and handed to the presenter as a constructor dependency.
-    ///
-    /// Clicks are wired in code rather than through the buttons' UnityEvent lists so the whole flow is
-    /// greppable from source and cannot be silently unhooked by a scene edit.
-    /// </remarks>
     public sealed class PomodoroWidgetView : MonoBehaviour
     {
         [Tooltip("Countdown label. Written as MM:SS.")]
@@ -38,13 +30,9 @@ namespace gishadev.companion.Pomodoro
         [Tooltip("Play button icon while the timer runs. Optional.")]
         [SerializeField] private Sprite pauseIcon;
 
+        [Inject] private IEventBus _eventBus;
+        
         private Image _playButtonIcon;
-
-        /// <summary>Raised on every press of the play button, whatever the timer is currently doing.</summary>
-        public event Action PlayPauseClicked;
-
-        /// <summary>Raised on every press of the settings button.</summary>
-        public event Action SettingsClicked;
 
         private void Awake()
         {
@@ -84,8 +72,7 @@ namespace gishadev.companion.Pomodoro
             _playButtonIcon.sprite = running ? pauseIcon : playIcon;
         }
 
-        private void OnPlayButtonClicked() => PlayPauseClicked?.Invoke();
-
-        private void OnSettingsButtonClicked() => SettingsClicked?.Invoke();
+        private void OnPlayButtonClicked() => _eventBus.Fire(new PlayPauseClickedEvent());
+        private void OnSettingsButtonClicked() => _eventBus.Fire(new SettingsClickedEvent());
     }
 }

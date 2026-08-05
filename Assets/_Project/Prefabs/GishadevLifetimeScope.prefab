@@ -48,7 +48,8 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  autoInjectScene: 1
+  autoInjectScene: 0
   includeInactive: 1
+  verboseLogging: 0
   audioMasterSO: {fileID: 11400000, guid: 3b661a91ddef14844bcaf55d880bc8f9, type: 2}
   poolDataSO: {fileID: 11400000, guid: 64bdf57fd936fb74a8fb99cefc182efd, type: 2}

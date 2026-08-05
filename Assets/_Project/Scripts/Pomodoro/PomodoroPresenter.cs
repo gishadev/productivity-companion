@@ -1,44 +1,38 @@
 using System;
+using gishadev.companion.Events;
+using gishadev.tools.Events;
 using VContainer.Unity;
 
 namespace gishadev.companion.Pomodoro
 {
-    /// <summary>
-    /// Binds <see cref="PomodoroTimer"/> to <see cref="PomodoroWidgetView"/>: turns button presses into
-    /// timer commands, and timer state into a countdown label. The only type that knows about both
-    /// sides, so the model stays UI-free and the view stays logic-free.
-    /// </summary>
-    /// <remarks>
-    /// A plain C# entry point rather than a MonoBehaviour — nothing here needs a transform, and keeping
-    /// it out of the scene means the wiring lives entirely in <c>PomodoroInstaller</c> where it can be
-    /// read in one place.
-    /// </remarks>
     public sealed class PomodoroPresenter : IStartable, ITickable, IDisposable
     {
+        private readonly IEventBus _eventBus;
         private readonly PomodoroTimer _timer;
         private readonly PomodoroSettings _settings;
-        private readonly PomodoroWidgetView _view;
+        private readonly PomodoroWidgetView _pomodoroWidgetView;
 
-        /// <summary>Whole seconds currently on the label; -1 forces the next refresh through.</summary>
+        // -1 forces the next refresh through.
         private int _displayedSeconds = -1;
 
-        public PomodoroPresenter(PomodoroTimer timer, PomodoroSettings settings, PomodoroWidgetView view)
+        public PomodoroPresenter(
+            IEventBus eventBus,
+            PomodoroTimer timer,
+            PomodoroSettings settings,
+            PomodoroWidgetView view)
         {
+            _eventBus = eventBus;
             _timer = timer;
             _settings = settings;
-            _view = view;
+            _pomodoroWidgetView = view;
         }
 
-        /// <remarks>
-        /// Subscribing here rather than lazily matters: <see cref="PomodoroTimer"/> restores its state in
-        /// its constructor and defers a phase that expired while the app was closed to its first Tick.
-        /// VContainer dispatches IStartable during Initialization and ITickable during Update, so this
-        /// runs first and that event is not raised into the void.
-        /// </remarks>
+        // Subscribing in Start, not lazily: the timer defers a phase that expired while the app was
+        // closed to its first Tick, and IStartable runs before ITickable — so the event is not lost.
         void IStartable.Start()
         {
-            _view.PlayPauseClicked += OnPlayPauseClicked;
-            _view.SettingsClicked += OnSettingsClicked;
+            _eventBus.Subscribe<PlayPauseClickedEvent>(OnPlayPauseClicked);
+            _eventBus.Subscribe<SettingsClickedEvent>(OnSettingsClicked);
 
             _timer.StateChanged += Refresh;
             _timer.PhaseStarted += OnPhaseChanged;
@@ -52,8 +46,8 @@ namespace gishadev.companion.Pomodoro
 
         public void Dispose()
         {
-            _view.PlayPauseClicked -= OnPlayPauseClicked;
-            _view.SettingsClicked -= OnSettingsClicked;
+            _eventBus.Unsubscribe<PlayPauseClickedEvent>(OnPlayPauseClicked);
+            _eventBus.Unsubscribe<SettingsClickedEvent>(OnSettingsClicked);
 
             _timer.StateChanged -= Refresh;
             _timer.PhaseStarted -= OnPhaseChanged;
@@ -64,7 +58,7 @@ namespace gishadev.companion.Pomodoro
 
         void ITickable.Tick() => RefreshTime();
 
-        private void OnPlayPauseClicked()
+        private void OnPlayPauseClicked(PlayPauseClickedEvent playPauseClickedEvent)
         {
             if (_timer.IsRunning)
                 _timer.Pause();
@@ -72,48 +66,37 @@ namespace gishadev.companion.Pomodoro
                 _timer.Start();
         }
 
-        private void OnSettingsClicked()
+        private void OnSettingsClicked(SettingsClickedEvent settingsClickedEvent)
         {
-            // Seam for the settings panel. PomodoroSettings is already bindable; the UI for it is not
-            // built yet, so the press is intentionally inert rather than wired to a placeholder.
+            // Seam for the settings panel; inert until that UI exists.
         }
 
-        // Start() also raises PhaseStarted when resuming from a pause, so every handler here has to be
-        // an idempotent refresh rather than a transition.
+        // Start() also raises PhaseStarted when resuming from a pause, so handlers must be idempotent
+        // refreshes rather than transitions.
         private void OnPhaseChanged(PomodoroPhase phase) => Refresh();
 
-        private void OnPhaseCompleted(PomodoroPhase phase)
-        {
-            // The natural place for a chime or a notification later, via gishadev.tools' SFXEmitter.
-            Refresh();
-        }
+        private void OnPhaseCompleted(PomodoroPhase phase) => Refresh();
 
         private void Refresh()
         {
-            _view.SetRunning(_timer.IsRunning);
+            _pomodoroWidgetView.SetRunning(_timer.IsRunning);
 
             _displayedSeconds = -1;
             RefreshTime();
         }
 
-        /// <summary>
-        /// Pushes the countdown to the label, but only when the whole-second value has actually moved —
-        /// this runs every frame.
-        /// </summary>
+        // Runs every frame; only writes when the whole-second value moved.
         private void RefreshTime()
         {
             var seconds = (int)Math.Ceiling(RemainingToShow().TotalSeconds);
             if (seconds == _displayedSeconds) return;
 
             _displayedSeconds = seconds;
-            _view.SetTime(Format(seconds));
+            _pomodoroWidgetView.SetTime(Format(seconds));
         }
 
-        /// <remarks>
-        /// A stopped phase with nothing banked reports zero remaining, which would leave a fresh install
-        /// (or a widget just after Reset) reading 00:00. Fall back to the phase's configured length so an
-        /// idle widget advertises what pressing play will give you.
-        /// </remarks>
+        // A stopped phase with nothing banked reports zero, which would leave a fresh install reading
+        // 00:00. Fall back to the configured length so an idle widget shows what play will give you.
         private TimeSpan RemainingToShow()
         {
             var remaining = _timer.Remaining;
@@ -123,10 +106,8 @@ namespace gishadev.companion.Pomodoro
             return remaining;
         }
 
-        /// <summary>
-        /// Formats whole seconds as MM:SS. Minutes are not wrapped at 60 — a 90 minute phase reads
-        /// 90:00, which keeps the widget narrow and avoids an hours field that is empty almost always.
-        /// </summary>
+        // MM:SS, minutes deliberately not wrapped at 60: a 90 minute phase reads 90:00, which keeps the
+        // widget narrow and avoids an hours field that is almost always empty.
         private static string Format(int totalSeconds)
         {
             if (totalSeconds < 0) totalSeconds = 0;

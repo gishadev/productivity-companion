@@ -3,10 +3,7 @@ using UnityEngine;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Persisted, independently toggleable window behaviors. Every default is off/neutral —
-    /// nothing here turns itself on without the user asking for it.
-    /// </summary>
+    /// <summary>Persisted, independently toggleable window behaviors.</summary>
     public sealed class WindowSettings
     {
         private const string KeyPrefix = "window.";
@@ -18,21 +15,12 @@ namespace gishadev.companion.Window
         private const string TargetFrameRateKey = KeyPrefix + "targetFrameRate";
         private const string PreventDisplaySleepKey = KeyPrefix + "preventDisplaySleep";
 
-        /// <summary>The frame rate caps offered to the user.</summary>
         public static readonly int[] AllowedFrameRates = { 15, 30, 60 };
 
-        /// <summary>
-        /// Per-pixel alpha is the default because it is the only mode that renders soft edges and
-        /// partial transparency correctly; ColorKey stays available as the fallback for hardware
-        /// where alpha blending misbehaves.
-        /// </summary>
         public const TransparencyMode DefaultTransparencyMode = TransparencyMode.PerPixelAlpha;
 
-        /// <summary>
-        /// Tied to the transparency default on purpose. The window covers the whole screen, so a
-        /// transparent window that still swallows clicks would leave the user unable to interact with
-        /// anything on their desktop. Transparent-by-default only makes sense with click-through on.
-        /// </summary>
+        // Tied to the transparency default: the window covers the whole screen, so transparent-without-
+        // click-through would leave the user unable to interact with their desktop at all.
         public const bool DefaultClickThrough = true;
 
         private TransparencyMode _transparencyMode;
@@ -104,7 +92,7 @@ namespace gishadev.companion.Window
             }
         }
 
-        /// <summary>Clamped to <see cref="AllowedFrameRates"/>; out-of-range values fall back to the nearest option.</summary>
+        /// <summary>Clamped to <see cref="AllowedFrameRates"/>; out-of-range values snap to the nearest.</summary>
         public int TargetFrameRate
         {
             get => _targetFrameRate;

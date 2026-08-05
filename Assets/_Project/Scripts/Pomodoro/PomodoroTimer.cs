@@ -5,18 +5,11 @@ using VContainer.Unity;
 namespace gishadev.companion.Pomodoro
 {
     /// <summary>
-    /// The Pomodoro state machine. Knows nothing about UI, audio, or the window — consumers subscribe
-    /// to the events.
+    /// The Pomodoro state machine; knows nothing about UI, audio, or the window. Time is tracked
+    /// against a UTC end timestamp rather than accumulated frame deltas: the app throttles its frame
+    /// rate and stops rendering while unfocused, so deltas would drift — and a timestamp lets a session
+    /// survive the machine sleeping or the app closing.
     /// </summary>
-    /// <remarks>
-    /// Time is tracked against the wall clock (a UTC end timestamp) rather than accumulated frame
-    /// deltas. The app throttles its frame rate and stops rendering while unfocused, so a
-    /// delta-accumulating timer would drift; a timestamp also lets a session survive the machine
-    /// sleeping or the app closing.
-    ///
-    /// Registered as a VContainer entry point, so it needs no MonoBehaviour: Tick() only compares
-    /// UtcNow against the end time.
-    /// </remarks>
     public sealed class PomodoroTimer : ITickable
     {
         private const string KeyPrefix = "pomodoro.state.";
@@ -55,7 +48,7 @@ namespace gishadev.companion.Pomodoro
             }
         }
 
-        /// <summary>Raised when a phase begins, whether started by the user or by auto-advance.</summary>
+        /// <summary>Raised whether started by the user or by auto-advance.</summary>
         public event Action<PomodoroPhase> PhaseStarted;
 
         /// <summary>Raised when a phase reaches its end, or is ended early via <see cref="Skip"/>.</summary>
@@ -111,8 +104,8 @@ namespace gishadev.companion.Pomodoro
         {
             if (_restoredPhaseExpired)
             {
-                // A phase that ran out while the app was closed. Reported once, and deliberately not
-                // auto-advanced — chaining here would fire off however many phases elapsed overnight.
+                // Reported once and deliberately not auto-advanced: chaining would fire off however
+                // many phases elapsed overnight.
                 _restoredPhaseExpired = false;
                 CompletePhase(autoAdvance: false);
                 return;
@@ -185,9 +178,8 @@ namespace gishadev.companion.Pomodoro
                 return;
             }
 
-            // The phase ran out while we were closed. Deferred to the first tick rather than handled
-            // here: this runs in the constructor, so nothing has subscribed yet and the event would
-            // be raised into the void.
+            // Ran out while closed. Deferred to the first tick: this is the constructor, so nothing
+            // has subscribed yet and the event would be raised into the void.
             IsRunning = false;
             _restoredPhaseExpired = true;
         }

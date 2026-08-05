@@ -3,8 +3,7 @@ using UnityEngine;
 namespace gishadev.companion.Window.Native
 {
     /// <summary>
-    /// Used in the editor and on every non-Windows target. Every call is a no-op, so callers
-    /// never need their own platform guards.
+    /// Editor and non-Windows targets. Every call is a no-op, so callers need no platform guards.
     /// </summary>
     public sealed class NullPlatformWindow : IPlatformWindow
     {

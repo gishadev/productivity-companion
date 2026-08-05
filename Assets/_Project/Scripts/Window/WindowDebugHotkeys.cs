@@ -3,18 +3,16 @@ using System;
 using gishadev.companion.Window.Native;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VContainer;
 
 namespace gishadev.companion.Window
 {
     /// <summary>
-    /// Development-only toggles and a state readout, so the window behaviors can be exercised in a
-    /// standalone build before any real settings UI exists. Stripped from release builds.
+    /// Development-only toggles and state readout, for exercising window behaviors in a standalone
+    /// build before a real settings UI exists. Stripped from release builds. Keyboard input requires
+    /// focus, and while the overlay is open it forces the window to stay clickable — otherwise
+    /// enabling click-through would make the overlay unreachable with no way to switch it back off.
     /// </summary>
-    /// <remarks>
-    /// Keyboard input requires the widget to have focus. While the overlay is open it forces the
-    /// window to stay clickable, otherwise enabling click-through would make the overlay
-    /// unreachable and there would be no way to switch it back off.
-    /// </remarks>
     public sealed class WindowDebugHotkeys : MonoBehaviour
     {
         private WindowSettings _settings;
@@ -31,7 +29,7 @@ namespace gishadev.companion.Window
 
         private Texture2D _opaqueBackground;
 
-        /// <summary>Solid, fully opaque fill so the panel is never color-keyed away or tinted.</summary>
+        // Fully opaque so the panel is never color-keyed away or tinted.
         private Texture2D OpaqueBackground
         {
             get
@@ -45,11 +43,8 @@ namespace gishadev.companion.Window
             }
         }
 
-        /// <summary>
-        /// Called by <see cref="WindowLifetimeScope"/> before this component is enabled. Deliberately
-        /// not VContainer attribute injection — see <see cref="WindowLifetimeScope"/> for why.
-        /// </summary>
-        public void Initialize(
+        [Inject]
+        public void Construct(
             WindowSettings settings,
             RenderThrottle renderThrottle,
             IPlatformWindow window,

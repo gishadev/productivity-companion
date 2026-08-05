@@ -44,33 +44,42 @@ Window/
   TopmostWatchdog.cs
   RenderThrottle.cs
   WidgetDragHandle.cs   scene component: drag to reposition the widget
-  WindowLifetimeScope.cs  registrations + [RuntimeInitializeOnLoadMethod] self-bootstrap
-  WindowSceneBinder.cs  pushes services into scene-authored components
   WindowDebugHotkeys.cs dev-only overlay (stripped from release builds)
 ```
 
+Registered by `CompanionLifetimeScope` (in `Game.unity`), which installs this subsystem **first** —
+`WindowController` strips the window chrome and forces windowed mode in its `IInitializable` phase,
+and entry points initialize in registration order.
+
 Three decisions that look odd without the context:
 
-**The scope creates itself at `BeforeSceneLoad` instead of living in a scene.** The window has to be
-reshaped before anything is drawn, and it is an app-lifetime service — registering it in a scene scope
-would dispose `WindowSettings` and `RenderThrottle` on scene unload while the native window kept its
-old state. Self-bootstrapping also means no scene can be missing it.
+**No scope of its own.** The window system used to self-bootstrap at `BeforeSceneLoad` into a
+`DontDestroyOnLoad` scope, so `WindowSettings` and `RenderThrottle` would not be disposed on scene
+unload while the native window kept its old state. The app is single-scene: the scene's lifetime *is*
+the app's lifetime, so that machinery bought nothing. Revisit if a second scene ever appears.
 
 **`WindowController`, `ClickThroughController` and `TopmostWatchdog` are plain C# entry points, not
-MonoBehaviours.** This is what lets them take constructor dependencies. `[Inject]` is not available:
-the project's root scope (`gishadev.tools.AutoInjectLifetimeScope`) re-injects every `[Inject]`-bearing
-MonoBehaviour found by `FindObjectsByType` on each scene load — a sweep that includes
-`DontDestroyOnLoad` objects — and because the window services live in a child scope the root container
-knows nothing about, that pass would log an injection failure for every one of them, every scene load.
+MonoBehaviours.** This is what lets them take constructor dependencies.
 
-`WindowController` implements both `IInitializable` (runs synchronously as the container builds, i.e.
-`BeforeSceneLoad`, where chrome removal belongs) and `IStartable` (first player loop, once
-`Camera.main` exists, which is what transparency needs). The two are not interchangeable.
+`WindowController` implements both `IInitializable` (runs synchronously as the container builds, where
+chrome removal belongs) and `IStartable` (first player loop, once `Camera.main` exists, which is what
+transparency needs). The two are not interchangeable.
 
 The exceptions are the two components that genuinely cannot stop being MonoBehaviours:
 `WindowDebugHotkeys` draws through `OnGUI`, and `WidgetDragHandle` is scene-authored and implements the
-uGUI drag interfaces. Both get explicit `Initialize(...)` calls instead — the debug overlay from
-`WindowLifetimeScope`, the drag handles from `WindowSceneBinder`.
+uGUI drag interfaces. Both take their dependencies through `[Inject]`.
+
+**Scene components are injected by `CompanionLifetimeScope`, never by the root scope.** The root
+(`GishadevLifetimeScope.prefab`) has `autoInjectScene` off, and must stay off: `AutoInjectLifetimeScope`
+injects every `[Inject]`-bearing MonoBehaviour it finds *from its own container*, and a root container
+cannot resolve registrations made in a child. That pass can only ever fail for anything registered here.
+
+This scope injects `Main GUI` through VContainer's own `autoInjectGameObjects` list instead. The timing
+is the point: `VContainerSettings` instantiates the root **after** the scene finishes loading, so when
+this scope's `Awake` runs its declared parent does not exist yet, VContainer defers the build, and
+`Container` stays null until the root appears. `autoInjectGameObjects` is consumed from `SetContainer`,
+so it fires whenever the build actually happens. Anything hung off `Awake` instead — including
+`AutoInjectLifetimeScope`'s own sweep — dereferences a null `Container`.
 
 **`RenderThrottle` and `ClickThroughController` hand out refcounted `IDisposable` leases**, not bools,
 so independent systems (a drag, an overlay, an animation) can each hold "keep rendering" or "keep

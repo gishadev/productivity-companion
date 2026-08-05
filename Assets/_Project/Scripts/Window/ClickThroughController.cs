@@ -10,21 +10,12 @@ using VContainer.Unity;
 namespace gishadev.companion.Window
 {
     /// <summary>
-    /// Makes the widget click-through over empty space and solid over interactive UI, re-evaluated
-    /// every frame from the cursor position.
+    /// Click-through over empty space, solid over interactive UI, re-evaluated every frame from the
+    /// cursor position. Tick must run before the UI input module dispatches; LateTick after the frame's
+    /// raycasts are meaningful — the two phases are not interchangeable.
     /// </summary>
-    /// <remarks>
-    /// The cursor is read from Win32 rather than the Input System on purpose: a window carrying
-    /// WS_EX_TRANSPARENT receives no mouse messages, so Unity's cursor position freezes the instant
-    /// click-through engages and the controller could never turn it back off.
-    ///
-    /// The two loop phases are not interchangeable. <see cref="ITickable"/> maps to the old Update and
-    /// must run before the UI input module dispatches; <see cref="ILateTickable"/> maps to LateUpdate,
-    /// after the frame's raycasts are meaningful.
-    /// </remarks>
     public sealed class ClickThroughController : ITickable, ILateTickable, IDisposable
     {
-        /// <summary>Minimize state barely changes, so it is polled instead of queried every frame.</summary>
         private const float MinimizedPollInterval = 0.25f;
 
         private readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
@@ -48,13 +39,9 @@ namespace gishadev.companion.Window
 
         /// <summary>
         /// Forces the window to keep accepting clicks regardless of the hit test, until disposed.
-        /// Needed by anything that owns the cursor outside the uGUI raycast graph — an IMGUI overlay,
-        /// or a drag that must survive the cursor crossing empty space.
+        /// Refcounted so independent holders don't clear each other. Needed by anything owning the
+        /// cursor outside the uGUI raycast graph. <paramref name="reason"/> is for debugging only.
         /// </summary>
-        /// <remarks>
-        /// Refcounted rather than a plain flag so independent systems can hold it at once without
-        /// clearing each other's block. <paramref name="reason"/> is for debugging only.
-        /// </remarks>
         public IDisposable AcquireBlock(string reason = null)
         {
             var block = new Block(this, reason);
@@ -86,7 +73,6 @@ namespace gishadev.companion.Window
 
             if (IsMinimized())
             {
-                // No point hit-testing a window nobody can see.
                 if (!_applied) return;
                 _window.SetClickThrough(false);
                 _applied = false;
@@ -99,16 +85,12 @@ namespace gishadev.companion.Window
         }
 
         /// <summary>
-        /// Overwrites the Input System's mouse position with the real OS cursor position.
+        /// Overwrites the Input System's mouse position with the real OS cursor position. When mouse
+        /// messages are routed away from this window, Unity's pointer freezes at its last value and
+        /// every uGUI interaction dispatches at that stale point. Two causes: WS_EX_TRANSPARENT while
+        /// click-through is engaged, and the OS hit-transparency applied to keyed pixels in ColorKey
+        /// mode regardless of that flag.
         /// </summary>
-        /// <remarks>
-        /// Whenever mouse messages are being routed away from this window, Unity's own pointer
-        /// position silently freezes at wherever it last was, and every uGUI interaction is then
-        /// dispatched at that stale point — clicks land nowhere near the cursor. Two separate
-        /// mechanisms cause it: WS_EX_TRANSPARENT while click-through is engaged, and, in ColorKey
-        /// mode, the OS hit-transparency Windows applies to keyed pixels regardless of that flag.
-        /// Feeding the position from Win32 keeps the pointer truthful under both.
-        /// </remarks>
         private void SyncPointerToOsCursor()
         {
             if (_window == null || !_window.IsAvailable) return;

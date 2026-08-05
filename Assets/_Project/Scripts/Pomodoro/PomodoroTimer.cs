@@ -74,6 +74,23 @@ namespace gishadev.companion.Pomodoro
             StateChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Switches to <paramref name="phase"/> and starts it. Picking the phase already loaded resumes
+        /// it with whatever was banked; picking a different one abandons the current phase and starts
+        /// the new one at full length — it is a change of mind, not a completion, so no cycle is counted.
+        /// </summary>
+        public void StartPhase(PomodoroPhase phase)
+        {
+            if (phase != Phase)
+            {
+                Phase = phase;
+                IsRunning = false;
+                _remaining = TimeSpan.Zero;
+            }
+
+            Start();
+        }
+
         public void Pause()
         {
             if (!IsRunning) return;

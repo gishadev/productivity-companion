@@ -31,8 +31,9 @@ namespace gishadev.companion.Pomodoro
         // closed to its first Tick, and IStartable runs before ITickable — so the event is not lost.
         void IStartable.Start()
         {
-            _eventBus.Subscribe<PlayPauseClickedEvent>(OnPlayPauseClicked);
-            _eventBus.Subscribe<SettingsClickedEvent>(OnSettingsClicked);
+            _eventBus.Subscribe<PlayClickedEvent>(OnPlayClicked);
+            _eventBus.Subscribe<PauseClickedEvent>(OnPauseClicked);
+            _eventBus.Subscribe<ResetClickedEvent>(OnResetClicked);
 
             _timer.StateChanged += Refresh;
             _timer.PhaseStarted += OnPhaseChanged;
@@ -46,8 +47,9 @@ namespace gishadev.companion.Pomodoro
 
         public void Dispose()
         {
-            _eventBus.Unsubscribe<PlayPauseClickedEvent>(OnPlayPauseClicked);
-            _eventBus.Unsubscribe<SettingsClickedEvent>(OnSettingsClicked);
+            _eventBus.Unsubscribe<PlayClickedEvent>(OnPlayClicked);
+            _eventBus.Unsubscribe<PauseClickedEvent>(OnPauseClicked);
+            _eventBus.Unsubscribe<ResetClickedEvent>(OnResetClicked);
 
             _timer.StateChanged -= Refresh;
             _timer.PhaseStarted -= OnPhaseChanged;
@@ -58,18 +60,11 @@ namespace gishadev.companion.Pomodoro
 
         void ITickable.Tick() => RefreshTime();
 
-        private void OnPlayPauseClicked(PlayPauseClickedEvent playPauseClickedEvent)
-        {
-            if (_timer.IsRunning)
-                _timer.Pause();
-            else
-                _timer.Start();
-        }
+        private void OnPlayClicked(PlayClickedEvent playClickedEvent) => _timer.StartPhase(playClickedEvent.Phase);
 
-        private void OnSettingsClicked(SettingsClickedEvent settingsClickedEvent)
-        {
-            // Seam for the settings panel; inert until that UI exists.
-        }
+        private void OnPauseClicked(PauseClickedEvent pauseClickedEvent) => _timer.Pause();
+
+        private void OnResetClicked(ResetClickedEvent resetClickedEvent) => _timer.Reset();
 
         // Start() also raises PhaseStarted when resuming from a pause, so handlers must be idempotent
         // refreshes rather than transitions.
@@ -79,7 +74,8 @@ namespace gishadev.companion.Pomodoro
 
         private void Refresh()
         {
-            _pomodoroWidgetView.SetRunning(_timer.IsRunning);
+            _pomodoroWidgetView.SetState(_timer.Phase, _timer.IsRunning,
+                !_timer.IsRunning && _timer.Remaining > TimeSpan.Zero);
 
             _displayedSeconds = -1;
             RefreshTime();

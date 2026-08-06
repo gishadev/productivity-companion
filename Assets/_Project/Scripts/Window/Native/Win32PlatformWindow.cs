@@ -1,6 +1,7 @@
 #if UNITY_STANDALONE_WIN
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 
@@ -64,6 +65,25 @@ namespace gishadev.companion.Window.Native
             Win32Interop.SetWindowPos(_hwnd, IntPtr.Zero, 0, 0, 0, 0,
                 Win32Interop.SWP_NOMOVE | Win32Interop.SWP_NOSIZE | Win32Interop.SWP_NOACTIVATE |
                 Win32Interop.SWP_FRAMECHANGED);
+        }
+
+        public void FitToMonitor()
+        {
+            if (!IsAvailable) return;
+
+            var monitor = Win32Interop.MonitorFromWindow(_hwnd, Win32Interop.MONITOR_DEFAULTTONEAREST);
+            if (monitor == IntPtr.Zero) return;
+
+            var info = new Win32Interop.MONITORINFO { cbSize = Marshal.SizeOf<Win32Interop.MONITORINFO>() };
+            if (!Win32Interop.GetMonitorInfo(monitor, ref info)) return;
+
+            // rcMonitor, not rcWork: the widget is meant to span the whole display, and it is
+            // click-through everywhere it draws nothing, so overlapping the taskbar costs nothing.
+            var bounds = info.rcMonitor;
+            Win32Interop.SetWindowPos(_hwnd, IntPtr.Zero,
+                bounds.Left, bounds.Top,
+                bounds.Right - bounds.Left, bounds.Bottom - bounds.Top,
+                Win32Interop.SWP_NOZORDER | Win32Interop.SWP_NOACTIVATE);
         }
 
         public void ApplyPerPixelAlpha()

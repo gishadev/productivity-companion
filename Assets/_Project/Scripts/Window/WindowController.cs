@@ -79,6 +79,10 @@ namespace gishadev.companion.Window
 
             _window.RemoveChrome();
 
+            // Windowed mode inherits whatever resolution fullscreen was using, and Windows pads that
+            // out with a frame — so without this the window starts larger than the display.
+            _window.FitToMonitor();
+
             _settings.Changed += OnSettingChanged;
             Application.focusChanged += OnApplicationFocus;
         }
@@ -93,6 +97,10 @@ namespace gishadev.companion.Window
 
         public void ApplyAll()
         {
+            // Re-asserted here as well as in Initialize: a fullscreen mode change applies at the end of
+            // the frame it was requested in, so Unity may have resized the window since.
+            _window.FitToMonitor();
+
             ApplyFrameRate();
             ApplyDisplaySleep();
             ApplyTransparency();
@@ -103,6 +111,9 @@ namespace gishadev.companion.Window
         private void OnApplicationFocus(bool hasFocus)
         {
             _renderThrottle.SetFocused(hasFocus);
+
+            // Cheapest hook that catches a resolution or DPI change, or Windows having moved us.
+            if (hasFocus) _window.FitToMonitor();
 
             // Regaining focus usually means the taskbar or another window just had it, which is
             // exactly when Windows will have dropped our topmost flag.

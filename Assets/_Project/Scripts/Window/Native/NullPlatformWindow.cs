@@ -13,6 +13,7 @@ namespace gishadev.companion.Window.Native
         public bool IsTaskbarForeground => false;
 
         public void RemoveChrome() { }
+        public void FitToMonitor() { }
         public void ApplyPerPixelAlpha() { }
         public void ApplyColorKey(Color32 key) { }
         public void ClearLayered() { }

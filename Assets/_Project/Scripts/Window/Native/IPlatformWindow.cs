@@ -20,6 +20,13 @@ namespace gishadev.companion.Window.Native
         /// <summary>Strips the title bar and resize border.</summary>
         void RemoveChrome();
 
+        /// <summary>
+        /// Resizes and repositions the window to exactly cover the monitor it sits on. Call after
+        /// <see cref="RemoveChrome"/>: sizing is meaningless while a non-client frame is still padding
+        /// the client area out past the screen.
+        /// </summary>
+        void FitToMonitor();
+
         /// <summary>Layered window with per-pixel alpha, backed by a DWM frame extension.</summary>
         void ApplyPerPixelAlpha();
 

@@ -24,7 +24,7 @@ namespace gishadev.companion.UI
         [SerializeField] [Range(0f, 0.25f)]
         private float switchHysteresis = 0.03f;
 
-        private SimulationSettings _settings;
+        private SimulationWindowSettings _windowSettings;
 
         private RectTransform _simulationRect;
         private RectTransform _dockParent;
@@ -36,12 +36,12 @@ namespace gishadev.companion.UI
         // Method injection, not a field: the scope builds after the scene's Awake pass, so this is the
         // earliest point the settings can actually be read.
         [Inject]
-        public void Construct(SimulationSettings settings)
+        public void Construct(SimulationWindowSettings windowSettings)
         {
-            _settings = settings;
-            _settings.Changed += OnSettingsChanged;
+            _windowSettings = windowSettings;
+            _windowSettings.Changed += OnWindowSettingsChanged;
 
-            OnSettingsChanged();
+            OnWindowSettingsChanged();
         }
 
         private void Awake()
@@ -72,8 +72,8 @@ namespace gishadev.companion.UI
 
         private void OnDestroy()
         {
-            if (_settings != null)
-                _settings.Changed -= OnSettingsChanged;
+            if (_windowSettings != null)
+                _windowSettings.Changed -= OnWindowSettingsChanged;
         }
 
         // Polled rather than driven by the drag: three separate WidgetDragHandles move the widget, and
@@ -81,7 +81,7 @@ namespace gishadev.companion.UI
         // tracks the widget; the manual side is set once and left alone.
         private void Update()
         {
-            if (!_canDock || _settings == null || !_settings.AutoFlip) return;
+            if (!_canDock || _windowSettings == null || !_windowSettings.AutoFlip) return;
 
             var dockToBottom = ShouldDockToBottom();
             if (dockToBottom == _isDockedToBottom) return;
@@ -89,16 +89,16 @@ namespace gishadev.companion.UI
             ApplyDock(dockToBottom);
         }
 
-        private void OnSettingsChanged()
+        private void OnWindowSettingsChanged()
         {
             ApplyHidden();
-            if (_canDock) ApplyDock(_settings.AutoFlip ? ShouldDockToBottom() : _settings.Flip);
+            if (_canDock) ApplyDock(_windowSettings.AutoFlip ? ShouldDockToBottom() : _windowSettings.Flip);
         }
 
         private void ApplyHidden()
         {
-            hideButton.image.sprite = _settings.IsHidden ? showSprite : hideSprite;
-            simulationTargetObject.SetActive(!_settings.IsHidden);
+            hideButton.image.sprite = _windowSettings.IsHidden ? showSprite : hideSprite;
+            simulationTargetObject.SetActive(!_windowSettings.IsHidden);
         }
 
         /// <summary>True once the widget sits in the upper half, where the window has to hang below it.</summary>
@@ -129,6 +129,6 @@ namespace gishadev.companion.UI
             _simulationRect.anchoredPosition = dockToBottom ? bottomPosition : topPosition;
         }
 
-        private void OnHideButtonClicked() => _settings.IsHidden = !_settings.IsHidden;
+        private void OnHideButtonClicked() => _windowSettings.IsHidden = !_windowSettings.IsHidden;
     }
 }

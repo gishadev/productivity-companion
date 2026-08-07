@@ -2,7 +2,6 @@ using gishadev.companion.Events;
 using gishadev.tools.Events;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VContainer;
 
@@ -20,10 +19,7 @@ namespace gishadev.companion.Pomodoro
 
         [Tooltip("Radial phase picker. Opened by the play button while the timer is stopped.")]
         [SerializeField] private GameObject radialRoot;
-
         [SerializeField] private Button playButton;
-
-        [FormerlySerializedAs("settingsButton")]
         [SerializeField] private Button resetButton;
 
         [SerializeField] private Sprite playIcon;

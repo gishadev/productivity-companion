@@ -8,8 +8,8 @@ using VContainer;
 namespace gishadev.companion.UI.Pages
 {
     /// <summary>
-    /// Edits <see cref="PomodoroSettings"/> in place: every field writes through as soon as it is
-    /// committed, so there is nothing to apply or cancel when the page closes.
+    /// Edits <see cref="PomodoroSettings"/> and <see cref="SimulationSettings"/> in place: every field
+    /// writes through as soon as it is committed, so there is nothing to apply or cancel on close.
     /// </summary>
     public class SettingsPopupPage : PopupPage
     {
@@ -20,14 +20,19 @@ namespace gishadev.companion.UI.Pages
         [SerializeField] private Toggle autoPomodoroToggle;
         [SerializeField] private Toggle autoBreakToggle;
 
+        [SerializeField] private Toggle autoFlipToggle;
+        [SerializeField] private Toggle flipToggle;
+
         [Inject] private PomodoroSettings _settings;
+        [Inject] private SimulationSettings _simulationSettings;
 
         private bool _isBound;
 
         private void Awake()
         {
             _isBound = pomodoroInput != null && shortBreakInput != null && longBreakInput != null &&
-                       autoPomodoroToggle != null && autoBreakToggle != null;
+                       autoPomodoroToggle != null && autoBreakToggle != null &&
+                       autoFlipToggle != null && flipToggle != null;
 
             if (!_isBound)
             {
@@ -41,6 +46,9 @@ namespace gishadev.companion.UI.Pages
 
             autoPomodoroToggle.onValueChanged.AddListener(OnAutoPomodoroToggled);
             autoBreakToggle.onValueChanged.AddListener(OnAutoBreakToggled);
+
+            autoFlipToggle.onValueChanged.AddListener(OnAutoFlipToggled);
+            flipToggle.onValueChanged.AddListener(OnFlipToggled);
         }
 
         protected override void OnDestroy()
@@ -55,6 +63,9 @@ namespace gishadev.companion.UI.Pages
 
             autoPomodoroToggle.onValueChanged.RemoveListener(OnAutoPomodoroToggled);
             autoBreakToggle.onValueChanged.RemoveListener(OnAutoBreakToggled);
+
+            autoFlipToggle.onValueChanged.RemoveListener(OnAutoFlipToggled);
+            flipToggle.onValueChanged.RemoveListener(OnFlipToggled);
         }
 
         public override void Enter()
@@ -73,7 +84,15 @@ namespace gishadev.companion.UI.Pages
 
             autoPomodoroToggle.SetIsOnWithoutNotify(_settings.AutoStartPomodoros);
             autoBreakToggle.SetIsOnWithoutNotify(_settings.AutoStartBreaks);
+
+            autoFlipToggle.SetIsOnWithoutNotify(_simulationSettings.AutoFlip);
+            flipToggle.SetIsOnWithoutNotify(_simulationSettings.Flip);
+            ShowFlipOverride();
         }
+
+        // Auto-flip owns the side while it is on, so the manual toggle greys out rather than silently
+        // doing nothing. Its stored value is left alone, and comes back when auto-flip goes off.
+        private void ShowFlipOverride() => flipToggle.interactable = !_simulationSettings.AutoFlip;
 
         // The setters clamp, so the field is rewritten from the model rather than from what was typed:
         // an empty box or a value out of range snaps back to what was actually stored.
@@ -98,6 +117,14 @@ namespace gishadev.companion.UI.Pages
         private void OnAutoPomodoroToggled(bool isOn) => _settings.AutoStartPomodoros = isOn;
 
         private void OnAutoBreakToggled(bool isOn) => _settings.AutoStartBreaks = isOn;
+
+        private void OnAutoFlipToggled(bool isOn)
+        {
+            _simulationSettings.AutoFlip = isOn;
+            ShowFlipOverride();
+        }
+
+        private void OnFlipToggled(bool isOn) => _simulationSettings.Flip = isOn;
 
         private static int ParseMinutes(string value, int fallback) =>
             int.TryParse(value, out var minutes) ? minutes : fallback;

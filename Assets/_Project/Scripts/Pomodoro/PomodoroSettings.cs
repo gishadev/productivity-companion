@@ -1,35 +1,24 @@
 using System;
+using gishadev.tools.SavingSystem;
 using UnityEngine;
 
 namespace gishadev.companion.Pomodoro
 {
-    /// <summary>
-    /// Persisted Pomodoro durations and flow options. Follows the same PlayerPrefs-backed shape as
-    /// <c>Window.WindowSettings</c>; the tools package provides no persistence helper to reuse.
-    /// </summary>
+    /// <summary>Persisted Pomodoro durations and flow options.</summary>
     public sealed class PomodoroSettings
     {
-        private const string KeyPrefix = "pomodoro.";
+        public const int MinMinutes = 1;
+        public const int MaxMinutes = 999;
 
-        private const string WorkKey = KeyPrefix + "workMinutes";
-        private const string ShortBreakKey = KeyPrefix + "shortBreakMinutes";
-        private const string LongBreakKey = KeyPrefix + "longBreakMinutes";
-        private const string CyclesKey = KeyPrefix + "cyclesBeforeLongBreak";
-        private const string AutoAdvanceKey = KeyPrefix + "autoAdvance";
+        private const string SaveKey = "pomodoro.settings";
 
-        private int _workMinutes;
-        private int _shortBreakMinutes;
-        private int _longBreakMinutes;
-        private int _cyclesBeforeLongBreak;
-        private bool _autoAdvance;
+        private readonly ISaverSystem _saver;
+        private readonly State _state;
 
-        public PomodoroSettings()
+        public PomodoroSettings(ISaverSystem saver)
         {
-            _workMinutes = Mathf.Max(1, PlayerPrefs.GetInt(WorkKey, 25));
-            _shortBreakMinutes = Mathf.Max(1, PlayerPrefs.GetInt(ShortBreakKey, 5));
-            _longBreakMinutes = Mathf.Max(1, PlayerPrefs.GetInt(LongBreakKey, 15));
-            _cyclesBeforeLongBreak = Mathf.Max(1, PlayerPrefs.GetInt(CyclesKey, 4));
-            _autoAdvance = PlayerPrefs.GetInt(AutoAdvanceKey, 1) != 0;
+            _saver = saver;
+            _state = LoadState(saver);
         }
 
         /// <summary>Raised after any value is persisted.</summary>
@@ -37,63 +26,104 @@ namespace gishadev.companion.Pomodoro
 
         public int WorkMinutes
         {
-            get => _workMinutes;
-            set => SetInt(ref _workMinutes, value, WorkKey);
+            get => _state.workMinutes;
+            set => SetClamped(ref _state.workMinutes, value);
         }
 
         public int ShortBreakMinutes
         {
-            get => _shortBreakMinutes;
-            set => SetInt(ref _shortBreakMinutes, value, ShortBreakKey);
+            get => _state.shortBreakMinutes;
+            set => SetClamped(ref _state.shortBreakMinutes, value);
         }
 
         public int LongBreakMinutes
         {
-            get => _longBreakMinutes;
-            set => SetInt(ref _longBreakMinutes, value, LongBreakKey);
+            get => _state.longBreakMinutes;
+            set => SetClamped(ref _state.longBreakMinutes, value);
         }
 
         /// <summary>Number of work sessions before a long break replaces the short one.</summary>
         public int CyclesBeforeLongBreak
         {
-            get => _cyclesBeforeLongBreak;
-            set => SetInt(ref _cyclesBeforeLongBreak, value, CyclesKey);
+            get => _state.cyclesBeforeLongBreak;
+            set => SetClamped(ref _state.cyclesBeforeLongBreak, value);
         }
 
-        /// <summary>When false, the timer stops at each phase boundary and waits for Start().</summary>
-        public bool AutoAdvance
+        /// <summary>Starts the next work phase on its own once a break finishes.</summary>
+        public bool AutoStartPomodoros
         {
-            get => _autoAdvance;
-            set
-            {
-                if (_autoAdvance == value) return;
-                _autoAdvance = value;
-                PlayerPrefs.SetInt(AutoAdvanceKey, value ? 1 : 0);
-                Persist();
-            }
+            get => _state.autoStartPomodoros;
+            set => SetBool(ref _state.autoStartPomodoros, value);
+        }
+
+        /// <summary>Starts the break on its own once a work phase finishes.</summary>
+        public bool AutoStartBreaks
+        {
+            get => _state.autoStartBreaks;
+            set => SetBool(ref _state.autoStartBreaks, value);
         }
 
         /// <summary>Configured length of the given phase.</summary>
         public TimeSpan DurationOf(PomodoroPhase phase) => phase switch
         {
-            PomodoroPhase.ShortBreak => TimeSpan.FromMinutes(_shortBreakMinutes),
-            PomodoroPhase.LongBreak => TimeSpan.FromMinutes(_longBreakMinutes),
-            _ => TimeSpan.FromMinutes(_workMinutes)
+            PomodoroPhase.ShortBreak => TimeSpan.FromMinutes(ShortBreakMinutes),
+            PomodoroPhase.LongBreak => TimeSpan.FromMinutes(LongBreakMinutes),
+            _ => TimeSpan.FromMinutes(WorkMinutes)
         };
 
-        private void SetInt(ref int field, int value, string key)
+        /// <summary>Whether the phase following <paramref name="completed"/> may start without the user.</summary>
+        public bool ShouldAutoStartAfter(PomodoroPhase completed) =>
+            completed == PomodoroPhase.Work ? AutoStartBreaks : AutoStartPomodoros;
+
+        private void SetClamped(ref int field, int value)
         {
-            var clamped = Mathf.Max(1, value);
+            var clamped = Mathf.Clamp(value, MinMinutes, MaxMinutes);
             if (field == clamped) return;
+
             field = clamped;
-            PlayerPrefs.SetInt(key, clamped);
+            Persist();
+        }
+
+        private void SetBool(ref bool field, bool value)
+        {
+            if (field == value) return;
+
+            field = value;
             Persist();
         }
 
         private void Persist()
         {
-            PlayerPrefs.Save();
+            _saver.Save(SaveKey, JsonUtility.ToJson(_state));
             Changed?.Invoke();
+        }
+
+        private static State LoadState(ISaverSystem saver)
+        {
+            if (!saver.TryLoad(SaveKey, out var json) || string.IsNullOrEmpty(json))
+                return new State();
+
+            var loaded = JsonUtility.FromJson<State>(json);
+            if (loaded == null) return new State();
+
+            loaded.workMinutes = Mathf.Clamp(loaded.workMinutes, MinMinutes, MaxMinutes);
+            loaded.shortBreakMinutes = Mathf.Clamp(loaded.shortBreakMinutes, MinMinutes, MaxMinutes);
+            loaded.longBreakMinutes = Mathf.Clamp(loaded.longBreakMinutes, MinMinutes, MaxMinutes);
+            loaded.cyclesBeforeLongBreak = Mathf.Clamp(loaded.cyclesBeforeLongBreak, MinMinutes, MaxMinutes);
+            return loaded;
+        }
+
+        // Field initializers double as the defaults: JsonUtility leaves anything the saved blob is
+        // missing untouched, so an older file gains new settings rather than zeroing them.
+        [Serializable]
+        private sealed class State
+        {
+            public int workMinutes = 25;
+            public int shortBreakMinutes = 5;
+            public int longBreakMinutes = 15;
+            public int cyclesBeforeLongBreak = 4;
+            public bool autoStartPomodoros = true;
+            public bool autoStartBreaks = true;
         }
     }
 }

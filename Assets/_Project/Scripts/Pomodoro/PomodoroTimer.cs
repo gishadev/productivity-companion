@@ -1,4 +1,5 @@
 using System;
+using gishadev.tools.SavingSystem;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -12,22 +13,19 @@ namespace gishadev.companion.Pomodoro
     /// </summary>
     public sealed class PomodoroTimer : ITickable
     {
-        private const string KeyPrefix = "pomodoro.state.";
-        private const string PhaseKey = KeyPrefix + "phase";
-        private const string EndUtcKey = KeyPrefix + "endUtcTicks";
-        private const string RemainingKey = KeyPrefix + "remainingTicks";
-        private const string RunningKey = KeyPrefix + "running";
-        private const string CompletedKey = KeyPrefix + "completedWorkSessions";
+        private const string SaveKey = "pomodoro.state";
 
         private readonly PomodoroSettings _settings;
+        private readonly ISaverSystem _saver;
 
         private DateTime _endUtc;
         private TimeSpan _remaining;
         private bool _restoredPhaseExpired;
 
-        public PomodoroTimer(PomodoroSettings settings)
+        public PomodoroTimer(PomodoroSettings settings, ISaverSystem saver)
         {
             _settings = settings;
+            _saver = saver;
             Restore();
         }
 
@@ -103,7 +101,7 @@ namespace gishadev.companion.Pomodoro
         }
 
         /// <summary>Ends the current phase immediately and advances, as if it had run out.</summary>
-        public void Skip() => CompletePhase(_settings.AutoAdvance);
+        public void Skip() => CompletePhase(allowAutoStart: true);
 
         /// <summary>Returns to a stopped Work phase and clears the cycle count.</summary>
         public void Reset()
@@ -124,17 +122,17 @@ namespace gishadev.companion.Pomodoro
                 // Reported once and deliberately not auto-advanced: chaining would fire off however
                 // many phases elapsed overnight.
                 _restoredPhaseExpired = false;
-                CompletePhase(autoAdvance: false);
+                CompletePhase(allowAutoStart: false);
                 return;
             }
 
             if (!IsRunning) return;
             if (DateTime.UtcNow < _endUtc) return;
 
-            CompletePhase(_settings.AutoAdvance);
+            CompletePhase(allowAutoStart: true);
         }
 
-        private void CompletePhase(bool autoAdvance)
+        private void CompletePhase(bool allowAutoStart)
         {
             var completed = Phase;
 
@@ -148,7 +146,7 @@ namespace gishadev.companion.Pomodoro
             Save();
             PhaseCompleted?.Invoke(completed);
 
-            if (autoAdvance)
+            if (allowAutoStart && _settings.ShouldAutoStartAfter(completed))
                 Start();
             else
                 StateChanged?.Invoke();
@@ -166,27 +164,32 @@ namespace gishadev.companion.Pomodoro
 
         private void Save()
         {
-            PlayerPrefs.SetInt(PhaseKey, (int)Phase);
-            PlayerPrefs.SetInt(CompletedKey, CompletedWorkSessions);
-            PlayerPrefs.SetInt(RunningKey, IsRunning ? 1 : 0);
-            PlayerPrefs.SetString(EndUtcKey, _endUtc.Ticks.ToString());
-            PlayerPrefs.SetString(RemainingKey, _remaining.Ticks.ToString());
-            PlayerPrefs.Save();
+            _saver.Save(SaveKey, JsonUtility.ToJson(new State
+            {
+                phase = (int)Phase,
+                completedWorkSessions = CompletedWorkSessions,
+                running = IsRunning,
+                endUtcTicks = _endUtc.Ticks,
+                remainingTicks = _remaining.Ticks
+            }));
         }
 
         private void Restore()
         {
-            Phase = (PomodoroPhase)PlayerPrefs.GetInt(PhaseKey, (int)PomodoroPhase.Work);
-            CompletedWorkSessions = PlayerPrefs.GetInt(CompletedKey, 0);
-            _remaining = new TimeSpan(ParseTicks(RemainingKey));
-            _endUtc = new DateTime(ParseTicks(EndUtcKey), DateTimeKind.Utc);
-
-            var wasRunning = PlayerPrefs.GetInt(RunningKey, 0) != 0;
-            if (!wasRunning)
-            {
-                IsRunning = false;
+            if (!_saver.TryLoad(SaveKey, out var json) || string.IsNullOrEmpty(json))
                 return;
-            }
+
+            var state = JsonUtility.FromJson<State>(json);
+            if (state == null) return;
+
+            Phase = Enum.IsDefined(typeof(PomodoroPhase), state.phase)
+                ? (PomodoroPhase)state.phase
+                : PomodoroPhase.Work;
+            CompletedWorkSessions = Math.Max(0, state.completedWorkSessions);
+            _remaining = new TimeSpan(SanitizeTicks(state.remainingTicks));
+            _endUtc = new DateTime(SanitizeTicks(state.endUtcTicks), DateTimeKind.Utc);
+
+            if (!state.running) return;
 
             if (DateTime.UtcNow < _endUtc)
             {
@@ -197,14 +200,20 @@ namespace gishadev.companion.Pomodoro
 
             // Ran out while closed. Deferred to the first tick: this is the constructor, so nothing
             // has subscribed yet and the event would be raised into the void.
-            IsRunning = false;
             _restoredPhaseExpired = true;
         }
 
-        private static long ParseTicks(string key)
+        private static long SanitizeTicks(long ticks) =>
+            ticks >= 0 && ticks <= DateTime.MaxValue.Ticks ? ticks : 0;
+
+        [Serializable]
+        private sealed class State
         {
-            var raw = PlayerPrefs.GetString(key, "0");
-            return long.TryParse(raw, out var ticks) && ticks >= 0 ? ticks : 0;
+            public int phase;
+            public int completedWorkSessions;
+            public bool running;
+            public long endUtcTicks;
+            public long remainingTicks;
         }
     }
 }

@@ -15,4 +15,9 @@ MonoBehaviour:
   <FadeTransitionTime>k__BackingField: 0
   <MusicAutoSequencing>k__BackingField: 0
   <MusicCollection>k__BackingField: []
-  <SFXCollection>k__BackingField: []
+  <SFXCollection>k__BackingField:
+  - <Name>k__BackingField: awfulfuckingcoughing
+    <AudioClips>k__BackingField:
+    - {fileID: 8300000, guid: bf89d016e87041c4c95a783cdcd80321, type: 3}
+    <InitialVolume>k__BackingField: 1
+    <Pitch>k__BackingField: 1

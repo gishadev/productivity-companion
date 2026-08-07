@@ -6,26 +6,18 @@ using VContainer;
 namespace gishadev.companion.Window
 {
     /// <summary>
-    /// Title-bar style grab area; position is remembered between runs. Moves the widget inside the
-    /// fullscreen transparent window rather than moving the OS window — identical to the user, but
-    /// needs no native calls and never fights the topmost watchdog. The widget therefore cannot be
-    /// dragged onto a second monitor. Attach to a UI object whose Graphic has Raycast Target enabled.
+    /// Title-bar style grab area. Moves the widget inside the fullscreen transparent window rather
+    /// than moving the OS window — identical to the user, but needs no native calls and never fights
+    /// the topmost watchdog. The widget therefore cannot be dragged onto a second monitor. Attach to
+    /// a UI object whose Graphic has Raycast Target enabled.
     /// </summary>
     public sealed class WidgetDragHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private const string KeyPrefix = "window.widgetPos.";
-
         [Tooltip("The widget root to move. Defaults to this object's parent.")] [SerializeField]
         private RectTransform target;
 
         [Tooltip("Keeps the widget from being dragged off the edge of the screen.")] [SerializeField]
         private bool clampToScreen = true;
-
-        [Tooltip("Remembers the widget position between runs.")] [SerializeField]
-        private bool persistPosition = true;
-
-        [Tooltip("Distinguishes saved positions when there is more than one draggable widget.")] [SerializeField]
-        private string positionId = "widget";
 
         private Canvas _canvas;
         private RectTransform _parentRect;
@@ -61,7 +53,6 @@ namespace gishadev.companion.Window
 
         private void Start()
         {
-            if (persistPosition) RestorePosition();
             if (clampToScreen) ClampIntoParent();
         }
 
@@ -86,11 +77,7 @@ namespace gishadev.companion.Window
             if (clampToScreen) ClampIntoParent();
         }
 
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            ReleaseHolds();
-            if (persistPosition) SavePosition();
-        }
+        public void OnEndDrag(PointerEventData eventData) => ReleaseHolds();
 
         private void ReleaseHolds()
         {
@@ -130,25 +117,6 @@ namespace gishadev.companion.Window
                 parentRect.yMax - size.y * (1f - pivot.y) - anchor.y);
 
             target.anchoredPosition = position;
-        }
-
-        private string PositionKey => KeyPrefix + positionId;
-
-        private void SavePosition()
-        {
-            var position = target.anchoredPosition;
-            PlayerPrefs.SetFloat(PositionKey + ".x", position.x);
-            PlayerPrefs.SetFloat(PositionKey + ".y", position.y);
-            PlayerPrefs.Save();
-        }
-
-        private void RestorePosition()
-        {
-            if (!PlayerPrefs.HasKey(PositionKey + ".x")) return;
-
-            target.anchoredPosition = new Vector2(
-                PlayerPrefs.GetFloat(PositionKey + ".x"),
-                PlayerPrefs.GetFloat(PositionKey + ".y"));
         }
     }
 }

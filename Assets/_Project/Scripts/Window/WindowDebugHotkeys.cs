@@ -1,5 +1,6 @@
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
 using System;
+using gishadev.companion.Focus;
 using gishadev.companion.Window.Native;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,9 +20,10 @@ namespace gishadev.companion.Window
         private RenderThrottle _renderThrottle;
         private IPlatformWindow _window;
         private ClickThroughController _clickThrough;
+        private FocusController _focus;
 
         /// <summary>Overlay bounds in GUI space (top-left origin). Shared by the draw and the hit test.</summary>
-        private static readonly Rect OverlayRect = new Rect(10, 10, 340, 210);
+        private static readonly Rect OverlayRect = new Rect(10, 10, 340, 270);
 
         private bool _overlayVisible = true;
         private IDisposable _overlayLease;
@@ -48,12 +50,14 @@ namespace gishadev.companion.Window
             WindowSettings settings,
             RenderThrottle renderThrottle,
             IPlatformWindow window,
-            ClickThroughController clickThrough)
+            ClickThroughController clickThrough,
+            FocusController focus)
         {
             _settings = settings;
             _renderThrottle = renderThrottle;
             _window = window;
             _clickThrough = clickThrough;
+            _focus = focus;
         }
 
         private void Start() => SetOverlayVisible(_overlayVisible);
@@ -79,6 +83,12 @@ namespace gishadev.companion.Window
             if (keyboard.f5Key.wasPressedThisFrame) CycleFrameRate();
             if (keyboard.f6Key.wasPressedThisFrame) _settings.PreventDisplaySleep = !_settings.PreventDisplaySleep;
             if (keyboard.f7Key.wasPressedThisFrame) SetOverlayVisible(!_overlayVisible);
+
+            // The keys only arrive while our own window has focus, which is exactly why FocusController
+            // ignores it: the target is still the app the user came from.
+            if (keyboard.f8Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Productive);
+            if (keyboard.f9Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Unproductive);
+            if (keyboard.f10Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Regular);
 
             // Block clicks only over the overlay itself, not the whole window. Blanket blocking made
             // click-through look broken everywhere while the overlay was up.
@@ -135,6 +145,12 @@ namespace gishadev.companion.Window
             };
         }
 
+        private string FocusLabel() =>
+            string.IsNullOrEmpty(_focus.CurrentProcessName) ? "(none yet)" : _focus.CurrentProcessName;
+
+        private static string Truncate(string value, int maxLength) =>
+            string.IsNullOrEmpty(value) || value.Length <= maxLength ? value : value.Substring(0, maxLength - 1) + "…";
+
         private void CycleFrameRate()
         {
             var rates = WindowSettings.AllowedFrameRates;
@@ -161,6 +177,8 @@ namespace gishadev.companion.Window
             GUILayout.Label($"Native window   : {(_window.IsAvailable ? "available" : "UNAVAILABLE")}");
             GUILayout.Label($"Render leases   : {_renderThrottle.ActiveLeaseCount} " +
                             $"(interval={UnityEngine.Rendering.OnDemandRendering.renderFrameInterval})");
+            GUILayout.Label($"F8/F9/F10 tag   : {FocusLabel()} [{_focus.CurrentCategory}]");
+            GUILayout.Label($"Focus title     : {Truncate(_focus.CurrentTitle, 40)}");
             GUILayout.EndArea();
         }
     }

@@ -1,3 +1,4 @@
+using gishadev.companion.Focus;
 using gishadev.companion.Pomodoro;
 using gishadev.companion.UI;
 using gishadev.companion.Window;
@@ -22,6 +23,7 @@ namespace gishadev.companion.Infrastructure
             builder.Register<ISaverSystem>(_ => new FileSaverSystem(SaveFileName), Lifetime.Singleton);
 
             new WindowInstaller(transform).Install(builder);
+            new FocusInstaller().Install(builder);
             new PomodoroInstaller().Install(builder);
             new UIInstaller().Install(builder);
         }

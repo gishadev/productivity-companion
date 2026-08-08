@@ -21,6 +21,8 @@ namespace gishadev.companion.Window
         public void Install(IContainerBuilder builder)
         {
             builder.RegisterInstance(PlatformWindowFactory.Create()).As<IPlatformWindow>();
+            builder.RegisterInstance(PlatformWindowFactory.CreateForegroundWindowProvider())
+                .As<IForegroundWindowProvider>();
             builder.Register<WindowSettings>(Lifetime.Singleton);
             builder.Register<RenderThrottle>(Lifetime.Singleton);
 

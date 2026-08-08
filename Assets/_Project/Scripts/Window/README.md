@@ -37,6 +37,10 @@ Window/
     IPlatformWindow.cs    the only surface the rest of the app sees
     Win32PlatformWindow.cs
     NullPlatformWindow.cs no-op; used in the editor and on every non-Windows target
+    IForegroundWindowProvider.cs  reads which *foreign* app owns the foreground
+    ForegroundWindowInfo.cs       process name + title snapshot; carries no HWND
+    Win32ForegroundWindowProvider.cs
+    NullForegroundWindowProvider.cs
     PlatformWindowFactory.cs  the single place that decides whether native calls are live
   WindowSettings.cs     persisted settings; raises Changed(WindowSetting)
   WindowController.cs   applies settings to the window and to Unity player state
@@ -84,6 +88,13 @@ so it fires whenever the build actually happens. Anything hung off `Awake` inste
 **`RenderThrottle` and `ClickThroughController` hand out refcounted `IDisposable` leases**, not bools,
 so independent systems (a drag, an overlay, an animation) can each hold "keep rendering" or "keep
 accepting clicks" without clearing each other's.
+
+**`IForegroundWindowProvider` is the one native surface that also runs in the editor.** It is a
+different concern from `IPlatformWindow` — it observes *other* applications rather than manipulating
+ours — and it only reads, so `PlatformWindowFactory.CreateForegroundWindowProvider` deliberately omits
+the `!Application.isEditor` guard that `Create` has. That is what makes `gishadev.companion.Focus`
+testable in play mode instead of needing a standalone build. It is registered here, next to
+`IPlatformWindow`, because both are Native seams; the domain that consumes it lives in `Focus/`.
 
 ---
 
@@ -141,6 +152,10 @@ panel, otherwise it would be unreachable.
 
 `F1` transparency · `F2` click-through · `F3` always-on-top · `F4` hide from taskbar ·
 `F5` target FPS · `F6` prevent sleep · `F7` overlay
+
+`F8` / `F9` / `F10` tag the tracked app as productive / unproductive / regular (see `Focus/`). The keys
+only arrive while our own window has focus, which is why `FocusController` ignores it: the tag still
+lands on the app the user came from. Alt-tab to it, click the widget, press the key.
 
 The `Native window: available / UNAVAILABLE` line is the first thing to check: `UNAVAILABLE` means
 HWND resolution failed and no Win32 call ran, which is a completely different problem from a

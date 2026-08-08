@@ -15,5 +15,18 @@ namespace gishadev.companion.Window.Native
 #endif
             return new NullPlatformWindow();
         }
+
+        /// <summary>
+        /// No editor exemption, unlike <see cref="Create"/>: reading the foreground window mutates
+        /// nothing, and having it live in play mode is what makes focus tracking testable without a build.
+        /// </summary>
+        public static IForegroundWindowProvider CreateForegroundWindowProvider()
+        {
+#if UNITY_STANDALONE_WIN
+            return new Win32ForegroundWindowProvider();
+#else
+            return new NullForegroundWindowProvider();
+#endif
+        }
     }
 }

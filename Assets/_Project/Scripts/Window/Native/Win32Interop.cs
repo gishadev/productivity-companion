@@ -106,6 +106,12 @@ namespace gishadev.companion.Window.Native
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int GetClassName(IntPtr hWnd, System.Text.StringBuilder lpClassName, int nMaxCount);
 
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int GetWindowText(IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int GetWindowTextLength(IntPtr hWnd);
+
         [DllImport("user32.dll")]
         internal static extern bool IsWindowVisible(IntPtr hWnd);
 

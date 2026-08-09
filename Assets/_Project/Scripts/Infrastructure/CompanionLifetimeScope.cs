@@ -1,5 +1,6 @@
 using gishadev.companion.Focus;
 using gishadev.companion.Pomodoro;
+using gishadev.companion.Simulation;
 using gishadev.companion.UI;
 using gishadev.companion.Window;
 using gishadev.tools.SavingSystem;
@@ -26,6 +27,7 @@ namespace gishadev.companion.Infrastructure
             new FocusInstaller().Install(builder);
             new PomodoroInstaller().Install(builder);
             new UIInstaller().Install(builder);
+            new SimulationInstaller().Install(builder);
         }
     }
 }

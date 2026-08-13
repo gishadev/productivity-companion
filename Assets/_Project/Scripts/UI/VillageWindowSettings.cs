@@ -5,14 +5,14 @@ using UnityEngine;
 namespace gishadev.companion.UI
 {
     /// <summary>Persisted state of the simulation window.</summary>
-    public sealed class SimulationWindowSettings
+    public sealed class VillageWindowSettings
     {
-        private const string SaveKey = "simulation.window.settings";
+        private const string SaveKey = "village.window.settings";
 
         private readonly ISaverSystem _saver;
         private readonly State _state;
 
-        public SimulationWindowSettings(ISaverSystem saver)
+        public VillageWindowSettings(ISaverSystem saver)
         {
             _saver = saver;
             _state = LoadState(saver);

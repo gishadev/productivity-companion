@@ -8,7 +8,7 @@ namespace gishadev.companion.UI
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.Register<SimulationWindowSettings>(Lifetime.Singleton);
+            builder.Register<VillageWindowSettings>(Lifetime.Singleton);
         }
     }
 }

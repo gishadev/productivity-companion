@@ -24,7 +24,7 @@ namespace gishadev.companion.UI
         [SerializeField] [Range(0f, 0.25f)]
         private float switchHysteresis = 0.03f;
 
-        private SimulationWindowSettings _windowSettings;
+        private VillageWindowSettings _windowSettings;
 
         private RectTransform _simulationRect;
         private RectTransform _dockParent;
@@ -36,7 +36,7 @@ namespace gishadev.companion.UI
         // Method injection, not a field: the scope builds after the scene's Awake pass, so this is the
         // earliest point the settings can actually be read.
         [Inject]
-        public void Construct(SimulationWindowSettings windowSettings)
+        public void Construct(VillageWindowSettings windowSettings)
         {
             _windowSettings = windowSettings;
             _windowSettings.Changed += OnWindowSettingsChanged;

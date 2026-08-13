@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace gishadev.companion.Simulation
+namespace gishadev.companion.Village
 {
     /// <summary>
     /// The UI-side face of the simulation: one RawImage the world is rendered into. Everything that
@@ -9,7 +9,7 @@ namespace gishadev.companion.Simulation
     /// plain Graphic and needs no knowledge of what is behind it.
     /// </summary>
     [RequireComponent(typeof(RawImage))]
-    public sealed class SimulationSurface : MonoBehaviour, ICanvasRaycastFilter
+    public sealed class VillageSurface : MonoBehaviour, ICanvasRaycastFilter
     {
         private RawImage _image;
         private RectTransform _rect;

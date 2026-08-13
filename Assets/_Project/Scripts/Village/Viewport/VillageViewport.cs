@@ -1,18 +1,18 @@
 using UnityEngine;
 
-namespace gishadev.companion.Simulation
+namespace gishadev.companion.Village
 {
     /// <summary>
     /// Maps between screen space and the simulation's world space. Deliberately holds no gameplay: every
     /// pointer-driven feature — picking, drag and place, labels pinned over entities — needs this one
     /// mapping and nothing else, which is what keeps the render-texture indirection from leaking.
     /// </summary>
-    public sealed class SimulationViewport
+    public sealed class VillageViewport
     {
-        private readonly SimulationSceneRig _rig;
-        private readonly SimulationSurface _surface;
+        private readonly VillageSceneRig _rig;
+        private readonly VillageSurface _surface;
 
-        public SimulationViewport(SimulationSceneRig rig, SimulationSurface surface)
+        public VillageViewport(VillageSceneRig rig, VillageSurface surface)
         {
             _rig = rig;
             _surface = surface;

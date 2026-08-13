@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace gishadev.companion.Simulation
+namespace gishadev.companion.Village
 {
     /// <summary>
     /// Handle onto the simulation world's scene objects. The world sits at a fixed offset from the
@@ -8,7 +8,7 @@ namespace gishadev.companion.Simulation
     /// anything anchored to that rect would have its cell and path coordinates shifted underneath it.
     /// </summary>
     [ExecuteAlways]
-    public sealed class SimulationSceneRig : MonoBehaviour
+    public sealed class VillageSceneRig : MonoBehaviour
     {
         [Tooltip("Renders the simulation into the render target. Must not be tagged MainCamera.")]
         [SerializeField] private Camera simulationCamera;
@@ -48,8 +48,8 @@ namespace gishadev.companion.Simulation
         }
 
 #if UNITY_EDITOR
-        private SimulationRenderTarget _preview;
-        private SimulationSurface _previewSurface;
+        private VillageRenderTarget _preview;
+        private VillageSurface _previewSurface;
 
         // The runtime target is a VContainer entry point, which only exists in play mode. Driving the
         // same path by hand here is what lets the widget show the world while it is being authored.
@@ -58,10 +58,10 @@ namespace gishadev.companion.Simulation
             if (Application.isPlaying) return;
 
             if (_previewSurface == null)
-                _previewSurface = FindAnyObjectByType<SimulationSurface>(FindObjectsInactive.Include);
+                _previewSurface = FindAnyObjectByType<VillageSurface>(FindObjectsInactive.Include);
             if (_previewSurface == null) return;
 
-            _preview ??= new SimulationRenderTarget(this, _previewSurface);
+            _preview ??= new VillageRenderTarget(this, _previewSurface);
             _preview.Sync();
         }
 

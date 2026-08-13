@@ -2,25 +2,25 @@ using System;
 using UnityEngine;
 using VContainer.Unity;
 
-namespace gishadev.companion.Simulation
+namespace gishadev.companion.Village
 {
     /// <summary>
     /// Owns the render texture the simulation camera draws into and the surface displays. Sized from the
     /// surface rect divided by the rig's upscale rather than from screen resolution: point filtering a
     /// small texture up to the widget is what keeps the pixel art crisp instead of resampled.
     /// </summary>
-    public sealed class SimulationRenderTarget : IStartable, ITickable, IDisposable
+    public sealed class VillageRenderTarget : IStartable, ITickable, IDisposable
     {
         // The 2D renderer is configured with a depth stencil buffer, which masks and sorting rely on.
         private const int DepthBits = 24;
 
-        private readonly SimulationSceneRig _rig;
-        private readonly SimulationSurface _surface;
+        private readonly VillageSceneRig _rig;
+        private readonly VillageSurface _surface;
 
         private RenderTexture _texture;
         private Vector2Int _size;
 
-        public SimulationRenderTarget(SimulationSceneRig rig, SimulationSurface surface)
+        public VillageRenderTarget(VillageSceneRig rig, VillageSurface surface)
         {
             _rig = rig;
             _surface = surface;

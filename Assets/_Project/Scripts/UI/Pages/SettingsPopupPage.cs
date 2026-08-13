@@ -8,7 +8,7 @@ using VContainer;
 namespace gishadev.companion.UI.Pages
 {
     /// <summary>
-    /// Edits <see cref="PomodoroSettings"/> and <see cref="SimulationWindowSettings"/> in place: every field
+    /// Edits <see cref="PomodoroSettings"/> and <see cref="VillageWindowSettings"/> in place: every field
     /// writes through as soon as it is committed, so there is nothing to apply or cancel on close.
     /// </summary>
     public class SettingsPopupPage : PopupPage
@@ -24,7 +24,7 @@ namespace gishadev.companion.UI.Pages
         [SerializeField] private Toggle flipToggle;
 
         [Inject] private PomodoroSettings _settings;
-        [Inject] private SimulationWindowSettings _simulationWindowSettings;
+        [Inject] private VillageWindowSettings _villageWindowSettings;
 
         private bool _isBound;
 
@@ -85,14 +85,14 @@ namespace gishadev.companion.UI.Pages
             autoPomodoroToggle.SetIsOnWithoutNotify(_settings.AutoStartPomodoros);
             autoBreakToggle.SetIsOnWithoutNotify(_settings.AutoStartBreaks);
 
-            autoFlipToggle.SetIsOnWithoutNotify(_simulationWindowSettings.AutoFlip);
-            flipToggle.SetIsOnWithoutNotify(_simulationWindowSettings.Flip);
+            autoFlipToggle.SetIsOnWithoutNotify(_villageWindowSettings.AutoFlip);
+            flipToggle.SetIsOnWithoutNotify(_villageWindowSettings.Flip);
             ShowFlipOverride();
         }
 
         // Auto-flip owns the side while it is on, so the manual toggle greys out rather than silently
         // doing nothing. Its stored value is left alone, and comes back when auto-flip goes off.
-        private void ShowFlipOverride() => flipToggle.interactable = !_simulationWindowSettings.AutoFlip;
+        private void ShowFlipOverride() => flipToggle.interactable = !_villageWindowSettings.AutoFlip;
 
         // The setters clamp, so the field is rewritten from the model rather than from what was typed:
         // an empty box or a value out of range snaps back to what was actually stored.
@@ -120,11 +120,11 @@ namespace gishadev.companion.UI.Pages
 
         private void OnAutoFlipToggled(bool isOn)
         {
-            _simulationWindowSettings.AutoFlip = isOn;
+            _villageWindowSettings.AutoFlip = isOn;
             ShowFlipOverride();
         }
 
-        private void OnFlipToggled(bool isOn) => _simulationWindowSettings.Flip = isOn;
+        private void OnFlipToggled(bool isOn) => _villageWindowSettings.Flip = isOn;
 
         private static int ParseMinutes(string value, int fallback) =>
             int.TryParse(value, out var minutes) ? minutes : fallback;

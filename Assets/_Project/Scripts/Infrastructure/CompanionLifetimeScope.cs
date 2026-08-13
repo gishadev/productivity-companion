@@ -4,6 +4,7 @@ using gishadev.companion.Village;
 using gishadev.companion.UI;
 using gishadev.companion.Window;
 using gishadev.tools.SavingSystem;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -18,6 +19,9 @@ namespace gishadev.companion.Infrastructure
     {
         private const string SaveFileName = "companion";
 
+        [Tooltip("Balance data for the progression mechanic. Progression is disabled when unassigned.")]
+        [SerializeField] private IncrementalSettingsSO incrementalSettings;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // Shared by every subsystem that persists anything, so it sits above the installers.
@@ -27,7 +31,7 @@ namespace gishadev.companion.Infrastructure
             new FocusInstaller().Install(builder);
             new PomodoroInstaller().Install(builder);
             new UIInstaller().Install(builder);
-            new VillageInstaller().Install(builder);
+            new VillageInstaller(incrementalSettings).Install(builder);
         }
     }
 }

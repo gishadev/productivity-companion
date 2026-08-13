@@ -30,6 +30,19 @@ namespace gishadev.companion.Focus
 
         public FocusCategory CurrentCategory { get; private set; } = FocusCategory.Regular;
 
+        /// <summary>True while the player itself holds the foreground.</summary>
+        public bool IsOwnWindowFocused { get; private set; }
+
+        /// <summary>
+        /// What the user's current activity should count as. Identical to <see cref="CurrentCategory"/>
+        /// except while our own window is focused, which counts as <see cref="FocusCategory.Regular"/>
+        /// rather than inheriting the app they came from: the sticky category is right for tagging, but
+        /// as a reward input it would pay out the last app's multiplier for sitting in the widget — and,
+        /// worse, keep accruing an unproductive penalty with no way to escape it from inside the app.
+        /// </summary>
+        public FocusCategory EffectiveCategory =>
+            IsOwnWindowFocused ? FocusCategory.Regular : CurrentCategory;
+
         /// <summary>Always the last foreign application: the player's own window is ignored.</summary>
         public string CurrentProcessName { get; private set; } = string.Empty;
 
@@ -60,9 +73,13 @@ namespace gishadev.companion.Focus
             if (!_provider.IsAvailable) return;
 
             var info = _provider.GetForegroundWindow();
+            if (!info.IsValid) return;
+
+            IsOwnWindowFocused = info.IsOwnProcess;
+
             // Ignoring our own window keeps clicking the widget from resetting the user's activity, and
             // is what leaves the tagging hotkeys pointed at the app they just came from.
-            if (!info.IsValid || info.IsOwnProcess) return;
+            if (info.IsOwnProcess) return;
 
             CurrentProcessName = info.ProcessName;
             CurrentTitle = info.Title;

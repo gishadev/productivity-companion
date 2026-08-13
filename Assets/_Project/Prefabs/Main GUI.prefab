@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 7934583637554867682}
   - component: {fileID: 1818307467978243711}
   - component: {fileID: 4314674165291384967}
+  - component: {fileID: 6830849940341809256}
   m_Layer: 5
   m_Name: Main GUI
   m_TagString: Untagged
@@ -460,6 +461,22 @@ MonoBehaviour:
   topPosition: {x: 0, y: -10}
   bottomPosition: {x: 0, y: -280}
   switchHysteresis: 0.03
+--- !u!114 &6830849940341809256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597200702474605537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10066345f312204468d715421aa5f266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.IncrementalView
+  slider: {fileID: 8928621005295454455}
+  fillImage: {fileID: 1088450536687362777}
+  normalColor: {r: 0.35, g: 0.78, b: 0.42, a: 1}
+  penaltyColor: {r: 0.85, g: 0.25, b: 0.25, a: 1}
 --- !u!1 &1909035884804960715
 GameObject:
   m_ObjectHideFlags: 0

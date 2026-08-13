@@ -53,9 +53,15 @@ namespace gishadev.companion.Village
         private bool _dirty;
         private float _nextPersist;
 
-        // -1 is unmatchable by the quantised value, so the first refresh always writes through.
+        // -1 is unmatchable by the quantised value and by any level, so the first refresh always writes
+        // through. Same job done by the null on the category, whose default would otherwise be a real
+        // value that could match on the first comparison and suppress the initial write.
         private int _pushedValue = -1;
         private bool _pushedPenalty;
+        private int _pushedLevel = -1;
+        private FocusCategory? _pushedCategory;
+        private bool _pushedOnBreak;
+        private bool _pushedPaused;
 
         public IncrementalController(
             IncrementalSettingsSO settings,
@@ -202,16 +208,35 @@ namespace gishadev.companion.Village
             if (_view == null) return;
 
             var penalised = IsPenalised;
-            var value = penalised ? _penaltySeconds / _settings.MaxPenaltySeconds : (float)_progress;
+            var value = Mathf.Clamp01(penalised ? _penaltySeconds / _settings.MaxPenaltySeconds : (float)_progress);
 
             // Ticks arrive far faster than the widget renders while unfocused, so only push when the
             // bar would visibly move.
-            var quantised = Mathf.RoundToInt(Mathf.Clamp01(value) * 200f);
-            if (quantised == _pushedValue && penalised == _pushedPenalty) return;
+            var quantised = Mathf.RoundToInt(value * 200f);
+            if (quantised != _pushedValue || penalised != _pushedPenalty)
+            {
+                _pushedValue = quantised;
+                _pushedPenalty = penalised;
+                _view.SetProgress(value, penalised);
+            }
 
-            _pushedValue = quantised;
-            _pushedPenalty = penalised;
-            _view.SetProgress(Mathf.Clamp01(value), penalised);
+            if (Level != _pushedLevel)
+            {
+                _pushedLevel = Level;
+                _view.SetLevel(Level);
+            }
+
+            var paused = !_pomodoro.IsRunning;
+            var onBreak = IsOnBreak;
+            var category = _focus.EffectiveCategory;
+
+            if (category != _pushedCategory || onBreak != _pushedOnBreak || paused != _pushedPaused)
+            {
+                _pushedCategory = category;
+                _pushedOnBreak = onBreak;
+                _pushedPaused = paused;
+                _view.SetActivity(category, onBreak, paused);
+            }
         }
 
         private void Persist()

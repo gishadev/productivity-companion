@@ -250,6 +250,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Companion GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1597200702474605537, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1936099346145518239, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -587,6 +591,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4593040842144869555, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4593040842144869555, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
       propertyPath: m_TargetTexture
       value: 

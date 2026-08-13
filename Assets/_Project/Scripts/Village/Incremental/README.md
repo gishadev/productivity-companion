@@ -74,6 +74,12 @@ on a break, so a phase-only test would read as "on a break" indefinitely.
 Unproductive time on a break is **inert**, not rewarded: it accrues no penalty, but pays none off and
 earns no points either. An owed penalty simply waits for the break to end.
 
+**The activity icon has its own break state**, and both modal flags outrank the focused app —
+`pause > break > category`. Unproductive time is sheltered during a break, so showing the unproductive
+icon would accuse the user of the exact thing the break exists to permit. The controller passes the
+live category plus both flags and lets the view resolve the precedence, so the display rule sits with
+the sprites it picks between rather than being pre-baked into the value handed over.
+
 
 **`_progress` is a `double`, and it is not optional.** It holds a 0–1 fraction, so `float` looks like
 the obvious type. At 32-bit precision a frame's increment stops moving the accumulator entirely once
@@ -144,9 +150,17 @@ other end so `Math.Pow` cannot reach infinity and feed the slider a `NaN`.
 
 ## Scene requirements
 
-A **Slider** with `IncrementalView`, its `slider` and Fill `Image` wired, and **Interactable off**.
+`IncrementalView` wants a **Slider** (with **Interactable off**) and its Fill `Image`, a
+`progressionImage` plus the five activity sprites, and a `TMP_Text` for the level.
+
 The controller resolves the view leniently (`FindAnyObjectByType`, inactive included) and null-checks
-every access, so a missing or hidden slider disables the display without touching progression.
+every access, so a missing or hidden widget disables the display without touching progression. Each
+field is independently optional for the same reason — an unassigned level label costs the level
+display and nothing else.
+
+Unassigned *sprites* are not warned about, unlike the components: they are assigned to the image
+regardless, so a missing one shows as a blank icon rather than leaving the previous sprite on screen
+claiming a state the user has already left.
 
 The view is compared with `== null`, never `?.` or `is null` — a destroyed `UnityEngine.Object` only
 reports itself as null through the overloaded operator, and the null-propagating forms would NRE.

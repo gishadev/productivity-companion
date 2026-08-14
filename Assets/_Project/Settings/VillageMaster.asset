@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598a4d4e9c8d67046935646fd83b900d, type: 3}
+  m_Name: VillageMaster
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.VillageMasterSO
+  villagerPrefab: {fileID: -4674648766778755437, guid: 356a36497da9db94596a20985158c424, type: 3}
+  villagerSprites:
+  - {fileID: -39921608780872571, guid: b4d5bfdcf6ce4bd42953dd9e87da3fd0, type: 3}
+  maxVillagers: 30
+  spawnArea:
+    serializedVersion: 2
+    x: -2
+    y: -0.6
+    width: 4
+    height: 0.4
+  minSpacing: 0.12
+  placementAttempts: 8

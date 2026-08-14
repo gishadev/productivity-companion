@@ -22,6 +22,9 @@ namespace gishadev.companion.Infrastructure
         [Tooltip("Balance data for the progression mechanic. Progression is disabled when unassigned.")]
         [SerializeField] private IncrementalSettingsSO incrementalSettings;
 
+        [Tooltip("Villager prefab, sprites and placement. The village is disabled when unassigned.")]
+        [SerializeField] private VillageMasterSO villageMaster;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // Shared by every subsystem that persists anything, so it sits above the installers.
@@ -31,7 +34,7 @@ namespace gishadev.companion.Infrastructure
             new FocusInstaller().Install(builder);
             new PomodoroInstaller().Install(builder);
             new UIInstaller().Install(builder);
-            new VillageInstaller(incrementalSettings).Install(builder);
+            new VillageInstaller(incrementalSettings, villageMaster).Install(builder);
         }
     }
 }

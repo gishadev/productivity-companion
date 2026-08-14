@@ -391,6 +391,60 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
+--- !u!1 &985160135 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4874380551413922014, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+  m_PrefabInstance: {fileID: 2133759103349128631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &985160138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985160135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e95438ec62259141b5f72b8b43f2581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.StaticYSort
+  orderOffset: 50
+--- !u!1 &1069675732 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1464512968573848135, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+  m_PrefabInstance: {fileID: 2133759103349128631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1069675735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069675732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e95438ec62259141b5f72b8b43f2581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.StaticYSort
+  orderOffset: 50
+--- !u!1 &1168297812 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5403001271781895396, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+  m_PrefabInstance: {fileID: 2133759103349128631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1168297815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168297812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e95438ec62259141b5f72b8b43f2581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.StaticYSort
+  orderOffset: 50
 --- !u!1 &1389396493
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +587,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1597200702474605537, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
   m_PrefabInstance: {fileID: 981297608}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1981882129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6560343590750897017, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+  m_PrefabInstance: {fileID: 2133759103349128631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1981882132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981882129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e95438ec62259141b5f72b8b43f2581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.StaticYSort
+  orderOffset: 50
 --- !u!1 &2085043964
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,6 +655,7 @@ MonoBehaviour:
   autoInjectGameObjects:
   - {fileID: 1735297480}
   incrementalSettings: {fileID: 11400000, guid: b63fb138ab157ba4185dd2b38bae1056, type: 2}
+  villageMaster: {fileID: 11400000, guid: 4899958895c3889499ea49082f00e551, type: 2}
 --- !u!1001 &2133759103349128631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -591,9 +664,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4593040842144869555, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 1635016209679358768, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3165641762829921276, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4593040842144869555, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
       propertyPath: m_TargetTexture
@@ -639,18 +716,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5917987723205966123, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
-      propertyPath: m_Name
-      value: Simulation Root
+    - target: {fileID: 5468430360889301594, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5917987723205966123, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: m_Name
+      value: Village Scene Rig
+      objectReference: {fileID: 0}
+    - target: {fileID: 6773362665585473215, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5403001271781895396, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1168297815}
+    - targetCorrespondingSourceObject: {fileID: 6560343590750897017, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1981882132}
+    - targetCorrespondingSourceObject: {fileID: 4874380551413922014, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 985160138}
+    - targetCorrespondingSourceObject: {fileID: 1464512968573848135, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1069675735}
   m_SourcePrefab: {fileID: 100100000, guid: 6ea3f1f7531ee4244839b072408b76ad, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

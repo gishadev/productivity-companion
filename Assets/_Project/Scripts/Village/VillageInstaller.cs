@@ -1,3 +1,4 @@
+using gishadev.companion.Village.POI;
 using gishadev.companion.Village.Villagers;
 using UnityEngine;
 using VContainer;
@@ -64,6 +65,10 @@ namespace gishadev.companion.Village
 
             builder.RegisterInstance(_villageMaster);
             builder.Register(_ => Find<VillageView>(), Lifetime.Singleton);
+
+            // Scans the scene itself rather than taking a reference: POIs are scattered across the
+            // village prefab, and wiring each one into a list by hand is a step to forget.
+            builder.Register<POIRegistry>(Lifetime.Singleton);
 
             builder.Register<VillagersAIController>(Lifetime.Singleton);
             builder.Register<VillagersFactory>(Lifetime.Singleton);

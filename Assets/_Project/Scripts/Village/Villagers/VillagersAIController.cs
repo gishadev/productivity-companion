@@ -1,4 +1,5 @@
 using System;
+using gishadev.companion.Village.POI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -22,14 +23,16 @@ namespace gishadev.companion.Village.Villagers
 
         private readonly VillageMasterSO _master;
         private readonly VillageView _view;
+        private readonly POIRegistry _pois;
 
         private Agent[] _agents = new Agent[InitialCapacity];
         private int _count;
 
-        public VillagersAIController(VillageMasterSO master, VillageView view)
+        public VillagersAIController(VillageMasterSO master, VillageView view, POIRegistry pois)
         {
             _master = master;
             _view = view;
+            _pois = pois;
         }
 
         public int Count => _count;
@@ -47,8 +50,10 @@ namespace gishadev.companion.Village.Villagers
             {
                 View = villager,
                 Tf = villager.transform,
+                Facing = Vector2.down,
                 SortingOrder = int.MinValue
             };
+
             EnterIdle(ref _agents[_count]);
             ApplySorting(ref _agents[_count], villager.transform.position.y);
 
@@ -63,6 +68,7 @@ namespace gishadev.companion.Village.Villagers
             {
                 if (_agents[i].View != villager) continue;
 
+                ReleasePoi(ref _agents[i]);
                 RemoveAt(i);
                 return;
             }
@@ -70,12 +76,15 @@ namespace gishadev.companion.Village.Villagers
 
         public void Clear()
         {
+            for (var i = 0; i < _count; i++)
+                ReleasePoi(ref _agents[i]);
+
             // Cleared rather than left in place so the array stops holding destroyed views alive.
             Array.Clear(_agents, 0, _count);
             _count = 0;
         }
 
-        public void Tick(float deltaTime)
+        public void Tick(float deltaTime, VillageActivity activity)
         {
             for (var i = 0; i < _count; i++)
             {
@@ -84,9 +93,11 @@ namespace gishadev.companion.Village.Villagers
                 // write-back, and CollectionsMarshal.AsSpan is past this project's framework level.
                 ref var agent = ref _agents[i];
 
-                // Unity's overloaded == is the only null check that catches a destroyed object.
+                // Unity's overloaded == is the only null check that catches a destroyed object. A hiding
+                // villager is merely disabled, which this correctly does not treat as gone.
                 if (agent.View == null)
                 {
+                    ReleasePoi(ref agent);
                     RemoveAt(i);
                     i--;
                     continue;
@@ -97,19 +108,40 @@ namespace gishadev.companion.Village.Villagers
                 switch (agent.State)
                 {
                     case VillagerState.Idle:
-                        TickIdle(ref agent);
+                        TickIdle(ref agent, activity);
                         break;
 
                     case VillagerState.Wander:
                         TickWander(ref agent, deltaTime);
                         break;
+
+                    case VillagerState.GoToJob:
+                        TickGoToJob(ref agent, deltaTime, activity);
+                        break;
+
+                    case VillagerState.Working:
+                        TickWorking(ref agent, activity);
+                        break;
+
+                    case VillagerState.GoToRelax:
+                        TickGoToRelax(ref agent, deltaTime, activity);
+                        break;
+
+                    case VillagerState.Hiding:
+                        TickHiding(ref agent, activity);
+                        break;
                 }
             }
         }
 
-        private void TickIdle(ref Agent agent)
+        // The end of an idle is the one decision point: claiming here rather than every frame keeps the
+        // registry off the hot path and stops a villager abandoning a walk it just started.
+        private void TickIdle(ref Agent agent, VillageActivity activity)
         {
             if (agent.StateTimer < agent.StateDuration) return;
+
+            if (activity == VillageActivity.Working && TryStartJob(ref agent)) return;
+            if (activity == VillageActivity.Relaxing && TryStartRelax(ref agent)) return;
 
             // Nowhere to walk to: stay put and try again after another idle, rather than spinning
             // through a state transition every frame.
@@ -124,8 +156,140 @@ namespace gishadev.companion.Village.Villagers
 
         private void TickWander(ref Agent agent, float deltaTime)
         {
+            if (MoveToward(ref agent, deltaTime)) EnterIdle(ref agent);
+        }
+
+        private void TickGoToJob(ref Agent agent, float deltaTime, VillageActivity activity)
+        {
+            if (activity != VillageActivity.Working)
+            {
+                ReleasePoi(ref agent);
+                EnterIdle(ref agent);
+                return;
+            }
+
+            if (!MoveToward(ref agent, deltaTime)) return;
+
+            agent.State = VillagerState.Working;
+            agent.StateTimer = 0f;
+
+            // Speed back to zero first: it is still carrying the walk value from EnterTravel, and
+            // leaving it set would keep the locomotion tree in its walk state under the job animation.
+            agent.View.SetMovement(agent.Facing, 0f);
+            agent.View.SetWorking(true);
+        }
+
+        private void TickWorking(ref Agent agent, VillageActivity activity)
+        {
+            // The post is held for the whole session; only the user leaving productive work ends it.
+            if (activity == VillageActivity.Working) return;
+
+            agent.View.SetWorking(false);
+            ReleasePoi(ref agent);
+            EnterIdle(ref agent);
+        }
+
+        private void TickGoToRelax(ref Agent agent, float deltaTime, VillageActivity activity)
+        {
+            if (activity != VillageActivity.Relaxing)
+            {
+                ReleasePoi(ref agent);
+                EnterIdle(ref agent);
+                return;
+            }
+
+            if (!MoveToward(ref agent, deltaTime)) return;
+
+            agent.State = VillagerState.Hiding;
+            agent.StateTimer = 0f;
+            agent.StateDuration = _master.RandomHideDuration();
+
+            agent.View.SetMovement(agent.Facing, 0f);
+            agent.View.SetVisible(false);
+        }
+
+        // Reached while the GameObject is switched off, which is exactly why the AI is a plain loop and
+        // not a MonoBehaviour: Unity would have stopped calling us.
+        private void TickHiding(ref Agent agent, VillageActivity activity)
+        {
+            // Leaving the break turns everyone out immediately, however long they have been inside.
+            if (activity == VillageActivity.Relaxing && agent.StateTimer < agent.StateDuration) return;
+
+            if (agent.Poi != null) agent.Tf.position = ToWorld(agent.Poi.TargetPosition, agent.Tf.position.z);
+
+            agent.View.SetVisible(true);
+            ApplySorting(ref agent, agent.Tf.position.y);
+
+            ReleasePoi(ref agent);
+            EnterIdle(ref agent);
+        }
+
+        private bool TryStartJob(ref Agent agent)
+        {
+            var poi = _pois.TryClaimJob();
+            if (poi == null) return false;
+
+            agent.Poi = poi;
+            EnterTravel(ref agent, VillagerState.GoToJob, poi.TargetPosition);
+            return true;
+        }
+
+        private bool TryStartRelax(ref Agent agent)
+        {
+            // Rolled before claiming, so a villager that decides to stay out does not hold a slot.
+            if (Random.value > _master.RelaxChance) return false;
+
+            var poi = _pois.TryClaimRelax();
+            if (poi == null) return false;
+
+            agent.Poi = poi;
+            EnterTravel(ref agent, VillagerState.GoToRelax, poi.TargetPosition);
+            return true;
+        }
+
+        private void EnterIdle(ref Agent agent)
+        {
+            agent.State = VillagerState.Idle;
+            agent.StateTimer = 0f;
+            agent.StateDuration = _master.RandomIdleDuration();
+
+            // Facing is kept, so an idling villager holds the direction it arrived in.
+            agent.View.SetMovement(agent.Facing, 0f);
+        }
+
+        private void EnterWander(ref Agent agent)
+        {
+            var current = Flat(agent.Tf.position);
+
+            // Offset from where the villager stands, then pulled back inside: picking anywhere in the
+            // area would send everyone marching across the whole village on every walk.
+            var destination = _view.WalkableArea.ClampInside(
+                current + Random.insideUnitCircle * _master.WanderRadius);
+
+            EnterTravel(ref agent, VillagerState.Wander, destination);
+        }
+
+        private void EnterTravel(ref Agent agent, VillagerState state, Vector2 destination)
+        {
+            var current = Flat(agent.Tf.position);
+            var offset = destination - current;
+
+            agent.State = state;
+            agent.StateTimer = 0f;
+            agent.Destination = destination;
+            agent.StateDuration = TravelTimeout(offset.magnitude);
+
+            // Set once here rather than per frame: a leg is a straight line, so the direction it
+            // establishes holds for the whole walk.
+            if (offset.sqrMagnitude > Mathf.Epsilon) agent.Facing = offset.normalized;
+            agent.View.SetMovement(agent.Facing, _master.WalkSpeed);
+        }
+
+        /// <summary>True once the villager has arrived, or the travel timeout has run out.</summary>
+        private bool MoveToward(ref Agent agent, float deltaTime)
+        {
             var position = agent.Tf.position;
-            var current = new Vector2(position.x, position.y);
+            var current = Flat(position);
             var next = Vector2.MoveTowards(current, agent.Destination, _master.WalkSpeed * deltaTime);
 
             // z is preserved rather than zeroed: depth comes from sorting order, not from z, and
@@ -134,35 +298,14 @@ namespace gishadev.companion.Village.Villagers
             ApplySorting(ref agent, next.y);
 
             // The timeout is the guard against a zero walk speed, which would otherwise never arrive.
-            if ((next - agent.Destination).sqrMagnitude > ArrivalSqrDistance &&
-                agent.StateTimer < agent.StateDuration) return;
-
-            EnterIdle(ref agent);
+            return (next - agent.Destination).sqrMagnitude <= ArrivalSqrDistance ||
+                   agent.StateTimer >= agent.StateDuration;
         }
 
-        private void EnterIdle(ref Agent agent)
+        private void ReleasePoi(ref Agent agent)
         {
-            agent.State = VillagerState.Idle;
-            agent.StateTimer = 0f;
-            agent.StateDuration = _master.RandomIdleDuration();
-        }
-
-        private void EnterWander(ref Agent agent)
-        {
-            var position = agent.Tf.position;
-            var current = new Vector2(position.x, position.y);
-
-            // Offset from where the villager stands, then pulled back inside: picking anywhere in the
-            // area would send everyone marching across the whole village on every walk.
-            var destination = _view.WalkableArea.ClampInside(
-                current + Random.insideUnitCircle * _master.WanderRadius);
-
-            agent.State = VillagerState.Wander;
-            agent.StateTimer = 0f;
-            agent.Destination = destination;
-            agent.StateDuration = TravelTimeout(Vector2.Distance(current, destination));
-
-            agent.View.SetFacingLeft(destination.x < current.x);
+            if (agent.Poi != null) agent.Poi.Release();
+            agent.Poi = null;
         }
 
         // Cached per agent so a walk that stays within one rendered pixel of height does not touch the
@@ -183,6 +326,10 @@ namespace gishadev.companion.Village.Villagers
             return speed > 0f ? distance / speed * 2f + 1f : 1f;
         }
 
+        private static Vector2 Flat(Vector3 position) => new Vector2(position.x, position.y);
+
+        private static Vector3 ToWorld(Vector2 flat, float z) => new Vector3(flat.x, flat.y, z);
+
         private void RemoveAt(int index)
         {
             // Order is not meaningful, so the last element backfills rather than shifting the tail.
@@ -199,6 +346,8 @@ namespace gishadev.companion.Village.Villagers
             public float StateTimer;
             public float StateDuration;
             public Vector2 Destination;
+            public Vector2 Facing;
+            public VillagePOI Poi;
             public int SortingOrder;
         }
     }

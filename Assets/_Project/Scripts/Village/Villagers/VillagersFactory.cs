@@ -45,8 +45,7 @@ namespace gishadev.companion.Village.Villagers
             var villager = Object.Instantiate(_master.VillagerPrefab, PickPosition(), Quaternion.identity,
                 _view.VillagersRoot);
 
-            villager.SetSprite(_master.RandomSprite());
-            villager.SetFacingLeft(Random.value < 0.5f);
+            villager.SetVariant(_master.RandomVariant());
 
             CheckSetupOnce(villager);
 

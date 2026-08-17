@@ -4,6 +4,12 @@ namespace gishadev.companion.Village.Villagers
     public enum VillagerState
     {
         Idle = 0,
-        Wander = 1
+        Wander = 1,
+        GoToJob = 2,
+        Working = 3,
+        GoToRelax = 4,
+
+        /// <summary>Inside a building: the GameObject is disabled, but the agent keeps ticking.</summary>
+        Hiding = 5
     }
 }

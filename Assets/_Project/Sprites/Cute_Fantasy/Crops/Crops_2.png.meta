@@ -190,7 +190,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -225,10 +225,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -269,12 +269,12 @@ TextureImporter:
       name: Crops_2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 223
-        width: 16
-        height: 18
+        x: 1
+        y: 224
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -291,12 +291,12 @@ TextureImporter:
       name: Crops_2_1
       rect:
         serializedVersion: 2
-        x: 17
-        y: 223
-        width: 14
-        height: 17
+        x: 18
+        y: 224
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -313,12 +313,12 @@ TextureImporter:
       name: Crops_2_2
       rect:
         serializedVersion: 2
-        x: 35
-        y: 228
-        width: 10
-        height: 8
+        x: 36
+        y: 229
+        width: 8
+        height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -335,12 +335,12 @@ TextureImporter:
       name: Crops_2_3
       rect:
         serializedVersion: 2
-        x: 48
-        y: 227
-        width: 15
-        height: 16
+        x: 49
+        y: 228
+        width: 13
+        height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -357,12 +357,12 @@ TextureImporter:
       name: Crops_2_4
       rect:
         serializedVersion: 2
-        x: 64
-        y: 227
-        width: 17
-        height: 22
+        x: 65
+        y: 228
+        width: 15
+        height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -379,12 +379,12 @@ TextureImporter:
       name: Crops_2_5
       rect:
         serializedVersion: 2
-        x: 80
-        y: 227
-        width: 17
-        height: 26
+        x: 81
+        y: 228
+        width: 15
+        height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -401,12 +401,12 @@ TextureImporter:
       name: Crops_2_6
       rect:
         serializedVersion: 2
-        x: 95
-        y: 223
-        width: 17
-        height: 18
+        x: 96
+        y: 224
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -423,12 +423,12 @@ TextureImporter:
       name: Crops_2_7
       rect:
         serializedVersion: 2
-        x: 0
-        y: 191
-        width: 16
-        height: 18
+        x: 1
+        y: 192
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -445,12 +445,12 @@ TextureImporter:
       name: Crops_2_8
       rect:
         serializedVersion: 2
-        x: 17
-        y: 191
-        width: 14
-        height: 17
+        x: 18
+        y: 192
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -467,12 +467,12 @@ TextureImporter:
       name: Crops_2_9
       rect:
         serializedVersion: 2
-        x: 36
-        y: 196
-        width: 7
-        height: 6
+        x: 37
+        y: 197
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -489,12 +489,12 @@ TextureImporter:
       name: Crops_2_10
       rect:
         serializedVersion: 2
-        x: 51
-        y: 196
-        width: 8
-        height: 11
+        x: 52
+        y: 197
+        width: 6
+        height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -511,12 +511,12 @@ TextureImporter:
       name: Crops_2_11
       rect:
         serializedVersion: 2
-        x: 66
-        y: 196
-        width: 11
-        height: 14
+        x: 67
+        y: 197
+        width: 9
+        height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -533,12 +533,12 @@ TextureImporter:
       name: Crops_2_12
       rect:
         serializedVersion: 2
-        x: 82
-        y: 196
-        width: 11
-        height: 15
+        x: 83
+        y: 197
+        width: 9
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -555,12 +555,12 @@ TextureImporter:
       name: Crops_2_13
       rect:
         serializedVersion: 2
-        x: 95
-        y: 191
-        width: 17
-        height: 18
+        x: 96
+        y: 192
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -577,12 +577,12 @@ TextureImporter:
       name: Crops_2_14
       rect:
         serializedVersion: 2
-        x: 0
-        y: 159
-        width: 16
-        height: 18
+        x: 1
+        y: 160
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -599,12 +599,12 @@ TextureImporter:
       name: Crops_2_15
       rect:
         serializedVersion: 2
-        x: 17
-        y: 159
-        width: 14
-        height: 17
+        x: 18
+        y: 160
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -621,12 +621,12 @@ TextureImporter:
       name: Crops_2_16
       rect:
         serializedVersion: 2
-        x: 36
-        y: 164
-        width: 7
-        height: 6
+        x: 37
+        y: 165
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -643,12 +643,12 @@ TextureImporter:
       name: Crops_2_17
       rect:
         serializedVersion: 2
-        x: 50
-        y: 163
-        width: 11
-        height: 13
+        x: 51
+        y: 164
+        width: 9
+        height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -665,12 +665,12 @@ TextureImporter:
       name: Crops_2_18
       rect:
         serializedVersion: 2
-        x: 65
-        y: 163
-        width: 13
-        height: 15
+        x: 66
+        y: 164
+        width: 11
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -687,12 +687,12 @@ TextureImporter:
       name: Crops_2_19
       rect:
         serializedVersion: 2
-        x: 81
-        y: 163
-        width: 13
-        height: 18
+        x: 82
+        y: 164
+        width: 11
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -709,12 +709,12 @@ TextureImporter:
       name: Crops_2_20
       rect:
         serializedVersion: 2
-        x: 95
-        y: 159
-        width: 17
-        height: 18
+        x: 96
+        y: 160
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -731,12 +731,12 @@ TextureImporter:
       name: Crops_2_21
       rect:
         serializedVersion: 2
-        x: 0
-        y: 127
-        width: 16
-        height: 18
+        x: 1
+        y: 128
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -753,12 +753,12 @@ TextureImporter:
       name: Crops_2_22
       rect:
         serializedVersion: 2
-        x: 17
-        y: 127
-        width: 14
-        height: 17
+        x: 18
+        y: 128
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -775,12 +775,12 @@ TextureImporter:
       name: Crops_2_23
       rect:
         serializedVersion: 2
-        x: 36
-        y: 132
-        width: 7
-        height: 6
+        x: 37
+        y: 133
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -797,12 +797,12 @@ TextureImporter:
       name: Crops_2_24
       rect:
         serializedVersion: 2
-        x: 50
-        y: 131
-        width: 10
-        height: 12
+        x: 51
+        y: 132
+        width: 8
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -819,12 +819,12 @@ TextureImporter:
       name: Crops_2_25
       rect:
         serializedVersion: 2
-        x: 65
-        y: 131
-        width: 13
-        height: 13
+        x: 66
+        y: 132
+        width: 11
+        height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -841,12 +841,12 @@ TextureImporter:
       name: Crops_2_26
       rect:
         serializedVersion: 2
-        x: 81
-        y: 131
-        width: 13
-        height: 13
+        x: 82
+        y: 132
+        width: 11
+        height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -863,12 +863,12 @@ TextureImporter:
       name: Crops_2_27
       rect:
         serializedVersion: 2
-        x: 95
-        y: 127
-        width: 17
-        height: 18
+        x: 96
+        y: 128
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -885,12 +885,12 @@ TextureImporter:
       name: Crops_2_28
       rect:
         serializedVersion: 2
-        x: 0
-        y: 95
-        width: 16
-        height: 18
+        x: 1
+        y: 96
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -907,12 +907,12 @@ TextureImporter:
       name: Crops_2_29
       rect:
         serializedVersion: 2
-        x: 17
-        y: 95
-        width: 14
-        height: 17
+        x: 18
+        y: 96
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -929,12 +929,12 @@ TextureImporter:
       name: Crops_2_30
       rect:
         serializedVersion: 2
-        x: 36
-        y: 100
-        width: 7
-        height: 6
+        x: 37
+        y: 101
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -951,12 +951,12 @@ TextureImporter:
       name: Crops_2_31
       rect:
         serializedVersion: 2
-        x: 51
-        y: 99
-        width: 9
-        height: 11
+        x: 52
+        y: 100
+        width: 7
+        height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -973,12 +973,12 @@ TextureImporter:
       name: Crops_2_32
       rect:
         serializedVersion: 2
-        x: 65
-        y: 99
-        width: 14
-        height: 16
+        x: 66
+        y: 100
+        width: 12
+        height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -995,12 +995,12 @@ TextureImporter:
       name: Crops_2_33
       rect:
         serializedVersion: 2
-        x: 81
-        y: 99
-        width: 14
-        height: 20
+        x: 82
+        y: 100
+        width: 12
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1017,12 +1017,12 @@ TextureImporter:
       name: Crops_2_34
       rect:
         serializedVersion: 2
-        x: 95
-        y: 95
-        width: 17
-        height: 18
+        x: 96
+        y: 96
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1039,12 +1039,12 @@ TextureImporter:
       name: Crops_2_35
       rect:
         serializedVersion: 2
-        x: 0
-        y: 63
-        width: 16
-        height: 18
+        x: 1
+        y: 64
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1061,12 +1061,12 @@ TextureImporter:
       name: Crops_2_36
       rect:
         serializedVersion: 2
-        x: 17
-        y: 63
-        width: 14
-        height: 17
+        x: 18
+        y: 64
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1083,12 +1083,12 @@ TextureImporter:
       name: Crops_2_37
       rect:
         serializedVersion: 2
-        x: 36
-        y: 68
-        width: 7
-        height: 6
+        x: 37
+        y: 69
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1105,12 +1105,12 @@ TextureImporter:
       name: Crops_2_38
       rect:
         serializedVersion: 2
-        x: 51
-        y: 67
-        width: 9
-        height: 13
+        x: 52
+        y: 68
+        width: 7
+        height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1127,12 +1127,12 @@ TextureImporter:
       name: Crops_2_39
       rect:
         serializedVersion: 2
-        x: 66
-        y: 67
-        width: 11
-        height: 16
+        x: 67
+        y: 68
+        width: 9
+        height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1149,12 +1149,12 @@ TextureImporter:
       name: Crops_2_40
       rect:
         serializedVersion: 2
-        x: 82
-        y: 67
-        width: 11
-        height: 19
+        x: 83
+        y: 68
+        width: 9
+        height: 17
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1171,12 +1171,12 @@ TextureImporter:
       name: Crops_2_41
       rect:
         serializedVersion: 2
-        x: 95
-        y: 63
-        width: 17
-        height: 18
+        x: 96
+        y: 64
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1193,12 +1193,12 @@ TextureImporter:
       name: Crops_2_42
       rect:
         serializedVersion: 2
-        x: 0
-        y: 31
-        width: 16
-        height: 18
+        x: 1
+        y: 32
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1215,12 +1215,12 @@ TextureImporter:
       name: Crops_2_43
       rect:
         serializedVersion: 2
-        x: 17
-        y: 31
-        width: 14
-        height: 17
+        x: 18
+        y: 32
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1237,12 +1237,12 @@ TextureImporter:
       name: Crops_2_44
       rect:
         serializedVersion: 2
-        x: 36
-        y: 36
-        width: 7
-        height: 6
+        x: 37
+        y: 37
+        width: 5
+        height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1259,12 +1259,12 @@ TextureImporter:
       name: Crops_2_45
       rect:
         serializedVersion: 2
-        x: 49
-        y: 35
-        width: 13
-        height: 12
+        x: 50
+        y: 36
+        width: 11
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1281,12 +1281,12 @@ TextureImporter:
       name: Crops_2_46
       rect:
         serializedVersion: 2
-        x: 65
-        y: 35
-        width: 14
-        height: 17
+        x: 66
+        y: 36
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1303,12 +1303,12 @@ TextureImporter:
       name: Crops_2_47
       rect:
         serializedVersion: 2
-        x: 81
-        y: 35
-        width: 14
-        height: 20
+        x: 82
+        y: 36
+        width: 12
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1325,12 +1325,12 @@ TextureImporter:
       name: Crops_2_48
       rect:
         serializedVersion: 2
-        x: 95
-        y: 31
-        width: 17
-        height: 18
+        x: 96
+        y: 32
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1347,12 +1347,12 @@ TextureImporter:
       name: Crops_2_49
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 0
-        width: 16
-        height: 17
+        width: 14
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1369,12 +1369,12 @@ TextureImporter:
       name: Crops_2_50
       rect:
         serializedVersion: 2
-        x: 17
+        x: 18
         y: 0
-        width: 14
-        height: 16
+        width: 12
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1391,12 +1391,12 @@ TextureImporter:
       name: Crops_2_51
       rect:
         serializedVersion: 2
-        x: 31
+        x: 32
         y: 0
-        width: 81
-        height: 29
+        width: 80
+        height: 28
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1413,7 +1413,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 3c83707c43523b445b27bf19941e0f8c
     internalID: 0
     vertices: []
     indices: 
@@ -1421,7 +1421,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Crops_2_0: -1340623528484842500
       Crops_2_1: -6163400531934313660

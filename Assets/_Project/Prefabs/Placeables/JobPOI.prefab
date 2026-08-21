@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7988487280251610406}
   - component: {fileID: 3528258959142037567}
+  - component: {fileID: 1089789460767543619}
   m_Layer: 6
   m_Name: JobPOI
   m_TagString: Untagged
@@ -47,6 +48,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.POI.JobPOI
   workPos: {fileID: 5755056828393870882}
+--- !u!114 &1089789460767543619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791334962263458630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8621e5ce906988e44bef29072f9c0f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.Placeables.JobPlaceable
+  spriteRenderer: {fileID: 5504851433238320715}
+  tiers: []
+  jobPoi: {fileID: 3528258959142037567}
 --- !u!1 &5040376747923321901
 GameObject:
   m_ObjectHideFlags: 0

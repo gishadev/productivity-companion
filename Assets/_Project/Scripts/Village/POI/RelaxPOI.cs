@@ -17,6 +17,12 @@ namespace gishadev.companion.Village.POI
 
         protected override Transform Target => enterPos;
 
+        /// <summary>
+        /// Raised by an upgraded building. Shrinking never evicts: anyone already inside stays, and
+        /// the building simply refuses new claims until it is back under the new limit.
+        /// </summary>
+        public void SetCapacity(int value) => capacity = Mathf.Max(1, value);
+
         protected override int Capacity => Mathf.Max(1, capacity);
     }
 }

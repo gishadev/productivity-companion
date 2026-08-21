@@ -13,14 +13,29 @@ MonoBehaviour:
   m_Name: VillageMaster
   m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.VillageMasterSO
   villagerPrefab: {fileID: -4674648766778755437, guid: 356a36497da9db94596a20985158c424, type: 3}
-  villagerSprites:
-  - {fileID: -39921608780872571, guid: b4d5bfdcf6ce4bd42953dd9e87da3fd0, type: 3}
+  villagerVariants: []
   maxVillagers: 30
-  spawnArea:
-    serializedVersion: 2
-    x: -2
-    y: -0.6
-    width: 4
-    height: 0.4
   minSpacing: 0.12
   placementAttempts: 8
+  walkSpeed: 0.25
+  wanderRadius: 0.8
+  idleDuration: {x: 1.5, y: 5}
+  relaxChance: 0.35
+  hideDuration: {x: 5, y: 15}
+  placeablePrefabs:
+  - type: 2
+    prefab: {fileID: 1089789460767543619, guid: d216060955f4bec4faac3c4d16ce04b5, type: 3}
+  - type: 0
+    prefab: {fileID: 7009618148115202288, guid: f205a81258560574e84a017dfba7787c, type: 3}
+  placementRules:
+  - level: 1
+    type: 2
+  - level: 2
+    type: 0
+  - level: 4
+    type: 0
+  tierRules:
+  - type: 0
+    tier: 1
+    unlockLevel: 10
+    levelsPerUpgrade: 5

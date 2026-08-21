@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using gishadev.companion.Village.Placeables;
 using UnityEngine;
 
 namespace gishadev.companion.Village
@@ -43,6 +45,16 @@ namespace gishadev.companion.Village
         [Tooltip("Seconds spent hidden inside, as min/max. A work phase turns them out early regardless.")]
         [SerializeField] private Vector2 hideDuration = new Vector2(5f, 15f);
 
+        [Header("Placeables")]
+        [Tooltip("Which prefab each kind of spot builds.")]
+        [SerializeField] private PlaceableDefinition[] placeablePrefabs;
+
+        [Tooltip("The village build order: one entry per building, in the order they should appear.")]
+        [SerializeField] private PlacementRule[] placementRules;
+
+        [Tooltip("When each tier starts sweeping through the buildings of a type.")]
+        [SerializeField] private TierRule[] tierRules;
+
         public Villagers.Villager VillagerPrefab => villagerPrefab;
 
         public bool HasVariants => villagerVariants != null && villagerVariants.Length > 0;
@@ -60,6 +72,26 @@ namespace gishadev.companion.Village
         public float WanderRadius => Mathf.Max(0f, wanderRadius);
 
         public float RelaxChance => Mathf.Clamp01(relaxChance);
+
+        public IReadOnlyList<PlacementRule> PlacementRules =>
+            (IReadOnlyList<PlacementRule>)placementRules ?? System.Array.Empty<PlacementRule>();
+
+        public IReadOnlyList<TierRule> TierRules =>
+            (IReadOnlyList<TierRule>)tierRules ?? System.Array.Empty<TierRule>();
+
+        /// <summary>Null when the type has no prefab assigned, which leaves its spots empty.</summary>
+        public PlaceableBase PrefabFor(PlaceableType type)
+        {
+            if (placeablePrefabs == null) return null;
+
+            for (var i = 0; i < placeablePrefabs.Length; i++)
+            {
+                var definition = placeablePrefabs[i];
+                if (definition != null && definition.Type == type) return definition.Prefab;
+            }
+
+            return null;
+        }
 
         public float RandomIdleDuration() => RandomInBand(idleDuration);
 

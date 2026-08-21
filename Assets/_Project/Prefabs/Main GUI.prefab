@@ -459,7 +459,7 @@ MonoBehaviour:
   hideSprite: {fileID: -9068725172075675904, guid: a2c102fbabc57ef4f90c91ffded5c2e2, type: 3}
   showSprite: {fileID: 728810779448538483, guid: a2c102fbabc57ef4f90c91ffded5c2e2, type: 3}
   topPosition: {x: 0, y: -10}
-  bottomPosition: {x: 0, y: -280}
+  bottomPosition: {x: 0, y: -300}
   switchHysteresis: 0.03
 --- !u!114 &6830849940341809256
 MonoBehaviour:
@@ -2026,7 +2026,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -10}
-  m_SizeDelta: {x: 450, y: 170}
+  m_SizeDelta: {x: 450, y: 192.9957}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6254405972614000686
 CanvasRenderer:

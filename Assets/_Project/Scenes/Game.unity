@@ -250,6 +250,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Companion GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1936099346145518239, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936099346145518239, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5024653958744698756, guid: 9774f29bbcc782f49be0e638c29561b6, type: 3}
       propertyPath: m_Pivot.x
       value: 0

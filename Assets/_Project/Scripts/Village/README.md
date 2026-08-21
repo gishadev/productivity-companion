@@ -12,6 +12,17 @@ Village/
   YSorting.cs             the one world-Y-to-sorting-order formula
   StaticYSort.cs          applies it to props that do not move
   VillageInstaller.cs     registers this, Viewport/ and Incremental/
+  Placeables/
+    PlaceableType.cs        House / Tree / Job
+    PlaceableSpot.cs        an authored plot; fixed type
+    PlaceableBase.cs        the minimum: a type, and hooks it may ignore
+    TieredPlaceable.cs      adds the fixed variant index and a tier ladder
+    PlaceableTiersSO.cs     the ladder itself, as a shared asset
+    HousePlaceable.cs       tiered; carries a RelaxPOI whose capacity rises with it
+    JobPlaceable.cs         carries a JobPOI; deliberately not tiered
+    SimplePlaceable.cs      tiered; trees and scenery
+    PlacementRules.cs       the level-keyed rule types
+    PlaceableController.cs  reconciles the whole village from the level
   POI/
     VillagePOI.cs           abstract: target position, capacity, claim/release
     JobPOI.cs               one villager, works while the user works
@@ -260,6 +271,79 @@ the buildings.
 
 ---
 
+## Placeables — the village as a progression readout
+
+Buildings appear at authored levels and houses upgrade through material tiers. Like the villager
+population, this **reconciles to a target computed from the level** rather than reacting to level-ups:
+a save restored at level 50 must rebuild the right village in one pass, with no history to replay.
+
+Two rule sets on `VillageMasterSO`, both pure functions of level:
+
+- **`placementRules`** — one `(level, type)` entry per building, so the array reads as a build order.
+  Placed count for a type is how many of its rules have `level <= currentLevel`, clamped to the number
+  of spots of that type. Spots fill in scene order, so the hierarchy is the running order.
+- **`tierRules`** — `(type, tier, unlockLevel, levelsPerUpgrade)`. At `unlockLevel` the first building
+  reaches that tier, then one more every `levelsPerUpgrade` levels until all have.
+
+Which building upgrades next comes from a **Fisher-Yates shuffle fixed at startup, one draw per tier**,
+so the house that led the sweep to tier 2 is not automatically the one that leads to tier 3. Not
+persisted — re-rolled each launch, like villager variants. Stable within a session is all reconciling
+needs.
+
+Displayed tier is the **highest** rule a building qualifies for, which makes the computation
+order-independent and lets overlapping rules degrade gracefully: a building can reach tier 3 without
+visibly passing through tier 2 and simply shows tier 3.
+
+### Shape is fixed; the tier is the material
+
+The art forces this. `House_1..5` are five different **footprints** — 0.72 to 1.72 units wide — while
+Wood / Stone / Limestone are pixel-identical silhouettes of those same shapes. So a spot draws its
+**variant index once and keeps it for life**, and the tier only decides which array that index is read
+from. Upgrading is a pure sprite swap: no resize, and no chance of a house growing into its neighbour.
+
+`SpriteFor(tier, variantIndex)` therefore means *shape i in tier t's material* — every tier must list
+the shapes in the same order. Both indices are clamped, so a short tier falls back to its last entry
+rather than throwing or drawing a different building.
+
+The ladder lives in a **`PlaceableTiersSO` asset**, not on the prefab: art can be repainted or retimed
+without dirtying the prefab, and several prefabs can share one ladder. It is one asset per *ladder*
+rather than one per tier, because the shape-index contract spans tiers and is only checkable when they
+sit side by side in a single inspector — which is also where an editor-only `OnValidate` warns if the
+rows have different lengths, the one mistake that would silently make a building change shape as it
+upgrades.
+
+### Not everything tiers
+
+`PlaceableBase` carries only a type and two hooks it is free to ignore; `TieredPlaceable` adds the
+sprite data on top. **`JobPlaceable` extends the base directly**: a job post is one villager at one
+fixed spot, so it has nothing to upgrade and no capacity to raise — it either exists or it does not,
+and that is all the level decides about it. Giving it a tier array to leave empty would have been a
+field that exists only to be ignored.
+
+Capacity sits on the **tier row itself**, beside that tier's sprites. A parallel `int[]` on
+`HousePlaceable` would be a second tier-indexed collection in a second file — two things to keep in
+step, and nothing to notice when they drift. Ladders for scenery leave the field at its default and
+nothing reads it.
+
+Tier rules naming a type whose prefab is not tiered are inert, not an error.
+
+### ⚠️ Placement invalidates the POI registry
+
+`POIRegistry` scans once and caches. Every POI it knew before this existed was authored into the prefab;
+now they arrive on runtime-instantiated buildings. `PlaceableController` calls `Refresh()` after any
+placement change, and `PlaceableSpot.Clear` **deactivates before destroying** — `Destroy` is deferred to
+end of frame, so a demolished building's POI would otherwise still be claimable by the refresh that
+follows immediately.
+
+Both failures here are silent: villagers simply never use the new building. Worth checking first if a
+placed house or workplace is being ignored.
+
+`PlaceableBase` deliberately does **no** Y-sorting — `House.prefab`'s `Sprite` child already carries
+`StaticYSort`, and `Instantiate` positions the object before `OnEnable`. A second sorting path is the
+exact duplicate-formula problem `YSorting` exists to prevent.
+
+---
+
 ## Scene requirements
 
 - `VillageView` on the `Simulation Root` prefab, with a `villagersRoot` child (falls back to its own
@@ -269,6 +353,12 @@ the buildings.
 - `StaticYSort` on each house and prop, moved onto the **same sorting layer as the villagers**. The
   ground stays on `SimGround` and needs no component: it is always behind everything.
 - An `Animator` on `Villager.prefab` with the controller described above.
+- `PlaceableSpot`s for each plot, with `type` set; the placeable prefabs assigned per type on
+  `VillageMaster.asset`, each with its `tiers` filled and its `spriteRenderer` wired to the child that
+  actually draws.
+- House sprites re-imported with **pivot Bottom-Center**. The pack ships `pivot {0,0}` (bottom-*left*),
+  which puts a building's transform at its lower-left corner — placement and `YSorting` both assume the
+  transform is where the building stands.
 - `JobPOI` near a workplace with a `workPos` child where the villager stands; `RelaxPOI` on each
   building with an `enterPos` child at the door. POIs need no layer or sorting setup — they are logic
   markers and are never rendered.

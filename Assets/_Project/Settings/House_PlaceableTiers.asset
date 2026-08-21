@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7968fd870bd47484891b135d0de53f1f, type: 3}
+  m_Name: House_PlaceableTiers
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.Placeables.PlaceableTiersSO
+  tiers:
+  - variants:
+    - {fileID: -6694875992507473619, guid: 6b5fb1d5c4639ad4e99a36d798ade64b, type: 3}
+    - {fileID: 7597468625203146345, guid: 480c30bdf5df0e642af4f1e17f67b360, type: 3}
+    capacity: 1
+  - variants:
+    - {fileID: -529788526876314560, guid: 8d73c411d08debe4ca18aab424f834fd, type: 3}
+    - {fileID: 4972288215953488587, guid: 40f9f2ae27706454c921867e7d90804c, type: 3}
+    - {fileID: -7403517671583093659, guid: f65e6c0490cb6ad43bcbf871abae49d4, type: 3}
+    capacity: 1
+  - variants:
+    - {fileID: -5453514363504455597, guid: 3bcf83c44f0f3d045b5f6e0a484a17c9, type: 3}
+    - {fileID: -3510415501004913657, guid: 62c313521e7e6514fb4f33ac7c1935a8, type: 3}
+    - {fileID: 2071198125820355338, guid: e7dfa700c4da1504fb4cff357bddf0af, type: 3}
+    - {fileID: 2632133395554702046, guid: 1ac1bcad1936e294c9535a1aa2ce90a5, type: 3}
+    - {fileID: -1309427334820629646, guid: 314a362980bba7e4897656bcfcf3ef2c, type: 3}
+    capacity: 2

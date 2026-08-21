@@ -1,4 +1,5 @@
 using gishadev.companion.Village.POI;
+using gishadev.companion.Village.Placeables;
 using gishadev.companion.Village.Villagers;
 using UnityEngine;
 using VContainer;
@@ -69,6 +70,9 @@ namespace gishadev.companion.Village
             // Scans the scene itself rather than taking a reference: POIs are scattered across the
             // village prefab, and wiring each one into a list by hand is a step to forget.
             builder.Register<POIRegistry>(Lifetime.Singleton);
+
+            // Before the population that uses it, so the world exists first.
+            builder.RegisterEntryPoint<PlaceableController>().AsSelf();
 
             builder.Register<VillagersAIController>(Lifetime.Singleton);
             builder.Register<VillagersFactory>(Lifetime.Singleton);

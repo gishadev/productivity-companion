@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1928886718156782267}
   - component: {fileID: 235885775030696562}
+  - component: {fileID: 7009618148115202288}
   m_Layer: 6
   m_Name: House
   m_TagString: Untagged
@@ -79,6 +80,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.POI.RelaxPOI
   enterPos: {fileID: 6029397484525264700}
   capacity: 3
+--- !u!114 &7009618148115202288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460523017457014073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcf3df4573c1627449ca35c0bcffa4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: gishadev.companion.Runtime::gishadev.companion.Village.Placeables.HousePlaceable
+  spriteRenderer: {fileID: 4179891429369653686}
+  tiers: {fileID: 11400000, guid: 4bac0589a4933e54a9db9970a297ddba, type: 2}
+  relaxPoi: {fileID: 235885775030696562}
+  tierCapacities: 03000000
 --- !u!1 &9049398361443936429
 GameObject:
   m_ObjectHideFlags: 0

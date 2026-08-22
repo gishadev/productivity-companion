@@ -38,16 +38,39 @@ namespace gishadev.companion.Village.Villagers
         /// </summary>
         public void SetMovement(Vector2 direction, float speed)
         {
-            if (spriteRenderer != null && !Mathf.Approximately(direction.x, 0f))
-                spriteRenderer.flipX = direction.x < 0f;
+            var facing = Cardinal(direction);
+
+            if (spriteRenderer != null && !Mathf.Approximately(facing.x, 0f))
+                spriteRenderer.flipX = facing.x < 0f;
 
             if (animator == null) return;
 
             // The side clips are authored facing right and mirrored for left, so the blend tree only
             // ever sees a non-negative X — otherwise it would need left-facing clips that do not exist.
-            animator.SetFloat(MoveXHash, Mathf.Abs(direction.x));
-            animator.SetFloat(MoveYHash, direction.y);
+            animator.SetFloat(MoveXHash, Mathf.Abs(facing.x));
+            animator.SetFloat(MoveYHash, facing.y);
             animator.SetFloat(SpeedHash, speed);
+        }
+
+        /// <summary>
+        /// Quantises a heading to the axis it leans on. Sprite clips cannot be interpolated, so a 2D
+        /// blend tree does not blend them — it shows whichever clip currently carries the most weight.
+        /// A diagonal heading sits between two clips at near-equal weight, where the smallest numerical
+        /// wobble flips which one wins and the villager visibly flickers between facings. Snapping is
+        /// what makes the choice deterministic; it costs nothing visually, because a three-clip tree was
+        /// only ever going to show one of three facings anyway.
+        ///
+        /// Movement itself stays diagonal. This quantises the *facing*, not the path.
+        /// </summary>
+        private static Vector2 Cardinal(Vector2 direction)
+        {
+            if (direction.sqrMagnitude < Mathf.Epsilon) return Vector2.down;
+
+            // Ties go horizontal: a walk at exactly 45 degrees reads better on the side clip than on
+            // the back or front, and picking a side deterministically is the whole point.
+            return Mathf.Abs(direction.x) >= Mathf.Abs(direction.y)
+                ? new Vector2(Mathf.Sign(direction.x), 0f)
+                : new Vector2(0f, Mathf.Sign(direction.y));
         }
 
         public void SetWorking(bool working)

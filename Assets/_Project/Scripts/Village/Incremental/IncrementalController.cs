@@ -125,6 +125,39 @@ namespace gishadev.companion.Village
             else AccrueProgress(category, dt);
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Jumps to a level. Debug tooling only, which is why it is compiled out of release builds —
+        /// nothing in the app is allowed to hand out levels.
+        ///
+        /// Fires <see cref="LevelUpEvent"/> in both directions. The name reads oddly on a decrease, but
+        /// every consumer reconciles from <see cref="Level"/> rather than accumulating from the payload,
+        /// so one event puts the village into the right shape either way.
+        /// </summary>
+        public void DebugSetLevel(int level)
+        {
+            var previous = Level;
+
+            Level = Mathf.Clamp(level, 0, MaxLevel);
+            _progress = 0d;
+            _dirty = true;
+
+            Persist();
+            Refresh();
+
+            if (Level != previous) _eventBus.Fire(new LevelUpEvent(Level, previous));
+        }
+
+        /// <summary>Back to a fresh install: level, progress and any penalty owed.</summary>
+        public void DebugResetState()
+        {
+            _penaltySeconds = 0f;
+            _penaltyFired = false;
+
+            DebugSetLevel(0);
+        }
+#endif
+
         public void Dispose()
         {
             if (_dirty) Persist();

@@ -23,9 +23,24 @@ MonoBehaviour:
     - {fileID: -7403517671583093659, guid: f65e6c0490cb6ad43bcbf871abae49d4, type: 3}
     capacity: 1
   - variants:
-    - {fileID: -5453514363504455597, guid: 3bcf83c44f0f3d045b5f6e0a484a17c9, type: 3}
     - {fileID: -3510415501004913657, guid: 62c313521e7e6514fb4f33ac7c1935a8, type: 3}
+    - {fileID: -1309427334820629646, guid: 314a362980bba7e4897656bcfcf3ef2c, type: 3}
     - {fileID: 2071198125820355338, guid: e7dfa700c4da1504fb4cff357bddf0af, type: 3}
     - {fileID: 2632133395554702046, guid: 1ac1bcad1936e294c9535a1aa2ce90a5, type: 3}
-    - {fileID: -1309427334820629646, guid: 314a362980bba7e4897656bcfcf3ef2c, type: 3}
+    - {fileID: -2762084523766588718, guid: 4f9e14d5ebfedc248be875f9c580c988, type: 3}
+    - {fileID: 1579032979022226812, guid: bc0f984747cc3a6448128575952a5cde, type: 3}
+    - {fileID: -7939185883873598991, guid: f99fda80a6e55b74ea64be0a586924cf, type: 3}
+    - {fileID: 7665076880598194970, guid: 8b4cedc37033a7840b09d76a832b116e, type: 3}
+    - {fileID: -5453514363504455597, guid: 3bcf83c44f0f3d045b5f6e0a484a17c9, type: 3}
     capacity: 2
+  - variants:
+    - {fileID: -1505487287276319016, guid: e4a7497eb81e84941bc2306573b8e217, type: 3}
+    - {fileID: -6258305593649301498, guid: e84bcbdf1dff83c44aca9db55c95284a, type: 3}
+    - {fileID: -646876696479864085, guid: 1491c9bf17d42604bbdbcc9bb9f8640e, type: 3}
+    - {fileID: 8248737345458431486, guid: a40c09e855845434ba9f66c74767451d, type: 3}
+    - {fileID: 4563026713546883732, guid: e6c9d944eaab9644dac860b6cab39b41, type: 3}
+    - {fileID: -1369882933804062893, guid: f89ae930373290d45b1a09292d38e5ee, type: 3}
+    - {fileID: -5276039468894566532, guid: 4ba6ab8428dfbd443a40fa0d079b5c88, type: 3}
+    - {fileID: 3040600775190891071, guid: 3ad85d23d611b1449a39d721ea04aa0e, type: 3}
+    - {fileID: -5387668969623090218, guid: 1c568b427f9c7824884ae4db8a20e88d, type: 3}
+    capacity: 3

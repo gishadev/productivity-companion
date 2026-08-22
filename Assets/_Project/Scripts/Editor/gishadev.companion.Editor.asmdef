@@ -1,0 +1,20 @@
+{
+    "name": "gishadev.companion.Editor",
+    "rootNamespace": "",
+    "references": [
+        "gishadev.companion.Runtime",
+        "gishadev.tools",
+        "VContainer"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

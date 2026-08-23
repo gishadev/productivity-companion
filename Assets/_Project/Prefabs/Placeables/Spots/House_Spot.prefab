@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6696805307148185533}
   - component: {fileID: 3691723070054647207}
   m_Layer: 0
-  m_Name: House_PlaceableSpot
+  m_Name: House_Spot
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

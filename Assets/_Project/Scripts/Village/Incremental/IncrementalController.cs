@@ -148,6 +148,44 @@ namespace gishadev.companion.Village
             if (Level != previous) _eventBus.Fire(new LevelUpEvent(Level, previous));
         }
 
+        public bool DebugPenaltyFired => _penaltyFired;
+
+        /// <summary>
+        /// Straight to a triggered penalty, without the two unproductive minutes it normally takes.
+        /// Only fires the event when the latch was down, so pressing it twice cannot leave two triggers
+        /// outstanding against a single clear.
+        /// </summary>
+        public void DebugFillPenalty()
+        {
+            _penaltySeconds = _settings.MaxPenaltySeconds;
+
+            if (!_penaltyFired)
+            {
+                _penaltyFired = true;
+                _eventBus.Fire(new PenaltyTriggeredEvent(_penaltySeconds, _focus.CurrentProcessName));
+            }
+
+            Refresh();
+        }
+
+        /// <summary>
+        /// Pays the penalty off outright. Mirrors the pairing rule in RecoverPenalty: a clear is only
+        /// announced when a trigger actually preceded it, or consumers would be told to recover from
+        /// something that never happened.
+        /// </summary>
+        public void DebugClearPenalty()
+        {
+            _penaltySeconds = 0f;
+
+            if (_penaltyFired)
+            {
+                _penaltyFired = false;
+                _eventBus.Fire(new PenaltyClearedEvent());
+            }
+
+            Refresh();
+        }
+
         /// <summary>Back to a fresh install: level, progress and any penalty owed.</summary>
         public void DebugResetState()
         {

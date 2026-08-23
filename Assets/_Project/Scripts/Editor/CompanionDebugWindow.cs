@@ -37,6 +37,15 @@ namespace gishadev.companion.EditorTools
             var incremental = ResolveIncremental();
 
             DrawLevel(incremental);
+
+            // Skipped entirely rather than drawn disabled: DrawLevel already explains why there is
+            // nothing to talk to, and repeating it per section is noise.
+            if (incremental != null)
+            {
+                EditorGUILayout.Space();
+                DrawPenalty(incremental);
+            }
+
             EditorGUILayout.Space();
             DrawReset(incremental);
         }
@@ -70,6 +79,29 @@ namespace gishadev.companion.EditorTools
                 if (GUILayout.Button("Apply Level", GUILayout.Width(110f)))
                     incremental.DebugSetLevel(_targetLevel);
             }
+        }
+
+        private static void DrawPenalty(IncrementalController incremental)
+        {
+            EditorGUILayout.LabelField("Penalty", EditorStyles.boldLabel);
+
+            var owed = incremental.PenaltySeconds;
+            var state = incremental.DebugPenaltyFired ? "triggered" : "not triggered";
+            EditorGUILayout.LabelField("Owed", $"{owed:0.0}s  ({state})");
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("Fill Penalty")) incremental.DebugFillPenalty();
+                if (GUILayout.Button("Clear Penalty")) incremental.DebugClearPenalty();
+            }
+
+            // Worth saying, because it looks like the button failed: filling only holds while the
+            // penalty cannot drain, and productive or regular time during a running work phase pays it
+            // straight back off.
+            if (incremental.DebugPenaltyFired)
+                EditorGUILayout.HelpBox(
+                    "A running work phase will drain this as soon as you are in a productive or regular app.",
+                    MessageType.None);
         }
 
         private void DrawReset(IncrementalController incremental)

@@ -18,8 +18,8 @@ namespace gishadev.companion.Focus
 
         // JsonUtility cannot serialize a HashSet, so State holds lists and these are the lookup copy,
         // rebuilt from them on load and written back to them on save.
-        private readonly HashSet<string> _productive = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        private readonly HashSet<string> _unproductive = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _productive = new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _unproductive = new(StringComparer.OrdinalIgnoreCase);
 
         public FocusRules(ISaverSystem saver)
         {
@@ -120,8 +120,8 @@ namespace gishadev.companion.Focus
         [Serializable]
         private sealed class State
         {
-            public List<string> productive = new List<string>();
-            public List<string> unproductive = new List<string>();
+            public List<string> productive = new();
+            public List<string> unproductive = new();
         }
     }
 }

@@ -66,6 +66,7 @@ namespace gishadev.companion.Village
 
             builder.RegisterInstance(_villageMaster);
             builder.Register(_ => Find<VillageView>(), Lifetime.Singleton);
+            builder.Register(_ => Find<PenaltyVillageFireView>(), Lifetime.Singleton);
 
             // Scans the scene itself rather than taking a reference: POIs are scattered across the
             // village prefab, and wiring each one into a list by hand is a step to forget.

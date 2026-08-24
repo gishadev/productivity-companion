@@ -34,7 +34,7 @@ namespace gishadev.companion.Infrastructure
             new FocusInstaller().Install(builder);
             new PomodoroInstaller().Install(builder);
             new UIInstaller().Install(builder);
-            new VillageInstaller(incrementalSettings, villageMaster).Install(builder);
+            new VillageInstaller(incrementalSettings, villageMaster, transform).Install(builder);
         }
     }
 }

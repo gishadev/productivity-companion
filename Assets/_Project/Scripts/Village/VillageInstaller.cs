@@ -18,11 +18,16 @@ namespace gishadev.companion.Village
     {
         private readonly IncrementalSettingsSO _incrementalSettings;
         private readonly VillageMasterSO _villageMaster;
+        private readonly Transform _host;
 
-        public VillageInstaller(IncrementalSettingsSO incrementalSettings, VillageMasterSO villageMaster)
+        public VillageInstaller(
+            IncrementalSettingsSO incrementalSettings,
+            VillageMasterSO villageMaster,
+            Transform host)
         {
             _incrementalSettings = incrementalSettings;
             _villageMaster = villageMaster;
+            _host = host;
         }
 
         public void Install(IContainerBuilder builder)
@@ -51,6 +56,13 @@ namespace gishadev.companion.Village
             builder.RegisterInstance(_incrementalSettings);
             builder.Register(_ => Find<IncrementalView>(), Lifetime.Singleton);
             builder.RegisterEntryPoint<IncrementalController>().AsSelf();
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            builder.RegisterComponentOnNewGameObject<IncrementalDebugHotkeys>(Lifetime.Singleton)
+                .UnderTransform(_host);
+            // Nothing resolves it otherwise: it drives itself off Update, not an entry point.
+            builder.RegisterBuildCallback(c => c.Resolve<IncrementalDebugHotkeys>());
+#endif
         }
 
         private void InstallSimulation(IContainerBuilder builder)

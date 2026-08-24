@@ -38,6 +38,16 @@ MonoBehaviour:
     type: 0
   - level: 8
     type: 0
+  - level: 15
+    type: 2
+  - level: 20
+    type: 2
+  - level: 25
+    type: 2
+  - level: 30
+    type: 2
+  - level: 35
+    type: 2
   tierRules:
   - type: 0
     tier: 1

@@ -15,8 +15,9 @@ MonoBehaviour:
   basePointsPerSecond: 1
   regularMultiplier: 1
   productiveMultiplier: 2.5
-  baseThreshold: 60
+  baseThreshold: 5
   growthFactor: 1.35
-  maxPenaltySeconds: 120
+  breakMultiplier: 0.25
+  maxPenaltySeconds: 15
   regularRecoveryPerSecond: 1
   productiveRecoveryPerSecond: 2

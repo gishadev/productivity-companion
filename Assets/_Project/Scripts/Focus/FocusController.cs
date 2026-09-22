@@ -7,10 +7,6 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Focus
 {
-    /// <summary>
-    /// Polls which application owns the foreground and fires <see cref="FocusCategoryChangedEvent"/>
-    /// whenever its classification changes.
-    /// </summary>
     public sealed class FocusController : IStartable, ITickable, IDisposable
     {
         private const float PollInterval = 0.5f;
@@ -30,25 +26,18 @@ namespace gishadev.companion.Focus
 
         public FocusCategory CurrentCategory { get; private set; } = FocusCategory.Regular;
 
-        /// <summary>True while the player itself holds the foreground.</summary>
         public bool IsOwnWindowFocused { get; private set; }
 
-        /// <summary>
-        /// What the user's current activity should count as. Identical to <see cref="CurrentCategory"/>
-        /// except while our own window is focused, which counts as <see cref="FocusCategory.Regular"/>
-        /// rather than inheriting the app they came from: the sticky category is right for tagging, but
-        /// as a reward input it would pay out the last app's multiplier for sitting in the widget — and,
-        /// worse, keep accruing an unproductive penalty with no way to escape it from inside the app.
-        /// </summary>
+        // Our own window counts as Regular, so sitting in the widget neither earns the last app's
+        // multiplier nor keeps accruing its penalty.
         public FocusCategory EffectiveCategory =>
             IsOwnWindowFocused ? FocusCategory.Regular : CurrentCategory;
 
-        /// <summary>Always the last foreign application: the player's own window is ignored.</summary>
+        // Last foreign app; our own window is ignored.
         public string CurrentProcessName { get; private set; } = string.Empty;
 
         public string CurrentTitle { get; private set; } = string.Empty;
 
-        /// <summary>Assigns <see cref="CurrentProcessName"/> to a category. Used by the focus settings UI and debug hotkeys.</summary>
         public bool TagCurrent(FocusCategory category) => _rules.Set(CurrentProcessName, category);
 
         void IStartable.Start()
@@ -61,7 +50,6 @@ namespace gishadev.companion.Focus
 
         void ITickable.Tick()
         {
-            // Unscaled so a paused or slowed timescale cannot stall it.
             if (Time.unscaledTime < _nextPoll) return;
             Poll();
         }
@@ -77,8 +65,7 @@ namespace gishadev.companion.Focus
 
             IsOwnWindowFocused = info.IsOwnProcess;
 
-            // Ignoring our own window keeps clicking the widget from resetting the user's activity, and
-            // is what leaves the tagging hotkeys pointed at the app they just came from.
+            // Ignoring our own window keeps tagging pointed at the app the user came from.
             if (info.IsOwnProcess) return;
 
             CurrentProcessName = info.ProcessName;

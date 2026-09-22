@@ -7,10 +7,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Window.Native
 {
-    /// <summary>
-    /// Win32 implementation. Instantiated only by <see cref="PlatformWindowFactory"/>, which
-    /// refuses to create it in the editor.
-    /// </summary>
     public sealed class Win32PlatformWindow : IPlatformWindow
     {
         private const string UnityWindowClassName = "UnityWndClass";
@@ -19,7 +15,6 @@ namespace gishadev.companion.Window.Native
 
         private readonly IntPtr _hwnd;
 
-        // Cached so the per-frame click-through path never pays for a redundant SetWindowLong.
         private bool _clickThrough;
         private bool _hiddenFromTaskbar;
 
@@ -61,7 +56,7 @@ namespace gishadev.companion.Window.Native
             if (stripped == style) return;
 
             Win32Interop.SetWindowLong(_hwnd, Win32Interop.GWL_STYLE, stripped);
-            // The non-client area is cached by the OS; SWP_FRAMECHANGED forces it to be recomputed.
+            // SWP_FRAMECHANGED forces the cached non-client area to be recomputed.
             Win32Interop.SetWindowPos(_hwnd, IntPtr.Zero, 0, 0, 0, 0,
                 Win32Interop.SWP_NOMOVE | Win32Interop.SWP_NOSIZE | Win32Interop.SWP_NOACTIVATE |
                 Win32Interop.SWP_FRAMECHANGED);
@@ -77,8 +72,7 @@ namespace gishadev.companion.Window.Native
             var info = new Win32Interop.MONITORINFO { cbSize = Marshal.SizeOf<Win32Interop.MONITORINFO>() };
             if (!Win32Interop.GetMonitorInfo(monitor, ref info)) return;
 
-            // rcMonitor, not rcWork: the widget is meant to span the whole display, and it is
-            // click-through everywhere it draws nothing, so overlapping the taskbar costs nothing.
+            // rcMonitor, not rcWork: covering the taskbar is harmless while click-through.
             var bounds = info.rcMonitor;
             Win32Interop.SetWindowPos(_hwnd, IntPtr.Zero,
                 bounds.Left, bounds.Top,
@@ -94,14 +88,11 @@ namespace gishadev.companion.Window.Native
                 UnityEngine.Debug.LogWarning(
                     "[Window] DWM composition is disabled; per-pixel alpha will not work. Use the ColorKey mode instead.");
 
-            // WS_EX_LAYERED is required here, for two reasons that are easy to get wrong: click-through
-            // via WS_EX_TRANSPARENT only passes clicks reliably on a layered window, and a layered
-            // window that never receives SetLayeredWindowAttributes is not guaranteed to paint at all.
-            // An alpha of 255 is uniform-opaque and does not itself cause washout.
+            // Required: WS_EX_TRANSPARENT only passes clicks reliably on a layered window, and a layered window
+            // without SetLayeredWindowAttributes may not paint.
             AddExStyle(Win32Interop.WS_EX_LAYERED);
             Win32Interop.SetLayeredWindowAttributes(_hwnd, 0, 255, Win32Interop.LWA_ALPHA);
 
-            // -1 on every side extends the glass frame across the whole client area.
             var margins = new Win32Interop.MARGINS
             {
                 cxLeftWidth = -1, cxRightWidth = -1, cyTopHeight = -1, cyBottomHeight = -1
@@ -113,13 +104,12 @@ namespace gishadev.companion.Window.Native
         {
             if (!IsAvailable) return;
 
-            // Color keying works on the composited window surface, so any glass frame left over from
-            // a previous PerPixelAlpha run has to be collapsed or it keeps punching its own holes.
+            // Collapse any glass frame left from PerPixelAlpha, or it keeps punching holes.
             var margins = new Win32Interop.MARGINS();
             Win32Interop.DwmExtendFrameIntoClientArea(_hwnd, ref margins);
 
             AddExStyle(Win32Interop.WS_EX_LAYERED);
-            // COLORREF packs as 0x00BBGGRR, which is byte-reversed from the usual RGB order.
+            // COLORREF is 0x00BBGGRR.
             var colorRef = (uint)(key.r | (key.g << 8) | (key.b << 16));
             Win32Interop.SetLayeredWindowAttributes(_hwnd, colorRef, 0, Win32Interop.LWA_COLORKEY);
         }
@@ -128,8 +118,7 @@ namespace gishadev.companion.Window.Native
         {
             if (!IsAvailable) return;
 
-            // Collapse the DWM frame extension before dropping the layered style, otherwise the
-            // glass margins linger and the window renders with a transparent border.
+            // Collapse the DWM frame before dropping WS_EX_LAYERED, or a transparent border lingers.
             var margins = new Win32Interop.MARGINS();
             Win32Interop.DwmExtendFrameIntoClientArea(_hwnd, ref margins);
 
@@ -164,8 +153,7 @@ namespace gishadev.companion.Window.Native
 
             _hiddenFromTaskbar = hidden;
 
-            // The taskbar only re-reads WS_EX_TOOLWINDOW when the window is re-shown, so the
-            // hide/show cycle around the style change is required, not defensive.
+            // The taskbar only re-reads WS_EX_TOOLWINDOW on re-show.
             Win32Interop.ShowWindow(_hwnd, Win32Interop.SW_HIDE);
 
             var exStyle = Win32Interop.GetWindowLong(_hwnd, Win32Interop.GWL_EXSTYLE);
@@ -175,7 +163,7 @@ namespace gishadev.companion.Window.Native
                 exStyle = (exStyle & ~Win32Interop.WS_EX_TOOLWINDOW) | Win32Interop.WS_EX_APPWINDOW;
             Win32Interop.SetWindowLong(_hwnd, Win32Interop.GWL_EXSTYLE, exStyle);
 
-            // SW_SHOWNA keeps us from stealing focus on the way back up.
+            // SW_SHOWNA: don't steal focus.
             Win32Interop.ShowWindow(_hwnd, Win32Interop.SW_SHOWNA);
         }
 
@@ -195,7 +183,6 @@ namespace gishadev.companion.Window.Native
             if (point.X < 0 || point.Y < 0 || point.X >= width || point.Y >= height)
                 return false;
 
-            // Win32 client space is top-left origin; Unity screen space is bottom-left.
             unityScreenPosition = new Vector2(point.X, height - point.Y);
             return true;
         }
@@ -214,10 +201,7 @@ namespace gishadev.companion.Window.Native
             Win32Interop.SetWindowLong(_hwnd, Win32Interop.GWL_EXSTYLE, exStyle & ~flag);
         }
 
-        /// <summary>
-        /// GetActiveWindow only works when the player already owns the foreground, which is not
-        /// guaranteed at startup, so fall back to scanning this process's own top-level windows.
-        /// </summary>
+        // GetActiveWindow fails if we aren't foreground at startup.
         private static IntPtr ResolveWindowHandle()
         {
             var active = Win32Interop.GetActiveWindow();

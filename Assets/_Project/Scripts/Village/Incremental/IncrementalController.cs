@@ -2,6 +2,7 @@ using System;
 using gishadev.companion.Events;
 using gishadev.companion.Focus;
 using gishadev.companion.Pomodoro;
+using gishadev.companion.SavingLoading;
 using gishadev.tools.Events;
 using gishadev.tools.SavingSystem;
 using UnityEngine;
@@ -9,43 +10,25 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Turns focus category into village progress. Regular apps earn a baseline, productive apps a
-    /// multiple of it, and unproductive apps instead accrue a capped penalty that has to be paid back
-    /// before progress resumes at all.
-    /// </summary>
     public sealed class IncrementalController : IStartable, ITickable, IDisposable
     {
-        private const string SaveKey = "incremental.state";
-
-        // Waking from sleep, a domain reload or a scene load can hand us one enormous delta. Set well
-        // above the worst real frame interval (the widget throttles rendering, not Update, so ticks keep
-        // arriving at the target frame rate) so it only ever catches genuine stalls.
+        // Guards against huge deltas after sleep or domain reload.
         private const float MaxTickDelta = 1f;
 
-        // Far past anything reachable; exists so Threshold() cannot overflow to infinity, which would
-        // freeze the level and feed the slider a NaN.
+        // Keeps Threshold() from overflowing to infinity.
         private const int MaxLevel = 200;
 
-        // Every accruing tick dirties the state, and FileSaverSystem flushes to disk on every Save, so
-        // writes are debounced. Caps what an ungraceful kill can cost, without a write per frame.
+        // FileSaverSystem flushes on every Save, so accrual writes are debounced.
         private const float PersistInterval = 30f;
 
         private readonly IncrementalSettingsSO _settings;
         private readonly FocusController _focus;
         private readonly PomodoroTimer _pomodoro;
         private readonly IEventBus _eventBus;
-        private readonly ISaverSystem _saver;
+        private readonly SaveSlot<IncrementalData> _slot;
         private readonly IncrementalView _view;
 
-        // double, and normalized into the current level rather than counted in raw points.
-        //
-        // The normalizing is for the slider and for save-file stability. The double is the part that
-        // matters: at 32-bit precision a frame's increment stops moving the accumulator at all once the
-        // level threshold passes ~2.8e5 — around level 31, which is only ~520 hours of use — and
-        // progress silently freezes on a full-looking bar. Normalizing does *not* avoid this, because
-        // the increment shrinks in step with the threshold it is divided by; both representations stall
-        // at the same level. Only the wider mantissa does, pushing it to level 98 (~1e14 points).
+        // double, not float: at float precision a frame's increment stops moving progress around level 31.
         private double _progress;
         private float _penaltySeconds;
         private bool _penaltyFired;
@@ -53,9 +36,7 @@ namespace gishadev.companion.Village
         private bool _dirty;
         private float _nextPersist;
 
-        // -1 is unmatchable by the quantised value and by any level, so the first refresh always writes
-        // through. Same job done by the null on the category, whose default would otherwise be a real
-        // value that could match on the first comparison and suppress the initial write.
+        // -1 / null force the first refresh through.
         private int _pushedValue = -1;
         private bool _pushedPenalty;
         private int _pushedLevel = -1;
@@ -75,25 +56,23 @@ namespace gishadev.companion.Village
             _focus = focus;
             _pomodoro = pomodoro;
             _eventBus = eventBus;
-            _saver = saver;
+            _slot = new SaveSlot<IncrementalData>(saver, SaveKeys.Incremental);
             _view = view;
 
-            // In the constructor, not Start: anything that resolves this controller should see a valid
-            // level immediately, without depending on entry point registration order.
+            // In the constructor so resolvers see a valid level regardless of entry point order.
             Restore();
         }
 
         public int Level { get; private set; }
 
-        /// <summary>How far into the current level, 0 to 1.</summary>
+        // 0..1 within the current level.
         public float Progress => (float)_progress;
 
         public float PenaltySeconds => _penaltySeconds;
 
-        /// <summary>While true nothing accrues: productive and regular time pays off the penalty instead.</summary>
         public bool IsPenalised => _penaltySeconds > 0f;
 
-        /// <summary>A break that is actually ticking, which is the only state that shelters from penalties.</summary>
+        // Only a running break shelters from penalties.
         public bool IsOnBreak => _pomodoro.IsRunning && _pomodoro.Phase != PomodoroPhase.Work;
 
         void IStartable.Start() => Refresh();
@@ -102,9 +81,7 @@ namespace gishadev.companion.Village
         {
             var dt = Mathf.Min(Time.unscaledDeltaTime, MaxTickDelta);
 
-            // A stopped timer — paused, reset or never started — freezes the whole mechanic. Progress
-            // does not move and the penalty holds its value rather than accruing or draining, so the
-            // widget picks up exactly where it left off when the session resumes.
+            // A stopped timer freezes both progress and penalty.
             if (_pomodoro.IsRunning) Advance(_focus.EffectiveCategory, dt);
 
             Refresh();
@@ -113,8 +90,7 @@ namespace gishadev.companion.Village
 
         private void Advance(FocusCategory category, float dt)
         {
-            // On a break, unproductive time is inert rather than punished: it neither accrues penalty
-            // nor pays one off, so an owed penalty simply waits until the break ends.
+            // On a break, unproductive time neither accrues nor pays off penalty.
             if (category == FocusCategory.Unproductive)
             {
                 if (!IsOnBreak) AccruePenalty(dt);
@@ -126,14 +102,7 @@ namespace gishadev.companion.Village
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        /// <summary>
-        /// Jumps to a level. Debug tooling only, which is why it is compiled out of release builds —
-        /// nothing in the app is allowed to hand out levels.
-        ///
-        /// Fires <see cref="LevelUpEvent"/> in both directions. The name reads oddly on a decrease, but
-        /// every consumer reconciles from <see cref="Level"/> rather than accumulating from the payload,
-        /// so one event puts the village into the right shape either way.
-        /// </summary>
+        // Fires LevelUpEvent in both directions; consumers reconcile from Level.
         public void DebugSetLevel(int level)
         {
             var previous = Level;
@@ -150,11 +119,7 @@ namespace gishadev.companion.Village
 
         public bool DebugPenaltyFired => _penaltyFired;
 
-        /// <summary>
-        /// Straight to a triggered penalty, without the two unproductive minutes it normally takes.
-        /// Only fires the event when the latch was down, so pressing it twice cannot leave two triggers
-        /// outstanding against a single clear.
-        /// </summary>
+        // Fires only when the latch was down, so triggers and clears stay paired.
         public void DebugFillPenalty()
         {
             _penaltySeconds = _settings.MaxPenaltySeconds;
@@ -168,11 +133,6 @@ namespace gishadev.companion.Village
             Refresh();
         }
 
-        /// <summary>
-        /// Pays the penalty off outright. Mirrors the pairing rule in RecoverPenalty: a clear is only
-        /// announced when a trigger actually preceded it, or consumers would be told to recover from
-        /// something that never happened.
-        /// </summary>
         public void DebugClearPenalty()
         {
             _penaltySeconds = 0f;
@@ -186,7 +146,6 @@ namespace gishadev.companion.Village
             Refresh();
         }
 
-        /// <summary>Back to a fresh install: level, progress and any penalty owed.</summary>
         public void DebugResetState()
         {
             _penaltySeconds = 0f;
@@ -205,7 +164,6 @@ namespace gishadev.companion.Village
         {
             var points = _settings.BasePointsPerSecond * MultiplierFor(category) * PomodoroMultiplier() * dt;
 
-            // A zero rate leaves the state untouched rather than marking it dirty.
             if (points <= 0f) return;
 
             var threshold = Threshold(Level);
@@ -223,13 +181,12 @@ namespace gishadev.companion.Village
                 var previous = Level;
                 Level++;
 
-                // Carry the overflow across, rescaled into the new level's larger frame so it is worth
-                // the same number of points either side of the boundary.
+                // Carry the overflow into the next level's scale.
                 var next = Threshold(Level);
                 _progress = (_progress - 1d) * threshold / next;
                 threshold = next;
 
-                // Immediately, rather than on the debounce: a level is the one thing worth a disk write.
+                // Level-ups persist immediately rather than on the debounce.
                 _nextPersist = 0f;
                 _eventBus.Fire(new LevelUpEvent(Level, previous));
             }
@@ -251,8 +208,7 @@ namespace gishadev.companion.Village
             _penaltySeconds = Mathf.Max(0f, _penaltySeconds - RecoveryFor(category) * dt);
             if (_penaltySeconds > 0f) return;
 
-            // Only pairs with a penalty that actually fired: draining a partial one the user never
-            // maxed out is not something a consumer needs to recover from.
+            // Clears only pair with a fired trigger.
             if (!_penaltyFired) return;
 
             _penaltyFired = false;
@@ -263,7 +219,6 @@ namespace gishadev.companion.Village
             ? _settings.ProductiveMultiplier
             : _settings.RegularMultiplier;
 
-        // Only ever reached from Advance, which the running check already gates.
         private float PomodoroMultiplier() =>
             _pomodoro.Phase == PomodoroPhase.Work ? 1f : _settings.BreakMultiplier;
 
@@ -275,14 +230,13 @@ namespace gishadev.companion.Village
 
         private void Refresh()
         {
-            // Unity's == is overloaded to report a destroyed object as null; ?. and "is null" bypass it.
+            // Unity's == catches destroyed objects; ?. and "is null" don't.
             if (_view == null) return;
 
             var penalised = IsPenalised;
             var value = Mathf.Clamp01(penalised ? _penaltySeconds / _settings.MaxPenaltySeconds : (float)_progress);
 
-            // Ticks arrive far faster than the widget renders while unfocused, so only push when the
-            // bar would visibly move.
+            // Only push when the bar would visibly move.
             var quantised = Mathf.RoundToInt(value * 200f);
             if (quantised != _pushedValue || penalised != _pushedPenalty)
             {
@@ -314,41 +268,15 @@ namespace gishadev.companion.Village
         {
             _dirty = false;
             _nextPersist = Time.unscaledTime + PersistInterval;
-            _saver.Save(SaveKey, JsonUtility.ToJson(new State { level = Level, progress = (float)_progress }));
+            _slot.Save(new IncrementalData { level = Level, progress = (float)_progress });
         }
 
         private void Restore()
         {
-            if (!_saver.TryLoad(SaveKey, out var json) || string.IsNullOrEmpty(json)) return;
-
-            State state;
-            try
-            {
-                state = JsonUtility.FromJson<State>(json);
-            }
-            catch (Exception exception)
-            {
-                // This runs while the container is being built, so letting it escape takes the app down
-                // over a corrupt save. Starting over is the better failure.
-                Debug.LogWarning($"[Incremental] Discarding unreadable save state: {exception.Message}");
-                return;
-            }
-
-            if (state == null) return;
+            var state = _slot.Load();
 
             Level = Mathf.Clamp(state.level, 0, MaxLevel);
             _progress = float.IsFinite(state.progress) ? Mathf.Clamp01(state.progress) : 0f;
-        }
-
-        // progress is a float on the way to disk even though it is accumulated as a double: only the
-        // repeated addition needs the wider mantissa, and rounding a 0-1 fraction once per load costs
-        // ~6e-8 of a level. Keeping it float also stays inside the field types JsonUtility is known to
-        // round-trip, rather than betting the save file on its handling of double.
-        [Serializable]
-        private sealed class State
-        {
-            public int level;
-            public float progress;
         }
     }
 }

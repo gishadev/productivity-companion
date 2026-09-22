@@ -33,8 +33,7 @@ namespace gishadev.companion.UI
         private bool _isDockedToBottom;
         private bool _canDock;
 
-        // Method injection, not a field: the scope builds after the scene's Awake pass, so this is the
-        // earliest point the settings can actually be read.
+        // Method injection: the scope builds after Awake.
         [Inject]
         public void Construct(VillageWindowSettings windowSettings)
         {
@@ -76,9 +75,7 @@ namespace gishadev.companion.UI
                 _windowSettings.Changed -= OnWindowSettingsChanged;
         }
 
-        // Polled rather than driven by the drag: three separate WidgetDragHandles move the widget, and
-        // a resolution change moves the screen under a widget that never moved at all. Only auto-flip
-        // tracks the widget; the manual side is set once and left alone.
+        // Polled: several drag handles and resolution changes can move the widget.
         private void Update()
         {
             if (!_canDock || _windowSettings == null || !_windowSettings.AutoFlip) return;
@@ -101,25 +98,18 @@ namespace gishadev.companion.UI
             simulationTargetObject.SetActive(!_windowSettings.IsHidden);
         }
 
-        /// <summary>True once the widget sits in the upper half, where the window has to hang below it.</summary>
         private bool ShouldDockToBottom()
         {
             var height = Mathf.InverseLerp(_screenRect.rect.yMin, _screenRect.rect.yMax,
                 _screenRect.InverseTransformPoint(DockAnchor).y);
 
-            // The band is only ever crossed away from the current side, so a widget parked on the
-            // middle line settles instead of flipping every frame.
+            // Hysteresis, so a widget parked on the midline doesn't flip every frame.
             var threshold = _isDockedToBottom ? 0.5f - switchHysteresis : 0.5f + switchHysteresis;
             return height >= threshold;
         }
 
-        /// <summary>
-        /// Where the window hangs from: its own position with the offset we applied taken back out.
-        /// Reading the window directly would feed the flip back into its own trigger, and reading the
-        /// parent instead is no good either — it is a full-screen rect whose centre only happens to
-        /// track the widget. Point anchors only, which is what anchoredPosition being a plain
-        /// translation depends on.
-        /// </summary>
+        // Own position minus the applied offset, so the flip can't feed back into its own trigger.
+        // Point anchors only.
         private Vector3 DockAnchor =>
             _simulationRect.position - _dockParent.TransformVector(_simulationRect.anchoredPosition);
 

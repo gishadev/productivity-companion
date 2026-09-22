@@ -91,6 +91,6 @@ Shares `companion.sg` with the other subsystems, under the `focus.rules` key:
 {"productive":["rider","code"],"unproductive":["discord"]}
 ```
 
-`JsonUtility` cannot serialize a `HashSet`, so `State` holds `List<string>` and `FocusRules` keeps an
+`JsonUtility` cannot serialize a `HashSet`, so `FocusRulesData` (in `SavingLoading/Data/`) holds `List<string>` and `FocusRules` keeps an
 `OrdinalIgnoreCase` `HashSet` beside it for lookups — rebuilt from the lists on load, written back to
 them right before each save. Do not "simplify" one of the two away.

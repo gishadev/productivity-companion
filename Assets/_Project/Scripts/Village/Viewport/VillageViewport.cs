@@ -2,11 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Maps between screen space and the simulation's world space. Deliberately holds no gameplay: every
-    /// pointer-driven feature — picking, drag and place, labels pinned over entities — needs this one
-    /// mapping and nothing else, which is what keeps the render-texture indirection from leaking.
-    /// </summary>
     public sealed class VillageViewport
     {
         private readonly VillageSceneRig _rig;
@@ -20,7 +15,6 @@ namespace gishadev.companion.Village
 
         public bool IsUsable => _rig != null && _rig.IsValid && _surface != null && _surface.isActiveAndEnabled;
 
-        /// <summary>False when the simulation is hidden, or the point is outside the surface.</summary>
         public bool TryScreenToWorld(Vector2 screenPosition, out Vector2 world)
         {
             world = default;
@@ -38,7 +32,6 @@ namespace gishadev.companion.Village
             return true;
         }
 
-        /// <summary>Where a point in the simulation lands on screen, for pinning UI over an entity.</summary>
         public bool TryWorldToScreen(Vector2 world, out Vector2 screenPosition)
         {
             screenPosition = default;

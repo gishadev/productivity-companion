@@ -26,8 +26,7 @@ namespace gishadev.companion.UI
             TabGroup = group;
         }
 
-        // Guards against transitions firing before Awake runs (e.g. when this tab is
-        // instantiated and selected within the same frame, under an inactive parent).
+        // Transitions can fire before Awake (instantiated and selected in the same frame under an inactive parent).
         private void EnsureTransitionInitialized()
         {
             if (_transitionInitialized) return;

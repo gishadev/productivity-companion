@@ -1,22 +1,16 @@
 using System;
+using gishadev.companion.SavingLoading;
 using gishadev.tools.SavingSystem;
-using UnityEngine;
 using VContainer.Unity;
 
 namespace gishadev.companion.Pomodoro
 {
-    /// <summary>
-    /// The Pomodoro state machine; knows nothing about UI, audio, or the window. Time is tracked
-    /// against a UTC end timestamp rather than accumulated frame deltas: the app throttles its frame
-    /// rate and stops rendering while unfocused, so deltas would drift — and a timestamp lets a session
-    /// survive the machine sleeping or the app closing.
-    /// </summary>
+    // Tracks a UTC end timestamp, not frame deltas: rendering is throttled while unfocused, and a
+    // session must survive sleep or restart.
     public sealed class PomodoroTimer : ITickable
     {
-        private const string SaveKey = "pomodoro.state";
-
         private readonly PomodoroSettings _settings;
-        private readonly ISaverSystem _saver;
+        private readonly SaveSlot<PomodoroTimerData> _slot;
 
         private DateTime _endUtc;
         private TimeSpan _remaining;
@@ -25,7 +19,7 @@ namespace gishadev.companion.Pomodoro
         public PomodoroTimer(PomodoroSettings settings, ISaverSystem saver)
         {
             _settings = settings;
-            _saver = saver;
+            _slot = new SaveSlot<PomodoroTimerData>(saver, SaveKeys.PomodoroTimer);
             Restore();
         }
 
@@ -33,7 +27,6 @@ namespace gishadev.companion.Pomodoro
 
         public bool IsRunning { get; private set; }
 
-        /// <summary>Work sessions finished so far; drives when a long break is due.</summary>
         public int CompletedWorkSessions { get; private set; }
 
         public TimeSpan Remaining
@@ -46,21 +39,16 @@ namespace gishadev.companion.Pomodoro
             }
         }
 
-        /// <summary>Raised whether started by the user or by auto-advance.</summary>
         public event Action<PomodoroPhase> PhaseStarted;
 
-        /// <summary>Raised when a phase reaches its end, or is ended early via <see cref="Skip"/>.</summary>
         public event Action<PomodoroPhase> PhaseCompleted;
 
-        /// <summary>Coarse "something changed" signal for views to refresh on.</summary>
         public event Action StateChanged;
 
-        /// <summary>Starts the current phase, or resumes it if paused.</summary>
         public void Start()
         {
             if (IsRunning) return;
 
-            // A phase that has never run (or was reset) has no remaining time banked yet.
             if (_remaining <= TimeSpan.Zero)
                 _remaining = _settings.DurationOf(Phase);
 
@@ -72,11 +60,7 @@ namespace gishadev.companion.Pomodoro
             StateChanged?.Invoke();
         }
 
-        /// <summary>
-        /// Switches to <paramref name="phase"/> and starts it. Picking the phase already loaded resumes
-        /// it with whatever was banked; picking a different one abandons the current phase and starts
-        /// the new one at full length — it is a change of mind, not a completion, so no cycle is counted.
-        /// </summary>
+        // Same phase resumes; a different phase restarts at full length without counting a cycle.
         public void StartPhase(PomodoroPhase phase)
         {
             if (phase != Phase)
@@ -100,10 +84,8 @@ namespace gishadev.companion.Pomodoro
             StateChanged?.Invoke();
         }
 
-        /// <summary>Ends the current phase immediately and advances, as if it had run out.</summary>
         public void Skip() => CompletePhase(allowAutoStart: true);
 
-        /// <summary>Returns to a stopped Work phase and clears the cycle count.</summary>
         public void Reset()
         {
             Phase = PomodoroPhase.Work;
@@ -119,8 +101,7 @@ namespace gishadev.companion.Pomodoro
         {
             if (_restoredPhaseExpired)
             {
-                // Reported once and deliberately not auto-advanced: chaining would fire off however
-                // many phases elapsed overnight.
+                // Not auto-advanced, or it would chain through every phase that elapsed while closed.
                 _restoredPhaseExpired = false;
                 CompletePhase(allowAutoStart: false);
                 return;
@@ -164,23 +145,19 @@ namespace gishadev.companion.Pomodoro
 
         private void Save()
         {
-            _saver.Save(SaveKey, JsonUtility.ToJson(new State
+            _slot.Save(new PomodoroTimerData
             {
                 phase = (int)Phase,
                 completedWorkSessions = CompletedWorkSessions,
                 running = IsRunning,
                 endUtcTicks = _endUtc.Ticks,
                 remainingTicks = _remaining.Ticks
-            }));
+            });
         }
 
         private void Restore()
         {
-            if (!_saver.TryLoad(SaveKey, out var json) || string.IsNullOrEmpty(json))
-                return;
-
-            var state = JsonUtility.FromJson<State>(json);
-            if (state == null) return;
+            var state = _slot.Load();
 
             Phase = Enum.IsDefined(typeof(PomodoroPhase), state.phase)
                 ? (PomodoroPhase)state.phase
@@ -193,27 +170,15 @@ namespace gishadev.companion.Pomodoro
 
             if (DateTime.UtcNow < _endUtc)
             {
-                // Still mid-phase: pick it up where the wall clock says it is.
                 IsRunning = true;
                 return;
             }
 
-            // Ran out while closed. Deferred to the first tick: this is the constructor, so nothing
-            // has subscribed yet and the event would be raised into the void.
+            // Deferred to the first tick: nothing has subscribed yet in the constructor.
             _restoredPhaseExpired = true;
         }
 
         private static long SanitizeTicks(long ticks) =>
             ticks >= 0 && ticks <= DateTime.MaxValue.Ticks ? ticks : 0;
-
-        [Serializable]
-        private sealed class State
-        {
-            public int phase;
-            public int completedWorkSessions;
-            public bool running;
-            public long endUtcTicks;
-            public long remainingTicks;
-        }
     }
 }

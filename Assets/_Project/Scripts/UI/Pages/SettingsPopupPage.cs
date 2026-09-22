@@ -7,10 +7,6 @@ using VContainer;
 
 namespace gishadev.companion.UI.Pages
 {
-    /// <summary>
-    /// Edits <see cref="PomodoroSettings"/> and <see cref="VillageWindowSettings"/> in place: every field
-    /// writes through as soon as it is committed, so there is nothing to apply or cancel on close.
-    /// </summary>
     public class SettingsPopupPage : PopupPage
     {
         [SerializeField] private TMP_InputField pomodoroInput;
@@ -90,12 +86,10 @@ namespace gishadev.companion.UI.Pages
             ShowFlipOverride();
         }
 
-        // Auto-flip owns the side while it is on, so the manual toggle greys out rather than silently
-        // doing nothing. Its stored value is left alone, and comes back when auto-flip goes off.
+        // Manual flip is overridden while auto-flip is on; its stored value is kept.
         private void ShowFlipOverride() => flipToggle.interactable = !_villageWindowSettings.AutoFlip;
 
-        // The setters clamp, so the field is rewritten from the model rather than from what was typed:
-        // an empty box or a value out of range snaps back to what was actually stored.
+        // Rewritten from the model: setters clamp, and invalid input snaps back.
         private void OnPomodoroEdited(string value)
         {
             _settings.WorkMinutes = ParseMinutes(value, _settings.WorkMinutes);

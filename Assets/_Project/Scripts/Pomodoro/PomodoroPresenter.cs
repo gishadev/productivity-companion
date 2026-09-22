@@ -12,7 +12,6 @@ namespace gishadev.companion.Pomodoro
         private readonly PomodoroSettings _settings;
         private readonly PomodoroWidgetView _pomodoroWidgetView;
 
-        // -1 forces the next refresh through.
         private int _displayedSeconds = -1;
 
         public PomodoroPresenter(
@@ -27,8 +26,7 @@ namespace gishadev.companion.Pomodoro
             _pomodoroWidgetView = view;
         }
 
-        // Subscribing in Start, not lazily: the timer defers a phase that expired while the app was
-        // closed to its first Tick, and IStartable runs before ITickable — so the event is not lost.
+        // Subscribe in Start: the timer reports a phase that expired while closed on its first Tick.
         void IStartable.Start()
         {
             _eventBus.Subscribe<PlayClickedEvent>(OnPlayClicked);
@@ -39,7 +37,6 @@ namespace gishadev.companion.Pomodoro
             _timer.PhaseStarted += OnPhaseChanged;
             _timer.PhaseCompleted += OnPhaseCompleted;
 
-            // A duration edited while the timer sits idle should show up on the label immediately.
             _settings.Changed += Refresh;
 
             Refresh();
@@ -66,8 +63,7 @@ namespace gishadev.companion.Pomodoro
 
         private void OnResetClicked(ResetClickedEvent resetClickedEvent) => _timer.Reset();
 
-        // Start() also raises PhaseStarted when resuming from a pause, so handlers must be idempotent
-        // refreshes rather than transitions.
+        // Also raised on resume from pause, so this must stay an idempotent refresh.
         private void OnPhaseChanged(PomodoroPhase phase) => Refresh();
 
         private void OnPhaseCompleted(PomodoroPhase phase) => Refresh();
@@ -81,7 +77,6 @@ namespace gishadev.companion.Pomodoro
             RefreshTime();
         }
 
-        // Runs every frame; only writes when the whole-second value moved.
         private void RefreshTime()
         {
             var seconds = (int)Math.Ceiling(RemainingToShow().TotalSeconds);
@@ -91,8 +86,7 @@ namespace gishadev.companion.Pomodoro
             _pomodoroWidgetView.SetTime(Format(seconds));
         }
 
-        // A stopped phase with nothing banked reports zero, which would leave a fresh install reading
-        // 00:00. Fall back to the configured length so an idle widget shows what play will give you.
+        // Idle with nothing banked: show the configured length instead of 00:00.
         private TimeSpan RemainingToShow()
         {
             var remaining = _timer.Remaining;
@@ -102,8 +96,7 @@ namespace gishadev.companion.Pomodoro
             return remaining;
         }
 
-        // MM:SS, minutes deliberately not wrapped at 60: a 90 minute phase reads 90:00, which keeps the
-        // widget narrow and avoids an hours field that is almost always empty.
+        // Minutes aren't wrapped at 60: a 90 minute phase reads 90:00.
         private static string Format(int totalSeconds)
         {
             if (totalSeconds < 0) totalSeconds = 0;

@@ -8,12 +8,7 @@ using VContainer;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Development-only toggles and state readout, for exercising window behaviors in a standalone
-    /// build before a real settings UI exists. Stripped from release builds. Keyboard input requires
-    /// focus, and while the overlay is open it forces the window to stay clickable — otherwise
-    /// enabling click-through would make the overlay unreachable with no way to switch it back off.
-    /// </summary>
+    // Dev builds only. While the overlay is open the window stays clickable, or click-through would lock you out.
     public sealed class WindowDebugHotkeys : MonoBehaviour
     {
         private WindowSettings _settings;
@@ -22,7 +17,6 @@ namespace gishadev.companion.Window
         private ClickThroughController _clickThrough;
         private FocusController _focus;
 
-        /// <summary>Overlay bounds in GUI space (top-left origin). Shared by the draw and the hit test.</summary>
         private static readonly Rect OverlayRect = new Rect(10, 10, 340, 270);
 
         private bool _overlayVisible = true;
@@ -31,7 +25,6 @@ namespace gishadev.companion.Window
 
         private Texture2D _opaqueBackground;
 
-        // Fully opaque so the panel is never color-keyed away or tinted.
         private Texture2D OpaqueBackground
         {
             get
@@ -84,14 +77,11 @@ namespace gishadev.companion.Window
             if (keyboard.f6Key.wasPressedThisFrame) _settings.PreventDisplaySleep = !_settings.PreventDisplaySleep;
             if (keyboard.f7Key.wasPressedThisFrame) SetOverlayVisible(!_overlayVisible);
 
-            // The keys only arrive while our own window has focus, which is exactly why FocusController
-            // ignores it: the target is still the app the user came from.
             if (keyboard.f8Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Productive);
             if (keyboard.f9Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Unproductive);
             if (keyboard.f10Key.wasPressedThisFrame) _focus.TagCurrent(FocusCategory.Regular);
 
-            // Block clicks only over the overlay itself, not the whole window. Blanket blocking made
-            // click-through look broken everywhere while the overlay was up.
+            // Block only over the overlay, not the whole window.
             SetOverlayBlocking(_overlayVisible && IsCursorOverOverlay());
         }
 
@@ -112,7 +102,6 @@ namespace gishadev.companion.Window
         {
             if (!_window.TryGetCursorPosition(out var unityScreenPosition)) return false;
 
-            // IMGUI is top-left origin; the Win32 read is converted to Unity's bottom-left origin.
             var guiPosition = new Vector2(unityScreenPosition.x, Screen.height - unityScreenPosition.y);
             return OverlayRect.Contains(guiPosition);
         }
@@ -162,9 +151,7 @@ namespace gishadev.companion.Window
         {
             if (!_overlayVisible) return;
 
-            // GUI.skin.box is semi-transparent, so in ColorKey mode it blends with the key color and
-            // the whole overlay turns purple. Lay down a fully opaque backing first: opaque pixels
-            // never match the key, so the panel stays readable in every transparency mode.
+            // Opaque backing: GUI.skin.box is translucent and turns purple in ColorKey mode.
             GUI.DrawTexture(OverlayRect, OpaqueBackground);
             GUILayout.BeginArea(OverlayRect);
             GUILayout.Label("<b>Window debug</b> (F7 hides)", new GUIStyle(GUI.skin.label) { richText = true });

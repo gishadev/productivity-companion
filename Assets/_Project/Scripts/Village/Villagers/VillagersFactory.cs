@@ -3,10 +3,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village.Villagers
 {
-    /// <summary>
-    /// Owns the villager population. Reconciles to a target count rather than reacting to individual
-    /// level-ups, which is what lets a restored save materialise its whole village in one call.
-    /// </summary>
     public sealed class VillagersFactory
     {
         private readonly VillageMasterSO _master;
@@ -26,10 +22,7 @@ namespace gishadev.companion.Village.Villagers
 
         public int Count => _villagers.Count;
 
-        /// <summary>
-        /// Idempotent: spawns or despawns until the population matches. A tick can cross several levels
-        /// and fire several events, so this has to be safe to call with the same number repeatedly.
-        /// </summary>
+        // Idempotent: one tick can fire several level-ups.
         public void SetTarget(int count)
         {
             if (_view == null || _master == null || _master.VillagerPrefab == null) return;
@@ -65,9 +58,7 @@ namespace gishadev.companion.Village.Villagers
             Object.Destroy(villager.gameObject);
         }
 
-        // Rejection sampling with a bounded retry: once the area is full every candidate is too close,
-        // and accepting the last one is what stops that becoming an infinite loop. The spacing is a
-        // preference, not a guarantee.
+        // Bounded rejection sampling; spacing is a preference, not a guarantee.
         private Vector3 PickPosition()
         {
             var area = _view.WalkableArea;
@@ -92,17 +83,13 @@ namespace gishadev.companion.Village.Villagers
                 var other = _villagers[i];
                 if (other == null) continue;
 
-                // Compared in 2D: the art is flat, and z only carries sorting.
                 if (((Vector2)other.transform.position - world).sqrMagnitude < sqrSpacing) return false;
             }
 
             return true;
         }
 
-        // Both of these produce a village that looks broken rather than one that throws, so they are
-        // worth naming explicitly. Checked once for the whole run, not once per villager: every villager
-        // comes off the same prefab, and the scene lookup is not cheap enough to repeat 200 times
-        // through a restore.
+        // Both mistakes look broken rather than throw, so they're checked once and logged.
         private void CheckSetupOnce(Villager villager)
         {
             if (_setupChecked) return;
@@ -116,8 +103,7 @@ namespace gishadev.companion.Village.Villagers
             var rig = Object.FindAnyObjectByType<VillageSceneRig>(FindObjectsInactive.Include);
             if (rig == null || rig.Camera == null) return;
 
-            // The simulation camera culls everything but its own layer, so a prefab authored on the
-            // wrong one spawns fine, logs nothing and renders nothing.
+            // The simulation camera culls other layers, so a wrong layer renders nothing, silently.
             var layer = villager.gameObject.layer;
             if ((rig.Camera.cullingMask & (1 << layer)) != 0) return;
 

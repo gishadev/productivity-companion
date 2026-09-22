@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>Persisted, independently toggleable window behaviors.</summary>
     public sealed class WindowSettings
     {
         private const string KeyPrefix = "window.";
@@ -19,8 +18,7 @@ namespace gishadev.companion.Window
 
         public const TransparencyMode DefaultTransparencyMode = TransparencyMode.PerPixelAlpha;
 
-        // Tied to the transparency default: the window covers the whole screen, so transparent-without-
-        // click-through would leave the user unable to interact with their desktop at all.
+        // Transparent without click-through would lock the user out of their desktop.
         public const bool DefaultClickThrough = true;
 
         private TransparencyMode _transparencyMode;
@@ -41,7 +39,6 @@ namespace gishadev.companion.Window
             _preventDisplaySleep = GetBool(PreventDisplaySleepKey, false);
         }
 
-        /// <summary>Raised after a setting is persisted, carrying the one that changed.</summary>
         public event Action<WindowSetting> Changed;
 
         public TransparencyMode TransparencyMode
@@ -92,7 +89,7 @@ namespace gishadev.companion.Window
             }
         }
 
-        /// <summary>Clamped to <see cref="AllowedFrameRates"/>; out-of-range values snap to the nearest.</summary>
+        // Snaps to the nearest AllowedFrameRates entry.
         public int TargetFrameRate
         {
             get => _targetFrameRate;

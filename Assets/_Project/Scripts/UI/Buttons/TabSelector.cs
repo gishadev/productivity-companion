@@ -4,13 +4,7 @@ using UnityEngine.Events;
 
 namespace gishadev.companion.UI
 {
-    /// <summary>
-    /// A panel-less variant of <see cref="TabGroup"/>. It manages only the visual
-    /// selection state of its tabs and exposes the active index for manual control;
-    /// reacting to the selection (showing content, etc.) is left to listeners of
-    /// <see cref="onTabChanged"/>. Tabs may be assigned in the inspector or supplied
-    /// at runtime via <see cref="SetTabs"/>.
-    /// </summary>
+    // TabGroup without panels: react to onTabChanged yourself.
     public class TabSelector : MonoBehaviour, ITabGroup
     {
         [Header("Tabs")] [SerializeField] private List<TabButton> tabs = new();
@@ -31,7 +25,7 @@ namespace gishadev.companion.UI
                 Initialize(selectFirstOnStart ? 0 : -1);
         }
 
-        /// <summary>Replaces the tabs at runtime and selects <paramref name="startIndex"/> (-1 = none).</summary>
+        // startIndex -1 selects nothing.
         public void SetTabs(IEnumerable<TabButton> newTabs, int startIndex = 0)
         {
             tabs = new List<TabButton>(newTabs);
@@ -51,7 +45,6 @@ namespace gishadev.companion.UI
         public void OnTabSelected(TabButton tab) => SelectTab(tabs.IndexOf(tab));
         public bool IsActive(TabButton tab) => tab == _activeTab;
 
-        /// <summary>Manually selects a tab by index. Ignored if out of range.</summary>
         public void SelectTab(int index)
         {
             if (index < 0 || index >= tabs.Count) return;

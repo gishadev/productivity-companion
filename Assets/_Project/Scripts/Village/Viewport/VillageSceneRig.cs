@@ -2,11 +2,7 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Handle onto the simulation world's scene objects. The world sits at a fixed offset from the
-    /// origin and never moves: the widget it is displayed in gets dragged and re-docked constantly, so
-    /// anything anchored to that rect would have its cell and path coordinates shifted underneath it.
-    /// </summary>
+    // The world sits at a fixed offset and never moves, so dragging the widget can't shift world coordinates.
     [ExecuteAlways]
     public sealed class VillageSceneRig : MonoBehaviour
     {
@@ -35,8 +31,7 @@ namespace gishadev.companion.Village
                 return;
             }
 
-            // Camera.main is the transparency target WindowController rewrites the clear colour on, so
-            // a second MainCamera would leave which window is transparent up to scene ordering.
+            // WindowController rewrites Camera.main's clear colour for transparency; a second MainCamera breaks that.
             if (simulationCamera.CompareTag("MainCamera"))
                 Debug.LogError(
                     $"[Simulation] {name}: the simulation camera is tagged MainCamera, which window transparency claims.",
@@ -51,8 +46,7 @@ namespace gishadev.companion.Village
         private VillageRenderTarget _preview;
         private VillageSurface _previewSurface;
 
-        // The runtime target is a VContainer entry point, which only exists in play mode. Driving the
-        // same path by hand here is what lets the widget show the world while it is being authored.
+        // Drives the render target outside play mode for authoring.
         private void Update()
         {
             if (Application.isPlaying) return;

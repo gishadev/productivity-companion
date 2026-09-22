@@ -7,9 +7,7 @@ using UnityEngine.UI;
 
 namespace gishadev.companion.UI
 {
-    // Hit-tests a ring of options by pointer angle instead of by raycast: radial slices overlap as
-    // rects, so uGUI cannot tell them apart. The options' Buttons stay non-interactable and this
-    // drives their hover/press/selected tint.
+    // Hit-tests by pointer angle: radial slices overlap as rects, so uGUI raycasts can't separate them.
     [AddComponentMenu("UI/Radial Option Selector", 16)]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]
@@ -82,8 +80,7 @@ namespace gishadev.companion.UI
             foreach (var option in options)
             {
                 if (option?.button == null) continue;
-                // Selectable repaints its target graphic on every pointer event, and a non-interactable
-                // one always repaints to disabledColor — which would overwrite every tint set here.
+                // A non-interactable Selectable repaints to disabledColor on every pointer event, overwriting our tints.
                 option.button.transition = Selectable.Transition.None;
             }
         }
@@ -139,7 +136,6 @@ namespace gishadev.companion.UI
             else Refresh(pressed, instant: false);
         }
 
-        /// <summary>Selects an option as if it had been clicked. Out-of-range indices are ignored.</summary>
         public void Select(int index)
         {
             if (index < 0 || index >= options.Count) return;
@@ -165,9 +161,7 @@ namespace gishadev.companion.UI
             target.SetActive(false);
         }
 
-        // ── Hit testing ───────────────────────────────────────────────────────────
-
-        // -1 when the pointer is outside the ring, i.e. a click there dismisses the menu.
+        // -1 outside the ring (a click there dismisses).
         private int IndexAt(Vector2 screenPosition)
         {
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(_rect, screenPosition, EventCamera,
@@ -221,8 +215,6 @@ namespace gishadev.companion.UI
             return total <= 0f ? 1f : total;
         }
 
-        // ── Visuals ───────────────────────────────────────────────────────────────
-
         private void SetHovered(int index)
         {
             if (index == _hovered) return;
@@ -265,8 +257,6 @@ namespace gishadev.companion.UI
             if (index == _selected) return UIState.Selected;
             return UIState.Normal;
         }
-
-        // ── Editor ────────────────────────────────────────────────────────────────
 
         private void Reset()
         {
@@ -325,7 +315,6 @@ namespace gishadev.companion.UI
                 var edge = DirectionAt(cursor);
                 Gizmos.DrawLine(edge * minRadius, edge * maxRadius);
 
-                // Stub at the arc's midpoint so the option's facing is readable at a glance.
                 Gizmos.color = i == _hovered ? Color.yellow : new Color(0.4f, 0.7f, 1f, 0.8f);
                 var mid = DirectionAt(cursor + sweep * 0.5f);
                 Gizmos.DrawLine(mid * maxRadius, mid * (maxRadius + 14f));

@@ -4,10 +4,7 @@ using UnityEngine.UI;
 
 namespace gishadev.companion.UI
 {
-    /// <summary>
-    /// Add next to a Button to drive any number of Graphics with independent
-    /// per-state ColorBlocks. Set the Button's Transition to None.
-    /// </summary>
+    // Set the Button's Transition to None.
     [RequireComponent(typeof(Button))]
     public class MultiGraphicButton : MonoBehaviour,
         IPointerEnterHandler, IPointerExitHandler,
@@ -36,8 +33,6 @@ namespace gishadev.companion.UI
         }
 
         private void OnDisable() => transition.Transition(UIState.Disabled, immediate: true);
-
-        // ── Pointer events ────────────────────────────────────────────────────────
 
         public void OnPointerEnter(PointerEventData e)
         {
@@ -79,8 +74,6 @@ namespace gishadev.companion.UI
             transition.Transition(_isHovered ? UIState.Highlighted : UIState.Normal);
         }
 
-        // ── Interactable watch ────────────────────────────────────────────────────
-
         private void Update()
         {
             bool interactable = IsInteractable();
@@ -88,8 +81,6 @@ namespace gishadev.companion.UI
             _wasInteractable = interactable;
             transition.Transition(interactable ? ResolveState() : UIState.Disabled);
         }
-
-        // ── Helpers ───────────────────────────────────────────────────────────────
 
         private UIState ResolveState()
         {

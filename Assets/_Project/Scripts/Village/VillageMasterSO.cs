@@ -4,11 +4,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Everything the village needs to build itself. Edit-time data only: nothing here is written at
-    /// runtime or persisted, which is why it is an asset rather than one of the save-backed settings
-    /// classes the rest of the app uses.
-    /// </summary>
     [CreateAssetMenu(fileName = "VillageMaster", menuName = "Companion/Village Master")]
     public sealed class VillageMasterSO : ScriptableObject
     {
@@ -59,8 +54,7 @@ namespace gishadev.companion.Village
 
         public bool HasVariants => villagerVariants != null && villagerVariants.Length > 0;
 
-        // Re-clamped on read rather than trusted from the inspector: [Min] does not touch values already
-        // serialized into an asset, so an older or hand-edited file can still carry anything.
+        // Re-clamped on read: [Min] doesn't fix already-serialized values.
         public int MaxVillagers => Mathf.Max(1, maxVillagers);
 
         public float MinSpacing => Mathf.Max(0f, minSpacing);
@@ -79,7 +73,6 @@ namespace gishadev.companion.Village
         public IReadOnlyList<TierRule> TierRules =>
             (IReadOnlyList<TierRule>)tierRules ?? System.Array.Empty<TierRule>();
 
-        /// <summary>Null when the type has no prefab assigned, which leaves its spots empty.</summary>
         public PlaceableBase PrefabFor(PlaceableType type)
         {
             if (placeablePrefabs == null) return null;
@@ -100,8 +93,7 @@ namespace gishadev.companion.Village
         public AnimatorOverrideController RandomVariant() =>
             HasVariants ? villagerVariants[Random.Range(0, villagerVariants.Length)] : null;
 
-        // Ordered here rather than trusted from the inspector: a max below the min would otherwise make
-        // Random.Range silently return values outside the band the field claims.
+        // Ordered, so a max below the min can't escape the band.
         private static float RandomInBand(Vector2 band)
         {
             var min = Mathf.Max(0f, band.x);

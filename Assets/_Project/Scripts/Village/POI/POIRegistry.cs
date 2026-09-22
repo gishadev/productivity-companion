@@ -3,11 +3,7 @@ using UnityEngine;
 
 namespace gishadev.companion.Village.POI
 {
-    /// <summary>
-    /// Finds the POIs in the scene and hands out claims. Scanned once and lazily rather than on a
-    /// registration callback: POIs are static scene content authored on the village prefab, and the
-    /// lenient one-shot lookup matches how every other village scene reference is resolved.
-    /// </summary>
+    // Scanned lazily once; call Refresh after placeables change.
     public sealed class POIRegistry
     {
         private readonly List<JobPOI> _jobs = new List<JobPOI>();
@@ -33,12 +29,10 @@ namespace gishadev.companion.Village.POI
             }
         }
 
-        /// <summary>Null when every post is taken, or when the scene has none — both are normal.</summary>
         public JobPOI TryClaimJob() => Claim(Jobs);
 
         public RelaxPOI TryClaimRelax() => Claim(RelaxSpots);
 
-        /// <summary>Re-scan, for when POIs stop being fixed scene content.</summary>
         public void Refresh()
         {
             _scanned = false;
@@ -47,8 +41,7 @@ namespace gishadev.companion.Village.POI
 
         private static T Claim<T>(IReadOnlyList<T> candidates) where T : VillagePOI
         {
-            // Scanned in order rather than at random: with a handful of POIs the bias is invisible, and
-            // a stable choice keeps the same villager returning to the same post across a session.
+            // In order, not random: keeps a villager returning to the same post.
             for (var i = 0; i < candidates.Count; i++)
             {
                 var poi = candidates[i];
@@ -68,8 +61,7 @@ namespace gishadev.companion.Village.POI
             _jobs.Clear();
             _relax.Clear();
 
-            // Inactive included, for the same reason the installer does it: the village can be built
-            // while the widget is hidden.
+            // Inactive included: the village can be built while the widget is hidden.
             var found = Object.FindObjectsByType<VillagePOI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             for (var i = 0; i < found.Length; i++)
             {

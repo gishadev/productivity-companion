@@ -5,10 +5,6 @@ using System.Text;
 
 namespace gishadev.companion.Window.Native
 {
-    /// <summary>
-    /// Reads the foreground window through user32. Unlike <see cref="Win32PlatformWindow"/> this only
-    /// observes, never mutates, so <see cref="PlatformWindowFactory"/> also creates it in the editor.
-    /// </summary>
     public sealed class Win32ForegroundWindowProvider : IForegroundWindowProvider
     {
         private const int TitleBufferCapacity = 512;
@@ -17,8 +13,7 @@ namespace gishadev.companion.Window.Native
 
         private readonly StringBuilder _titleBuffer = new StringBuilder(TitleBufferCapacity);
 
-        // Process lookup is the expensive part of a poll and the answer cannot change for a live
-        // handle, so it is cached. The pid is part of the key because Windows recycles HWNDs.
+        // Process lookup is cached per handle; pid is part of the key because HWNDs get recycled.
         private IntPtr _cachedHwnd;
         private uint _cachedProcessId;
         private string _cachedProcessName;
@@ -45,10 +40,7 @@ namespace gishadev.companion.Window.Native
             return new ForegroundWindowInfo(_cachedProcessName, ReadTitle(hwnd), processId == CurrentProcessId);
         }
 
-        /// <summary>
-        /// Note that every UWP app reports "applicationframehost", so they all collapse into a single
-        /// entry as far as classification is concerned.
-        /// </summary>
+        // Every UWP app reports "applicationframehost".
         private static string ResolveProcessName(uint processId)
         {
             try
@@ -59,7 +51,6 @@ namespace gishadev.companion.Window.Native
             }
             catch (ArgumentException)
             {
-                // Exited between the handle read and this call.
                 return null;
             }
             catch (InvalidOperationException)
@@ -68,8 +59,7 @@ namespace gishadev.companion.Window.Native
             }
         }
 
-        // Re-read every poll rather than cached with the handle: a browser changes its title on every
-        // tab switch without the window ever changing.
+        // Not cached: browsers retitle on every tab switch.
         private string ReadTitle(IntPtr hwnd)
         {
             if (Win32Interop.GetWindowTextLength(hwnd) <= 0) return string.Empty;

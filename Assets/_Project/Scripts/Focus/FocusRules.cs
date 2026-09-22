@@ -1,36 +1,30 @@
 using System;
 using System.Collections.Generic;
+using gishadev.companion.SavingLoading;
 using gishadev.tools.SavingSystem;
-using UnityEngine;
 
 namespace gishadev.companion.Focus
 {
-    /// <summary>
-    /// Persisted process-name sets that classify the foreground application. Keys are matched
-    /// case-insensitively and without the ".exe" suffix.
-    /// </summary>
     public sealed class FocusRules
     {
-        private const string SaveKey = "focus.rules";
+        private readonly SaveSlot<FocusRulesData> _slot;
+        private readonly FocusRulesData _state;
 
-        private readonly ISaverSystem _saver;
-        private readonly State _state;
-
-        // JsonUtility cannot serialize a HashSet, so State holds lists and these are the lookup copy,
-        // rebuilt from them on load and written back to them on save.
+        // JsonUtility can't serialize HashSet: these are the lookup copy of the saved lists.
         private readonly HashSet<string> _productive = new(StringComparer.OrdinalIgnoreCase);
         private readonly HashSet<string> _unproductive = new(StringComparer.OrdinalIgnoreCase);
 
         public FocusRules(ISaverSystem saver)
         {
-            _saver = saver;
-            _state = LoadState(saver);
+            _slot = new SaveSlot<FocusRulesData>(saver, SaveKeys.FocusRules);
+            _state = _slot.Load();
+            _state.productive ??= new List<string>();
+            _state.unproductive ??= new List<string>();
 
             Fill(_productive, _state.productive);
             Fill(_unproductive, _state.unproductive);
         }
 
-        /// <summary>Raised after a rule change is persisted.</summary>
         public event Action Changed;
 
         public IReadOnlyCollection<string> Productive => _productive;
@@ -47,10 +41,7 @@ namespace gishadev.companion.Focus
             return FocusCategory.Regular;
         }
 
-        /// <summary>
-        /// Assigns a process to one set and removes it from the other; <see cref="FocusCategory.Regular"/>
-        /// clears it from both. False when nothing changed, so no write and no <see cref="Changed"/>.
-        /// </summary>
+        // False when nothing changed (no save, no Changed).
         public bool Set(string processName, FocusCategory category)
         {
             var key = Normalize(processName);
@@ -79,11 +70,10 @@ namespace gishadev.companion.Focus
             _state.unproductive.Clear();
             _state.unproductive.AddRange(_unproductive);
 
-            _saver.Save(SaveKey, JsonUtility.ToJson(_state));
+            _slot.Save(_state);
             Changed?.Invoke();
         }
 
-        /// <summary>One key format for every caller, so hotkeys and any future UI cannot disagree.</summary>
         private static string Normalize(string processName)
         {
             if (string.IsNullOrWhiteSpace(processName)) return null;
@@ -102,26 +92,6 @@ namespace gishadev.companion.Focus
                 var key = Normalize(entry);
                 if (key != null) set.Add(key);
             }
-        }
-
-        private static State LoadState(ISaverSystem saver)
-        {
-            if (!saver.TryLoad(SaveKey, out var json) || string.IsNullOrEmpty(json))
-                return new State();
-
-            var loaded = JsonUtility.FromJson<State>(json);
-            if (loaded == null) return new State();
-
-            loaded.productive ??= new List<string>();
-            loaded.unproductive ??= new List<string>();
-            return loaded;
-        }
-
-        [Serializable]
-        private sealed class State
-        {
-            public List<string> productive = new();
-            public List<string> unproductive = new();
         }
     }
 }

@@ -4,12 +4,7 @@ using UnityEngine.Rendering;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Drives <see cref="OnDemandRendering.renderFrameInterval"/> from a refcount so independent
-    /// systems can each hold a "keep rendering" lease without stomping each other. This throttles
-    /// rendering, not the game loop — Update still runs at Application.targetFrameRate, which is what
-    /// keeps the click-through hit test responsive while the widget is unfocused.
-    /// </summary>
+    // Throttles rendering only; Update keeps running, which keeps the click-through hit test responsive.
     public sealed class RenderThrottle
     {
         public const int DefaultIdleInterval = 15;
@@ -19,7 +14,6 @@ namespace gishadev.companion.Window
         private int _idleInterval = DefaultIdleInterval;
         private bool _focused = true;
 
-        /// <summary>Render interval applied when unfocused and no lease is held.</summary>
         public int IdleInterval
         {
             get => _idleInterval;
@@ -36,9 +30,7 @@ namespace gishadev.companion.Window
 
         public bool IsRendering => _focused || _leases.Count > 0;
 
-        /// <summary>
-        /// Holds rendering at full rate until disposed. <paramref name="reason"/> is for debugging only.
-        /// </summary>
+        // Refcounted: full-rate rendering until disposed.
         public IDisposable AcquireLease(string reason = null)
         {
             var lease = new Lease(this, reason);
@@ -54,7 +46,6 @@ namespace gishadev.companion.Window
             Apply();
         }
 
-        /// <summary>Re-asserts the interval, e.g. after something else wrote to OnDemandRendering.</summary>
         public void Apply()
         {
             OnDemandRendering.renderFrameInterval = IsRendering ? 1 : _idleInterval;

@@ -7,15 +7,9 @@ using VContainer;
 
 namespace gishadev.companion.EditorTools
 {
-    /// <summary>
-    /// Levelling takes real time by design, which makes anything keyed off level slow to exercise by
-    /// hand. This reaches into the running container and moves the level directly.
-    /// </summary>
     public sealed class CompanionDebugWindow : EditorWindow
     {
-        // The same name CompanionLifetimeScope constructs its FileSaverSystem with. Duplicated rather
-        // than exposed, because widening that constant's visibility for a debug window would be the
-        // wrong direction of dependency.
+        // Must match CompanionLifetimeScope.SaveFileName.
         private const string SaveFileName = "companion";
 
         private int _targetLevel;
@@ -23,8 +17,7 @@ namespace gishadev.companion.EditorTools
         [MenuItem("Tools/Debug")]
         private static void Open() => GetWindow<CompanionDebugWindow>("Companion Debug");
 
-        // Level and progress move every frame in play mode; without this the window shows whatever was
-        // true when it last happened to repaint.
+        // Level and progress change every frame in play mode.
         private void OnInspectorUpdate()
         {
             if (Application.isPlaying) Repaint();
@@ -38,8 +31,6 @@ namespace gishadev.companion.EditorTools
 
             DrawLevel(incremental);
 
-            // Skipped entirely rather than drawn disabled: DrawLevel already explains why there is
-            // nothing to talk to, and repeating it per section is noise.
             if (incremental != null)
             {
                 EditorGUILayout.Space();
@@ -95,9 +86,6 @@ namespace gishadev.companion.EditorTools
                 if (GUILayout.Button("Clear Penalty")) incremental.DebugClearPenalty();
             }
 
-            // Worth saying, because it looks like the button failed: filling only holds while the
-            // penalty cannot drain, and productive or regular time during a running work phase pays it
-            // straight back off.
             if (incremental.DebugPenaltyFired)
                 EditorGUILayout.HelpBox(
                     "A running work phase will drain this as soon as you are in a productive or regular app.",
@@ -126,16 +114,14 @@ namespace gishadev.companion.EditorTools
 
         private static void ResetAll(IncrementalController incremental)
         {
-            // Resolved from the container while playing so the live instance's own cache is cleared too;
-            // constructed directly otherwise, since out of play mode there is nothing holding the file.
+            // Live saver while playing, so its in-memory cache is cleared too.
             var saver = ResolveSaver() ?? new FileSaverSystem(SaveFileName);
             saver.ClearAll();
 
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
 
-            // In-memory progression is reset explicitly: clearing the file leaves the running controller
-            // holding its old level, which would then be written straight back out on the next save.
+            // Otherwise the running controller writes its old level straight back.
             if (incremental != null) incremental.DebugResetState();
 
             Debug.Log("[Companion] Save data and PlayerPrefs cleared.");
@@ -152,8 +138,6 @@ namespace gishadev.companion.EditorTools
             var scope = FindAnyObjectByType<CompanionLifetimeScope>();
             if (scope == null || scope.Container == null) return null;
 
-            // Registration is skipped entirely when the scope's assets are unassigned, so a miss here is
-            // a normal state rather than a bug worth throwing over.
             return scope.Container.TryResolve<T>(out var resolved) ? resolved : null;
         }
     }

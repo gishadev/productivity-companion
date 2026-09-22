@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 namespace gishadev.companion.UI
 {
-    // Flips this graphic's stencil test from "inside the mask" to "outside the mask", so a
-    // ReverseMask above it punches a hole instead of clipping. Must run after the Graphic's own
-    // IMaterialModifier pass, i.e. sit below it in the component order.
+    // Inverts the stencil test so a ReverseMask punches a hole. Must sit below the Graphic in
+    // component order (runs after its IMaterialModifier pass).
     [AddComponentMenu("UI/Reverse Maskable", 15)]
     [ExecuteAlways]
     [DisallowMultipleComponent]

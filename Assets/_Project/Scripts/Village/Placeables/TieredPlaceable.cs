@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village.Placeables
 {
-    /// <summary>
-    /// A placeable whose look changes with the level. It keeps a fixed shape for life and swaps which
-    /// tier's art that shape is drawn from; the art itself lives in a shared asset.
-    /// </summary>
     public abstract class TieredPlaceable : PlaceableBase
     {
         [Tooltip("Serialized rather than fetched: the renderer lives on a child on every prefab here.")]
@@ -16,7 +12,6 @@ namespace gishadev.companion.Village.Placeables
 
         private int _variantIndex;
 
-        /// <summary>The ladder, for subclasses that read more from a tier than its sprite.</summary>
         protected PlaceableTiersSO Tiers => tiers;
 
         public int VariantIndex => _variantIndex;
@@ -37,14 +32,12 @@ namespace gishadev.companion.Village.Placeables
 
             Tier = Mathf.Clamp(tier, 0, tiers.TierCount - 1);
 
-            // Clamping lives in the asset, next to the data that decides what is out of range.
             var sprite = tiers.SpriteFor(Tier, _variantIndex);
             if (spriteRenderer != null && sprite != null) spriteRenderer.sprite = sprite;
 
             OnTierApplied(Tier);
         }
 
-        /// <summary>Hook for whatever else a tier means to this kind of building.</summary>
         protected virtual void OnTierApplied(int tier)
         {
         }

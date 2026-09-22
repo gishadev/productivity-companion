@@ -5,10 +5,7 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Registrations for the window system. Install before other subsystems: WindowController strips
-    /// the window chrome in its IInitializable phase, and entry points initialize in registration order.
-    /// </summary>
+    // Install first: WindowController strips chrome in Initialize, and entry points run in registration order.
     public sealed class WindowInstaller : IInstaller
     {
         private readonly Transform _host;
@@ -33,7 +30,7 @@ namespace gishadev.companion.Window
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             builder.RegisterComponentOnNewGameObject<WindowDebugHotkeys>(Lifetime.Singleton)
                 .UnderTransform(_host);
-            // Nothing resolves it otherwise: it drives itself off Update/OnGUI, not an entry point.
+            // Nothing resolves it otherwise.
             builder.RegisterBuildCallback(c => c.Resolve<WindowDebugHotkeys>());
 #endif
         }

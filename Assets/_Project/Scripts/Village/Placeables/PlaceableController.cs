@@ -10,11 +10,8 @@ using Random = UnityEngine.Random;
 
 namespace gishadev.companion.Village.Placeables
 {
-    /// <summary>
-    /// Builds the village out of the current level. Like the villager population, this reconciles to a
-    /// target rather than reacting to individual level-ups: a save restored at level 50 has to produce
-    /// the right village in one pass, with no history to replay.
-    /// </summary>
+    // Reconciles to the current level rather than reacting to level-ups, so a restored save builds
+    // the whole village in one pass.
     public sealed class PlaceableController : IStartable, IDisposable
     {
         private readonly VillageMasterSO _master;
@@ -43,14 +40,12 @@ namespace gishadev.companion.Village.Placeables
 
             _eventBus.Subscribe<LevelUpEvent>(OnLevelUp);
 
-            // Primed for the same reason the villager population is: LevelUpEvent only ever describes a
-            // transition, so a restored save would otherwise stand in an empty village until it levelled.
             Apply(_incremental.Level);
         }
 
         public void Dispose() => _eventBus.Unsubscribe<LevelUpEvent>(OnLevelUp);
 
-        /// <summary>Idempotent, so a tick crossing several levels still lands on the right village.</summary>
+        // Idempotent.
         public void Apply(int level)
         {
             var changed = false;
@@ -64,8 +59,7 @@ namespace gishadev.companion.Village.Placeables
                 ApplyTiers(pair.Key, state, due, level);
             }
 
-            // Placed buildings carry the POIs villagers claim, and the registry caches its scan. Without
-            // this a house built mid-session is never found, and the failure is completely silent.
+            // The registry caches its scan; without this, POIs on new buildings are never found.
             if (changed) _pois.Refresh();
         }
 
@@ -101,9 +95,7 @@ namespace gishadev.companion.Village.Placeables
             }
         }
 
-        // The displayed tier is the highest one this building qualifies for, so overlapping rules
-        // degrade gracefully instead of fighting: a building can reach tier 3 without having visibly
-        // passed through tier 2, and simply shows tier 3.
+        // Highest qualifying tier wins, so overlapping rules don't fight.
         private int TierFor(PlaceableType type, TypeState state, int spotIndex, int placedCount, int level)
         {
             var tier = 0;
@@ -150,8 +142,6 @@ namespace gishadev.companion.Village.Placeables
             var prefab = _master.PrefabFor(spot.Type);
             if (prefab == null) return;
 
-            // Parented to the spot so the hierarchy stays readable and clearing a plot cannot orphan
-            // whatever was standing on it.
             var instance = Object.Instantiate(
                 prefab, spot.transform.position, spot.transform.rotation, spot.transform);
 
@@ -165,8 +155,7 @@ namespace gishadev.companion.Village.Placeables
         {
             _states.Clear();
 
-            // Inactive included, matching every other village scene lookup: the world can be built while
-            // the widget is hidden.
+            // Inactive included: the village can be built while the widget is hidden.
             var spots = Object.FindObjectsByType<PlaceableSpot>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
 
@@ -185,22 +174,16 @@ namespace gishadev.companion.Village.Placeables
                 pair.Value.Seed(_master.PrefabFor(pair.Key));
         }
 
-        /// <summary>Every spot of one type, plus the random draws that stay fixed for the session.</summary>
         private sealed class TypeState
         {
             public readonly List<PlaceableSpot> Spots = new List<PlaceableSpot>();
 
-            // Upgrade order, one draw per tier: the house that led the sweep to tier 2 is deliberately
-            // not the one guaranteed to lead the sweep to tier 3.
+            // One shuffle per tier, so the same house doesn't always lead every upgrade.
             private readonly Dictionary<int, int[]> _ranksByTier = new Dictionary<int, int[]>();
 
             public int[] VariantIndex { get; private set; } = Array.Empty<int>();
 
-            /// <summary>
-            /// The shape each spot draws, fixed for the session. Never re-rolled on upgrade: the house
-            /// shapes have different footprints, so a spot that changed shape mid-game would resize and
-            /// could grow into its neighbour. The tier changes the material, not the silhouette.
-            /// </summary>
+            // Never re-rolled on upgrade: shapes have different footprints and could overlap neighbours.
             public void Seed(PlaceableBase prefab)
             {
                 var variants = prefab != null ? prefab.VariantCount : 0;
@@ -218,12 +201,10 @@ namespace gishadev.companion.Village.Placeables
                     _ranksByTier[tier] = ranks;
                 }
 
-                // Out of range would mean the spot list changed under us; reporting the worst rank keeps
-                // that spot un-upgraded rather than throwing.
                 return spotIndex >= 0 && spotIndex < ranks.Length ? ranks[spotIndex] : int.MaxValue;
             }
 
-            // Fisher-Yates, inverted into ranks so the per-spot lookup is an index rather than a search.
+            // Fisher-Yates, inverted into ranks for O(1) lookup.
             private static int[] BuildRanks(int count)
             {
                 var order = new int[count];

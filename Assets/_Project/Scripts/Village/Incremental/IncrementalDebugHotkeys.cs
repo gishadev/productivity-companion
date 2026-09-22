@@ -7,13 +7,7 @@ using VContainer;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Development-only shortcuts for progression, which otherwise takes real minutes to move. Stripped
-    /// from release builds. Like the window hotkeys, the keys only arrive while our own window has
-    /// focus, so alt-tab back to the widget before pressing anything.
-    ///
-    /// U / I — level up, level down. J / K — fill the penalty, clear it.
-    /// </summary>
+    // U / I level up/down, J / K fill/clear penalty. Keys only arrive while our window has focus.
     public sealed class IncrementalDebugHotkeys : MonoBehaviour
     {
         private IncrementalController _incremental;
@@ -34,9 +28,7 @@ namespace gishadev.companion.Village
             if (keyboard.kKey.wasPressedThisFrame) _incremental.DebugClearPenalty();
         }
 
-        // These are ordinary letters, unlike the window hotkeys' function keys, so they would otherwise
-        // fire while the user is typing into the settings fields — the raw key is readable whether or
-        // not the field accepts the character.
+        // Letter keys would otherwise fire while typing into settings fields.
         private static bool IsTyping()
         {
             var selected = EventSystem.current != null

@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// The ground villagers may occupy, authored as a box in the scene rather than as numbers in an
-    /// asset: the area has to line up with the ground art, which is something you place by eye.
-    /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
     public sealed class WalkableArea : MonoBehaviour
     {
@@ -20,12 +16,8 @@ namespace gishadev.companion.Village
             }
         }
 
-        /// <summary>
-        /// Derived from the collider's offset and size rather than read from <c>Collider2D.bounds</c>,
-        /// which physics only fills in for a collider that is enabled and on an active object. The
-        /// village can be built while hidden, and a zero bounds would silently stack every villager on
-        /// one point. Rotation is ignored — a rotated spawn box is not a case worth supporting.
-        /// </summary>
+        // From offset/size, not Collider2D.bounds, which is zero while the object is inactive.
+        // Rotation is ignored.
         public Bounds WorldBounds
         {
             get
@@ -49,7 +41,6 @@ namespace gishadev.companion.Village
                 Random.Range(bounds.min.y, bounds.max.y));
         }
 
-        /// <summary>Nearest point inside the area, so a wander target is always reachable ground.</summary>
         public Vector2 ClampInside(Vector2 world)
         {
             var bounds = WorldBounds;
@@ -65,7 +56,6 @@ namespace gishadev.companion.Village
                    world.y >= bounds.min.y && world.y <= bounds.max.y;
         }
 
-        // The collider marks out an area, it does not block anything.
         private void Reset() => Box.isTrigger = true;
     }
 }

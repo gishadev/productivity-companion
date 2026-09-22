@@ -5,12 +5,7 @@ using VContainer;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Title-bar style grab area. Moves the widget inside the fullscreen transparent window rather
-    /// than moving the OS window — identical to the user, but needs no native calls and never fights
-    /// the topmost watchdog. The widget therefore cannot be dragged onto a second monitor. Attach to
-    /// a UI object whose Graphic has Raycast Target enabled.
-    /// </summary>
+    // Moves the widget inside the fullscreen window, not the OS window, so it can't cross monitors.
     public sealed class WidgetDragHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [Tooltip("The widget root to move. Defaults to this object's parent.")] [SerializeField]
@@ -60,15 +55,13 @@ namespace gishadev.companion.Window
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            // Without the block, the cursor crossing empty space mid-drag flips the window to
-            // click-through, Unity stops receiving mouse messages, and the drag dies.
+            // Otherwise crossing empty space mid-drag enables click-through and kills the drag.
             _clickThroughBlock ??= _clickThrough?.AcquireBlock("widget-drag");
             _renderLease ??= _renderThrottle?.AcquireLease("widget-drag");
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            // eventData.delta is in screen pixels; anchored position is in canvas units.
             var scale = _canvas != null ? _canvas.scaleFactor : 1f;
             if (scale <= 0f) scale = 1f;
 
@@ -87,11 +80,7 @@ namespace gishadev.companion.Window
             _renderLease = null;
         }
 
-        /// <summary>
-        /// Keeps the widget's rect inside its parent. Point anchors only: with stretched anchors
-        /// anchoredPosition is an offset from the stretched edges, not a position, so clamping it
-        /// against the parent rect would be wrong.
-        /// </summary>
+        // Point anchors only.
         private void ClampIntoParent()
         {
             if (_parentRect == null) return;
@@ -101,13 +90,10 @@ namespace gishadev.companion.Window
             var size = target.rect.size;
             var pivot = target.pivot;
 
-            // Where the widget's anchor sits in the parent's local space.
             var anchor = new Vector2(
                 parentRect.xMin + parentRect.width * target.anchorMin.x,
                 parentRect.yMin + parentRect.height * target.anchorMin.y);
 
-            // anchoredPosition places the pivot relative to that anchor, so convert the parent's
-            // edges into the equivalent bounds on anchoredPosition.
             var position = target.anchoredPosition;
             position.x = Mathf.Clamp(position.x,
                 parentRect.xMin + size.x * pivot.x - anchor.x,

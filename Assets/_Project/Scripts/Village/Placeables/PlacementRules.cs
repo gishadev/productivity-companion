@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village.Placeables
 {
-    /// <summary>Which prefab a spot of this type builds.</summary>
     [Serializable]
     public sealed class PlaceableDefinition
     {
@@ -15,10 +14,6 @@ namespace gishadev.companion.Village.Placeables
         public PlaceableBase Prefab => prefab;
     }
 
-    /// <summary>
-    /// One building appears at this level. Deliberately one entry per placement rather than a cadence:
-    /// the array then reads as the village's build order, which is the thing worth tuning by hand.
-    /// </summary>
     [Serializable]
     public sealed class PlacementRule
     {
@@ -30,10 +25,7 @@ namespace gishadev.companion.Village.Placeables
         public PlaceableType Type => type;
     }
 
-    /// <summary>
-    /// From <see cref="UnlockLevel"/> the first building of this type reaches this tier, and one more
-    /// joins it every <see cref="LevelsPerUpgrade"/> levels until all of them have.
-    /// </summary>
+    // From UnlockLevel the first building reaches Tier, then one more every LevelsPerUpgrade levels.
     [Serializable]
     public sealed class TierRule
     {
@@ -52,7 +44,7 @@ namespace gishadev.companion.Village.Placeables
 
         public int UnlockLevel => Mathf.Max(0, unlockLevel);
 
-        // Clamped at the read: a zero here would divide by zero and upgrade the whole village at once.
+        // Zero would upgrade the whole village at once.
         public int LevelsPerUpgrade => Mathf.Max(1, levelsPerUpgrade);
     }
 }

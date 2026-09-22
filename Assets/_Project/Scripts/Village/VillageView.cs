@@ -2,9 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// The village's anchor in the scene: what villagers hang off, and where they are allowed to stand.
-    /// </summary>
     public sealed class VillageView : MonoBehaviour
     {
         [Tooltip("Villagers are parented here. Falls back to this object when unassigned.")]

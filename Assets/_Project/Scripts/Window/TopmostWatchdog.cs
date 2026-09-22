@@ -4,11 +4,8 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Re-asserts WS_EX_TOPMOST, which Windows silently drops whenever the taskbar or Start menu takes
-    /// the foreground. Low cadence and only when actually lost — calling SetWindowPos every frame
-    /// fights the shell's own z-order handling.
-    /// </summary>
+    // Windows drops WS_EX_TOPMOST when the taskbar or Start menu takes focus. Re-assert only when lost:
+    // SetWindowPos every frame fights the shell.
     public sealed class TopmostWatchdog : ITickable
     {
         private const float CheckInterval = 0.5f;
@@ -45,7 +42,6 @@ namespace gishadev.companion.Window
         {
             if (!IsRunning) return;
 
-            // Unscaled so a paused or slowed timescale cannot stall it.
             if (Time.unscaledTime < _nextCheck) return;
 
             _nextCheck = Time.unscaledTime + CheckInterval;

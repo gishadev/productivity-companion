@@ -11,7 +11,6 @@ namespace gishadev.companion.UI
     {
         [SerializeField] private List<GraphicTarget> targets = new();
 
-        // Running coroutines — managed externally via the owner MonoBehaviour
         private Coroutine[] _coroutines;
         private MonoBehaviour _owner;
 
@@ -21,11 +20,7 @@ namespace gishadev.companion.UI
             _coroutines = new Coroutine[targets.Count];
         }
 
-        /// <summary>
-        /// Repairs targets whose ColorBlock was left at Unity's zeroed default (which
-        /// makes <c>colorMultiplier == 0</c>, tinting every graphic to transparent black).
-        /// Call from the owner's OnValidate.
-        /// </summary>
+        // Fixes ColorBlocks left at Unity's zeroed default (colorMultiplier 0 = invisible). Call from OnValidate.
         public void Validate()
         {
             foreach (var target in targets)
@@ -33,7 +28,6 @@ namespace gishadev.companion.UI
                     target.colors = ColorBlock.defaultColorBlock;
         }
 
-        /// <summary>Transitions all registered graphics to the given UI state.</summary>
         public void Transition(UIState state, bool immediate = false)
         {
             EnsureCoroutineArray();
@@ -41,8 +35,6 @@ namespace gishadev.companion.UI
             for (int i = 0; i < targets.Count; i++)
                 TransitionTarget(i, state, immediate);
         }
-
-        // ── Private ───────────────────────────────────────────────────────────────
 
         private void TransitionTarget(int index, UIState state, bool immediate)
         {
@@ -70,8 +62,6 @@ namespace gishadev.companion.UI
             if (_coroutines == null || _coroutines.Length != targets.Count)
                 _coroutines = new Coroutine[targets.Count];
         }
-
-        // ── Static helpers ────────────────────────────────────────────────────────
 
         public static Color ResolveColor(ColorBlock block, UIState state) => state switch
         {

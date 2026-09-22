@@ -4,14 +4,10 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Owns the render texture the simulation camera draws into and the surface displays. Sized from the
-    /// surface rect divided by the rig's upscale rather than from screen resolution: point filtering a
-    /// small texture up to the widget is what keeps the pixel art crisp instead of resampled.
-    /// </summary>
+    // Sized from the surface rect / upscale, not the screen, so point filtering keeps pixel art crisp.
     public sealed class VillageRenderTarget : IStartable, ITickable, IDisposable
     {
-        // The 2D renderer is configured with a depth stencil buffer, which masks and sorting rely on.
+        // The 2D renderer's masks and sorting need a depth-stencil buffer.
         private const int DepthBits = 24;
 
         private readonly VillageSceneRig _rig;
@@ -34,10 +30,7 @@ namespace gishadev.companion.Village
 
         public void Dispose() => Release();
 
-        // Polled rather than driven by events: the surface is shown and hidden by
-        // DynamicSimulationWindowView toggling the GameObject, and resized by the canvas scaler on a
-        // resolution change. Neither raises anything to subscribe to. Public so the editor preview on
-        // SimulationSceneRig can drive the same path outside play mode.
+        // Polled: show/hide and canvas rescale raise no events. Public for the editor preview.
         public void Sync()
         {
             if (_rig == null || !_rig.IsValid || _surface == null) return;
@@ -73,13 +66,12 @@ namespace gishadev.companion.Village
                 filterMode = FilterMode.Point,
                 wrapMode = TextureWrapMode.Clamp,
                 antiAliasing = 1,
-                // Keeps the editor preview's texture from being serialized into the scene or the prefab.
                 hideFlags = HideFlags.HideAndDontSave
             };
             _texture.Create();
 
             _rig.Camera.targetTexture = _texture;
-            // Half the rendered height in world units, so one texel always covers one pixel of art.
+            // One texel per art pixel.
             _rig.Camera.orthographicSize = size.y * 0.5f / _rig.PixelsPerUnit;
 
             _surface.Image.texture = _texture;

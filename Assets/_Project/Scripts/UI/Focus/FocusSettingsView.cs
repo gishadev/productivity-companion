@@ -8,10 +8,7 @@ using VContainer;
 
 namespace gishadev.companion.UI
 {
-    /// <summary>
-    /// Classifies the last foreign foreground app and lists every classified one. The list is a view of
-    /// <see cref="FocusRules"/>, which owns persistence, so it is rebuilt from the rules rather than saved.
-    /// </summary>
+    // The list is rebuilt from FocusRules, which owns persistence.
     public class FocusSettingsView : MonoBehaviour
     {
         private const string NoAppLabel = "—";
@@ -52,7 +49,7 @@ namespace gishadev.companion.UI
             unproductiveButton.onClick.RemoveListener(OnUnproductiveClicked);
         }
 
-        // CurrentProcessName has no change event; while this view is focused it holds the app the user came from.
+        // CurrentProcessName has no change event.
         private void Update()
         {
             if (_focus == null || _focus.CurrentProcessName == _shownAppName) return;

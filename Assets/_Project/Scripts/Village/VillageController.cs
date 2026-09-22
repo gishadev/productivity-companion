@@ -9,10 +9,6 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// The village simulation. Owns the villager population, tells them what the user is currently
-    /// doing, and drives their shared AI.
-    /// </summary>
     public sealed class VillageController : IStartable, ITickable, IDisposable
     {
         private readonly IncrementalController _incremental;
@@ -41,15 +37,9 @@ namespace gishadev.companion.Village
             _fireView = fireView;
         }
 
-        /// <summary>One villager for the starting level, then one per level gained.</summary>
         public int TargetVillagers => _incremental.Level + 1;
 
-        /// <summary>
-        /// Read from <see cref="FocusController.CurrentCategory"/>, not <c>EffectiveCategory</c>. The
-        /// latter reports Regular whenever our own window has focus — right for progression, since it
-        /// stops the widget paying out the last app's multiplier, but it would make a working villager
-        /// down tools every time the user clicks the widget to check the timer.
-        /// </summary>
+        // CurrentCategory, not EffectiveCategory: otherwise villagers down tools whenever the widget is clicked.
         public VillageActivity Activity
         {
             get
@@ -69,13 +59,10 @@ namespace gishadev.companion.Village
             _eventBus.Subscribe<PenaltyTriggeredEvent>(OnPenaltyTriggered);
             _eventBus.Subscribe<PenaltyClearedEvent>(OnPenaltyCleared);
 
-            // Explicitly off rather than left as authored: the penalty is never restored from a
-            // save, so a fire enabled on the prefab would otherwise burn from launch with nothing
-            // owed and no event coming to put it out.
+            // Penalty isn't restored from saves, so the fire must start off.
             SetFire(false);
 
-            // Primed, because LevelUpEvent only ever describes a transition — a restored save has
-            // already done its levelling and would otherwise show an empty village until the next one.
+            // Primed: LevelUpEvent only describes transitions, not a restored level.
             _factory.SetTarget(TargetVillagers);
         }
 
@@ -88,12 +75,9 @@ namespace gishadev.companion.Village
             _eventBus.Unsubscribe<PenaltyClearedEvent>(OnPenaltyCleared);
         }
 
-        // Reads the target rather than the event's level so the two paths cannot disagree; SetTarget is
-        // idempotent, which matters because one tick can cross several thresholds and fire several times.
         private void OnLevelUp(LevelUpEvent levelUpEvent) => _factory.SetTarget(TargetVillagers);
 
-        // Driven by the events rather than IsPenalised: the fire marks a penalty that actually
-        // fired at the cap, where IsPenalised is true from the first second owed.
+        // Driven by events, not IsPenalised: the fire marks a penalty that hit the cap.
         private void OnPenaltyTriggered(PenaltyTriggeredEvent penaltyEvent) => SetFire(true);
 
         private void OnPenaltyCleared(PenaltyClearedEvent penaltyEvent) => SetFire(false);

@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village.POI
 {
-    /// <summary>
-    /// Somewhere to disappear into during a break — a house, a tent. The villager walks to the entrance,
-    /// is switched off for a while, and reappears in the same spot.
-    /// </summary>
     public sealed class RelaxPOI : VillagePOI
     {
         [Tooltip("The doorway. Villagers walk here, vanish, and reappear here.")]
@@ -17,10 +13,7 @@ namespace gishadev.companion.Village.POI
 
         protected override Transform Target => enterPos;
 
-        /// <summary>
-        /// Raised by an upgraded building. Shrinking never evicts: anyone already inside stays, and
-        /// the building simply refuses new claims until it is back under the new limit.
-        /// </summary>
+        // Shrinking never evicts; it only refuses new claims until back under the limit.
         public void SetCapacity(int value) => capacity = Mathf.Max(1, value);
 
         protected override int Capacity => Mathf.Max(1, capacity);

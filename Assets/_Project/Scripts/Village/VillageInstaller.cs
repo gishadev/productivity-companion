@@ -7,13 +7,7 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Registrations for the simulation world, the surface it is displayed on, and the progression that
-    /// drives it. Scene components are looked up leniently rather than through
-    /// RegisterComponentInHierarchy, which throws when the object is absent: the rest of the app has to
-    /// keep running while the simulation scene is built out. Inactive objects are included because the
-    /// surface starts disabled when the window was left hidden.
-    /// </summary>
+    // Scene components are looked up leniently (inactive included) so the app runs without them.
     public sealed class VillageInstaller : IInstaller
     {
         private readonly IncrementalSettingsSO _incrementalSettings;
@@ -44,8 +38,7 @@ namespace gishadev.companion.Village
 
         private void InstallIncremental(IContainerBuilder builder)
         {
-            // Registering the controller anyway would resolve a null asset and then throw from Tick on
-            // every frame. Leaving progression out keeps the failure to one line and the widget usable.
+            // Without the asset the controller would throw every Tick; skip progression instead.
             if (_incrementalSettings == null)
             {
                 Debug.LogError(
@@ -60,15 +53,13 @@ namespace gishadev.companion.Village
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             builder.RegisterComponentOnNewGameObject<IncrementalDebugHotkeys>(Lifetime.Singleton)
                 .UnderTransform(_host);
-            // Nothing resolves it otherwise: it drives itself off Update, not an entry point.
+            // Nothing resolves it otherwise.
             builder.RegisterBuildCallback(c => c.Resolve<IncrementalDebugHotkeys>());
 #endif
         }
 
         private void InstallSimulation(IContainerBuilder builder)
         {
-            // Same reasoning as above: without the data there is nothing to build, and registering the
-            // controller anyway would only move the failure into Tick.
             if (_villageMaster == null)
             {
                 Debug.LogError(
@@ -80,11 +71,9 @@ namespace gishadev.companion.Village
             builder.Register(_ => Find<VillageView>(), Lifetime.Singleton);
             builder.Register(_ => Find<PenaltyVillageFireView>(), Lifetime.Singleton);
 
-            // Scans the scene itself rather than taking a reference: POIs are scattered across the
-            // village prefab, and wiring each one into a list by hand is a step to forget.
             builder.Register<POIRegistry>(Lifetime.Singleton);
 
-            // Before the population that uses it, so the world exists first.
+            // Before the population, so the world exists first.
             builder.RegisterEntryPoint<PlaceableController>().AsSelf();
 
             builder.Register<VillagersAIController>(Lifetime.Singleton);

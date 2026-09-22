@@ -2,11 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Balance data for the progression mechanic. An asset rather than the plain settings class the rest
-    /// of the app uses, because nothing here is user-editable or written at runtime: it ships with the
-    /// build and is tuned in the inspector, so it has no business in the save file.
-    /// </summary>
     [CreateAssetMenu(fileName = "IncrementalSettings", menuName = "Companion/Incremental Settings")]
     public sealed class IncrementalSettingsSO : ScriptableObject
     {
@@ -39,9 +34,8 @@ namespace gishadev.companion.Village
 
         public float ProductiveMultiplier => Mathf.Max(0f, productiveMultiplier);
 
-        // Re-clamped here, not just via [Min]: the attribute does not touch values already serialized
-        // into an asset, and a threshold of zero clears every level instantly and unbounds the level-up
-        // loop. Same for a growth factor below 1, which shrinks thresholds toward zero as the level rises.
+        // Re-clamped on read: [Min] doesn't fix already-serialized values, and a zero threshold or a
+        // growth factor below 1 breaks the level-up loop.
         public float BaseThreshold => Mathf.Max(1f, baseThreshold);
 
         public float GrowthFactor => Mathf.Max(1f, growthFactor);

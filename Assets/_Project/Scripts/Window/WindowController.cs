@@ -5,17 +5,10 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// The single place that reacts to <see cref="WindowSettings"/> changes; everything else just flips
-    /// settings. The two entry point phases are not interchangeable: IInitializable runs as the
-    /// container builds, where chrome must be stripped before a frame is drawn; IStartable runs on the
-    /// first player loop, once <see cref="Camera.main"/> resolves, which is what transparency needs.
-    /// </summary>
+    // Initialize strips chrome before the first frame; Start handles transparency once Camera.main resolves.
     public sealed class WindowController : IInitializable, IStartable, IDisposable
     {
-        // Only 0 and 255 per channel: the project renders in Linear space, so the clear color round-trips
-        // sRGB→linear→sRGB before reaching the window surface. Intermediate values come back off by a
-        // unit and never match, and LWA_COLORKEY compares exactly.
+        // Channels only 0 or 255: Linear color space round-trips the clear colour, and LWA_COLORKEY matches exactly.
         public static readonly Color32 DefaultColorKey = new Color32(255, 0, 255, 255);
 
         private readonly IPlatformWindow _window;
@@ -42,10 +35,6 @@ namespace gishadev.companion.Window
 
         public Color32 ColorKey { get; set; } = DefaultColorKey;
 
-        /// <summary>
-        /// Camera whose background becomes the transparent region. Resolved lazily so scene loads that
-        /// swap cameras still work.
-        /// </summary>
         public Camera TargetCamera
         {
             get
@@ -69,18 +58,15 @@ namespace gishadev.companion.Window
 
         void IInitializable.Initialize()
         {
-            // The widget must keep ticking while unfocused; that is the entire point of the app.
             Application.runInBackground = true;
 
-            // Unity persists the last screen mode in the registry, so a previously fullscreen run would
-            // survive the project default. A layered window has to be windowed.
+            // Unity persists the last screen mode; a layered window must be windowed.
             if (Screen.fullScreenMode != FullScreenMode.Windowed)
                 Screen.fullScreenMode = FullScreenMode.Windowed;
 
             _window.RemoveChrome();
 
-            // Windowed mode inherits whatever resolution fullscreen was using, and Windows pads that
-            // out with a frame — so without this the window starts larger than the display.
+            // Windowed mode inherits the fullscreen resolution plus a frame.
             _window.FitToMonitor();
 
             _settings.Changed += OnSettingChanged;
@@ -97,8 +83,7 @@ namespace gishadev.companion.Window
 
         public void ApplyAll()
         {
-            // Re-asserted here as well as in Initialize: a fullscreen mode change applies at the end of
-            // the frame it was requested in, so Unity may have resized the window since.
+            // Again: a fullscreen mode change applies at end of frame.
             _window.FitToMonitor();
 
             ApplyFrameRate();
@@ -112,11 +97,10 @@ namespace gishadev.companion.Window
         {
             _renderThrottle.SetFocused(hasFocus);
 
-            // Cheapest hook that catches a resolution or DPI change, or Windows having moved us.
+            // Catches resolution/DPI changes.
             if (hasFocus) _window.FitToMonitor();
 
-            // Regaining focus usually means the taskbar or another window just had it, which is
-            // exactly when Windows will have dropped our topmost flag.
+            // Windows drops topmost whenever something else had focus.
             if (hasFocus && _settings.AlwaysOnTop)
                 _watchdog.CheckNow();
         }
@@ -129,7 +113,7 @@ namespace gishadev.companion.Window
                     ApplyTransparency();
                     break;
                 case WindowSetting.ClickThrough:
-                    // ClickThroughController reads the setting directly each frame.
+                    // ClickThroughController reads it every frame.
                     break;
                 case WindowSetting.AlwaysOnTop:
                     ApplyAlwaysOnTop();

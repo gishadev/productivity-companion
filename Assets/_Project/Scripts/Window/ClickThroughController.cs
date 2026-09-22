@@ -9,11 +9,7 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
-    /// <summary>
-    /// Click-through over empty space, solid over interactive UI, re-evaluated every frame from the
-    /// cursor position. Tick must run before the UI input module dispatches; LateTick after the frame's
-    /// raycasts are meaningful — the two phases are not interchangeable.
-    /// </summary>
+    // Tick must run before the UI input module dispatches; LateTick after raycasts. Not interchangeable.
     public sealed class ClickThroughController : ITickable, ILateTickable, IDisposable
     {
         private const float MinimizedPollInterval = 0.25f;
@@ -37,11 +33,7 @@ namespace gishadev.companion.Window
 
         public bool IsBlocked => _blocks.Count > 0;
 
-        /// <summary>
-        /// Forces the window to keep accepting clicks regardless of the hit test, until disposed.
-        /// Refcounted so independent holders don't clear each other. Needed by anything owning the
-        /// cursor outside the uGUI raycast graph. <paramref name="reason"/> is for debugging only.
-        /// </summary>
+        // Refcounted: keeps the window clickable until disposed.
         public IDisposable AcquireBlock(string reason = null)
         {
             var block = new Block(this, reason);
@@ -51,7 +43,6 @@ namespace gishadev.companion.Window
 
         public void Dispose()
         {
-            // Never leave the window stuck in click-through if this controller goes away.
             if (!_applied) return;
             _window?.SetClickThrough(false);
             _applied = false;
@@ -84,13 +75,8 @@ namespace gishadev.companion.Window
             _applied = shouldPassThrough;
         }
 
-        /// <summary>
-        /// Overwrites the Input System's mouse position with the real OS cursor position. When mouse
-        /// messages are routed away from this window, Unity's pointer freezes at its last value and
-        /// every uGUI interaction dispatches at that stale point. Two causes: WS_EX_TRANSPARENT while
-        /// click-through is engaged, and the OS hit-transparency applied to keyed pixels in ColorKey
-        /// mode regardless of that flag.
-        /// </summary>
+        // Unity's pointer freezes when mouse messages are routed away (WS_EX_TRANSPARENT, or keyed pixels
+        // in ColorKey mode), so feed it the real OS cursor.
         private void SyncPointerToOsCursor()
         {
             if (_window == null || !_window.IsAvailable) return;
@@ -106,7 +92,6 @@ namespace gishadev.companion.Window
 
         private bool IsCursorOverInteractiveContent()
         {
-            // Outside the client area entirely: nothing of ours can be under the cursor.
             if (!_window.TryGetCursorPosition(out var screenPosition)) return false;
 
             var eventSystem = EventSystem.current;

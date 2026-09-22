@@ -2,11 +2,7 @@ using UnityEngine;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Sets the village alight while a penalty stands. Like every other view here it subscribes to
-    /// nothing and is told what to show: scene objects outside the widget canvas are not injected, and
-    /// the container is built after their Start runs even when they are.
-    /// </summary>
+    // Driven by VillageController: scene objects outside the widget canvas aren't injected.
     public sealed class PenaltyVillageFireView : MonoBehaviour
     {
         [SerializeField] private GameObject fireObj;

@@ -3,7 +3,6 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Pomodoro
 {
-    /// <summary>Registrations for the Pomodoro system.</summary>
     public sealed class PomodoroInstaller : IInstaller
     {
         public void Install(IContainerBuilder builder)

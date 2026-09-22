@@ -5,11 +5,7 @@ using UnityEngine.UI;
 
 namespace gishadev.companion.Village
 {
-    /// <summary>
-    /// Renders what it is told; <see cref="IncrementalController"/> owns all state. The slider is one
-    /// bar with two meanings — progress toward the next level, or the penalty still owed — separated by
-    /// the fill colour.
-    /// </summary>
+    // One slider, two meanings: level progress or penalty owed, told apart by fill colour.
     public sealed class IncrementalView : MonoBehaviour
     {
         [SerializeField] private Slider slider;
@@ -45,8 +41,6 @@ namespace gishadev.companion.Village
 
         public void SetProgress(float normalized, bool isPenalty)
         {
-            // SetValueWithoutNotify: the slider is display-only, and onValueChanged would be a loop
-            // waiting to happen if anything is ever wired to it in the inspector.
             if (slider != null) slider.SetValueWithoutNotify(normalized);
             if (fillImage != null) fillImage.color = isPenalty ? penaltyColor : normalColor;
         }
@@ -60,13 +54,11 @@ namespace gishadev.companion.Village
         {
             if (progressionImage == null) return;
 
-            // Assigned even when null, so an unset sprite reads as a missing icon rather than leaving
-            // the previous one on screen claiming a state the user is no longer in.
+            // Assigned even when null, so a stale icon never lingers.
             progressionImage.sprite = ResolveIcon(category, isOnBreak, isPaused);
         }
 
-        // Both flags outrank the category, and pause outranks the break: neither is a judgement on the
-        // focused app, so showing one would accuse the user of something not being counted either way.
+        // Pause outranks break, and both outrank the category.
         private Sprite ResolveIcon(FocusCategory category, bool isOnBreak, bool isPaused)
         {
             if (isPaused) return pauseIcon;

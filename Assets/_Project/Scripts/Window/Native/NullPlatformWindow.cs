@@ -2,9 +2,6 @@ using UnityEngine;
 
 namespace gishadev.companion.Window.Native
 {
-    /// <summary>
-    /// Editor and non-Windows targets. Every call is a no-op, so callers need no platform guards.
-    /// </summary>
     public sealed class NullPlatformWindow : IPlatformWindow
     {
         public bool IsAvailable => false;

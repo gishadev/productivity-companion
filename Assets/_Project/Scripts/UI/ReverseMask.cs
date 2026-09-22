@@ -3,8 +3,7 @@ using UnityEngine.UI;
 
 namespace gishadev.companion.UI
 {
-    // Stencil source for ReverseMaskable: children are hidden where this graphic is opaque,
-    // instead of being clipped to it.
+    // Stencil source for ReverseMaskable: children are hidden where this graphic is opaque.
     [AddComponentMenu("UI/Reverse Mask", 14)]
     [DisallowMultipleComponent]
     public class ReverseMask : Mask
@@ -20,7 +19,6 @@ namespace gishadev.companion.UI
         }
 #endif
 
-        // Mask filters children down to its own rect; for a hole that is exactly backwards.
         public override bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
             if (!isActiveAndEnabled || !blockRaycastsInsideMask) return true;

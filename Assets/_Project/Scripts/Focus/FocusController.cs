@@ -48,7 +48,7 @@ namespace gishadev.companion.Focus
 
         public string CurrentTitle { get; private set; } = string.Empty;
 
-        /// <summary>Assigns <see cref="CurrentProcessName"/> to a category — the seeding path while there is no UI.</summary>
+        /// <summary>Assigns <see cref="CurrentProcessName"/> to a category. Used by the focus settings UI and debug hotkeys.</summary>
         public bool TagCurrent(FocusCategory category) => _rules.Set(CurrentProcessName, category);
 
         void IStartable.Start()

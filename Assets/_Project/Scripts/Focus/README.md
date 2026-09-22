@@ -78,6 +78,9 @@ public sealed class Something : IStartable, IDisposable
 `FocusController` is registered `.AsSelf()`, so it can be injected directly for `CurrentCategory` /
 `CurrentProcessName` / `CurrentTitle` without going through the bus.
 
+The user-facing editor is `UI/Focus/FocusSettingsView`. Its list is rebuilt from `FocusRules` on
+`Changed` rather than saved on its own — `FocusRules` stays the single persisted source.
+
 ---
 
 ## Storage

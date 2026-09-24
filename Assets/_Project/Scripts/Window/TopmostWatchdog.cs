@@ -4,8 +4,9 @@ using VContainer.Unity;
 
 namespace gishadev.companion.Window
 {
-    // Windows drops WS_EX_TOPMOST when the taskbar or Start menu takes focus. Re-assert only when lost:
-    // SetWindowPos every frame fights the shell.
+    // Windows drops WS_EX_TOPMOST when the taskbar or Start menu takes focus, and Windows 10 can also keep the
+    // flag while sinking the window below ordinary ones. Re-assert only when lost: SetWindowPos every frame
+    // fights the shell.
     public sealed class TopmostWatchdog : ITickable
     {
         private const float CheckInterval = 0.5f;
@@ -34,7 +35,7 @@ namespace gishadev.companion.Window
         public void CheckNow()
         {
             if (!_window.IsAvailable) return;
-            if (_window.IsTopmost && !_window.IsTaskbarForeground) return;
+            if (_window.IsTopmost && !_window.IsTaskbarForeground && !_window.IsCoveredByNonTopmostWindow) return;
             _window.SetTopmost(true);
         }
 

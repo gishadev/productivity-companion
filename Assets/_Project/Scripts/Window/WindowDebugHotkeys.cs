@@ -157,7 +157,7 @@ namespace gishadev.companion.Window
             GUILayout.Label("<b>Window debug</b> (F7 hides)", new GUIStyle(GUI.skin.label) { richText = true });
             GUILayout.Label($"F1 Transparency : {_settings.TransparencyMode}");
             GUILayout.Label($"F2 Click-through: {_settings.ClickThrough}");
-            GUILayout.Label($"F3 Always on top: {_settings.AlwaysOnTop} (os={_window.IsTopmost})");
+            GUILayout.Label($"F3 Always on top: {_settings.AlwaysOnTop} (os={_window.IsTopmost}, covered={_window.IsCoveredByNonTopmostWindow})");
             GUILayout.Label($"F4 Hide taskbar : {_settings.HideFromTaskbar}");
             GUILayout.Label($"F5 Target FPS   : {_settings.TargetFrameRate}");
             GUILayout.Label($"F6 Prevent sleep: {_settings.PreventDisplaySleep}");

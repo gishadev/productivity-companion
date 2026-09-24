@@ -11,6 +11,9 @@ namespace gishadev.companion.Window.Native
 
         bool IsTopmost { get; }
 
+        // True when the topmost flag is set but the window actually sits below ordinary windows.
+        bool IsCoveredByNonTopmostWindow { get; }
+
         // Windows drops our topmost flag while the taskbar is foreground.
         bool IsTaskbarForeground { get; }
 

@@ -7,6 +7,7 @@ namespace gishadev.companion.Window.Native
         public bool IsAvailable => false;
         public bool IsMinimized => false;
         public bool IsTopmost => false;
+        public bool IsCoveredByNonTopmostWindow => false;
         public bool IsTaskbarForeground => false;
 
         public void RemoveChrome() { }

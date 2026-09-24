@@ -30,8 +30,28 @@ namespace gishadev.companion.Window.Native
 
         public bool IsMinimized => IsAvailable && Win32Interop.IsIconic(_hwnd);
 
-        public bool IsTopmost =>
-            IsAvailable && (Win32Interop.GetWindowLong(_hwnd, Win32Interop.GWL_EXSTYLE) & Win32Interop.WS_EX_TOPMOST) != 0;
+        public bool IsTopmost => IsAvailable && HasTopmostFlag(_hwnd);
+
+        // Topmost windows always precede non-topmost ones in z-order, so a visible non-topmost window above us
+        // means the flag and the real position disagree. Windows 10 leaves this state behind after shell UI.
+        public bool IsCoveredByNonTopmostWindow
+        {
+            get
+            {
+                if (!IsAvailable) return false;
+
+                const int maxSteps = 1024;
+                var above = Win32Interop.GetWindow(_hwnd, Win32Interop.GW_HWNDPREV);
+                for (var i = 0; above != IntPtr.Zero && i < maxSteps; i++)
+                {
+                    if (Win32Interop.IsWindowVisible(above) && !HasTopmostFlag(above))
+                        return true;
+                    above = Win32Interop.GetWindow(above, Win32Interop.GW_HWNDPREV);
+                }
+
+                return false;
+            }
+        }
 
         public bool IsTaskbarForeground
         {
@@ -140,12 +160,25 @@ namespace gishadev.companion.Window.Native
         {
             if (!IsAvailable) return;
 
-            Win32Interop.SetWindowPos(
-                _hwnd,
-                enabled ? Win32Interop.HWND_TOPMOST : Win32Interop.HWND_NOTOPMOST,
-                0, 0, 0, 0,
+            SetZOrder(enabled ? Win32Interop.HWND_TOPMOST : Win32Interop.HWND_NOTOPMOST);
+
+            // Windows 10 can ignore HWND_TOPMOST on a window it already considers topmost; cycling the band
+            // forces it to recompute our position.
+            if (enabled && IsCoveredByNonTopmostWindow)
+            {
+                SetZOrder(Win32Interop.HWND_NOTOPMOST);
+                SetZOrder(Win32Interop.HWND_TOPMOST);
+            }
+        }
+
+        private void SetZOrder(IntPtr insertAfter)
+        {
+            Win32Interop.SetWindowPos(_hwnd, insertAfter, 0, 0, 0, 0,
                 Win32Interop.SWP_NOMOVE | Win32Interop.SWP_NOSIZE | Win32Interop.SWP_NOACTIVATE);
         }
+
+        private static bool HasTopmostFlag(IntPtr hWnd) =>
+            (Win32Interop.GetWindowLong(hWnd, Win32Interop.GWL_EXSTYLE) & Win32Interop.WS_EX_TOPMOST) != 0;
 
         public void SetHiddenFromTaskbar(bool hidden)
         {

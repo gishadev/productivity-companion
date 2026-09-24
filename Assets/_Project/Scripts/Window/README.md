@@ -136,7 +136,7 @@ BC3 compression quantises alpha in 4×4 blocks, turning clean zeros into small n
 |---|---|---|
 | `TransparencyMode` | `PerPixelAlpha` | |
 | `ClickThrough` | `true` | **Coupled to the transparency default on purpose.** The window covers the whole screen; transparent without click-through leaves the user unable to click anything on their desktop. |
-| `AlwaysOnTop` | `false` | Starts/stops `TopmostWatchdog` |
+| `AlwaysOnTop` | `true` | Starts/stops `TopmostWatchdog`. The watchdog checks real z-order, not just `WS_EX_TOPMOST`: Windows 10 can keep the flag while leaving the window below ordinary ones after shell UI (taskbar, Start, Action Center) |
 | `HideFromTaskbar` | `false` | `WS_EX_TOOLWINDOW`; needs a hide/show cycle to take effect |
 | `TargetFrameRate` | `60` | 15 / 30 / 60 |
 | `PreventDisplaySleep` | `false` | |

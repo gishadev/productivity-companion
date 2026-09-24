@@ -34,6 +34,8 @@ namespace gishadev.companion.Window.Native
         internal const uint SWP_NOACTIVATE = 0x0010;
         internal const uint SWP_FRAMECHANGED = 0x0020;
 
+        internal const uint GW_HWNDPREV = 3;
+
         internal const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
 
         internal const int SW_HIDE = 0;
@@ -99,6 +101,9 @@ namespace gishadev.companion.Window.Native
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
 
         [DllImport("user32.dll")]
         internal static extern bool IsWindowVisible(IntPtr hWnd);

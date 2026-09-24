@@ -21,6 +21,9 @@ namespace gishadev.companion.Window
         // Transparent without click-through would lock the user out of their desktop.
         public const bool DefaultClickThrough = true;
 
+        // A widget that sinks behind other apps is useless; the only other toggle is the dev-only F3 hotkey.
+        public const bool DefaultAlwaysOnTop = true;
+
         private TransparencyMode _transparencyMode;
         private bool _clickThrough;
         private bool _alwaysOnTop;
@@ -33,7 +36,7 @@ namespace gishadev.companion.Window
             _transparencyMode =
                 (TransparencyMode)PlayerPrefs.GetInt(TransparencyKey, (int)DefaultTransparencyMode);
             _clickThrough = GetBool(ClickThroughKey, DefaultClickThrough);
-            _alwaysOnTop = GetBool(AlwaysOnTopKey, false);
+            _alwaysOnTop = GetBool(AlwaysOnTopKey, DefaultAlwaysOnTop);
             _hideFromTaskbar = GetBool(HideFromTaskbarKey, false);
             _targetFrameRate = SanitizeFrameRate(PlayerPrefs.GetInt(TargetFrameRateKey, 60));
             _preventDisplaySleep = GetBool(PreventDisplaySleepKey, false);
